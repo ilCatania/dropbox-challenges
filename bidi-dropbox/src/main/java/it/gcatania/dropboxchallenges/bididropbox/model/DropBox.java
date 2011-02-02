@@ -16,8 +16,6 @@ public class DropBox
 
     private final Set<Coordinates> availableStartingPoints;
 
-    private final Set<Coordinates> upperRightAngles;
-
     private int height;
 
     private int width;
@@ -27,15 +25,6 @@ public class DropBox
         addedRectangles = new ArrayList<CartesianRectangle>();
         availableStartingPoints = new HashSet<Coordinates>();
         availableStartingPoints.add(Coordinates.ORIGIN);
-        upperRightAngles = new HashSet<Coordinates>();
-    }
-
-    private void addIfNotUpperRight(Coordinates coords)
-    {
-        if (!upperRightAngles.contains(coords))
-        {
-            availableStartingPoints.add(coords);
-        }
     }
 
     public void put(CartesianRectangle rectangle)
@@ -48,12 +37,12 @@ public class DropBox
         }
         addedRectangles.add(rectangle);
 
-        addIfNotUpperRight(rectangle.getLowerRight());
-        addIfNotUpperRight(rectangle.getUpperLeft());
+        // upper right is not a starting point unless funny things with adjacent rectangles happen, in which case they
+        // will add it (so we can skip it now)
+        availableStartingPoints.add(rectangle.getLowerRight());
+        availableStartingPoints.add(rectangle.getUpperLeft());
 
-        // upper right is never a starting point
         Coordinates upperRight = rectangle.getUpperRight();
-        upperRightAngles.add(upperRight);
         width = Math.max(width, upperRight.getX());
         height = Math.max(height, upperRight.getY());
     }
