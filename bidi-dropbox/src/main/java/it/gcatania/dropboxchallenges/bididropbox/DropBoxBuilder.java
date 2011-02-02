@@ -47,7 +47,7 @@ public class DropBoxBuilder
             for (Coordinates coords : availableStartingPoints)
             {
                 CartesianRectangle cRect = new CartesianRectangle(coords, rect);
-                int currOverhead = overheadCalculator.getOverhead(cRect);
+                int currOverhead = overheadCalculator.getOverhead(dropBox, cRect);
                 if (currOverhead < minOverhead && !dropBox.overlaps(cRect))
                 {
                     minOverhead = currOverhead;
@@ -59,7 +59,7 @@ public class DropBoxBuilder
                     continue;
                 }
                 cRect = new CartesianRectangle(coords, rect.rotate());
-                currOverhead = overheadCalculator.getOverhead(cRect);
+                currOverhead = overheadCalculator.getOverhead(dropBox, cRect);
                 if (currOverhead < minOverhead && !dropBox.overlaps(cRect))
                 {
                     minOverhead = currOverhead;

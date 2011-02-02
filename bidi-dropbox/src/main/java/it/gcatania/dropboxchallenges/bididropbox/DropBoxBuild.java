@@ -4,6 +4,7 @@ import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleAreaCompar
 import it.gcatania.dropboxchallenges.bididropbox.model.DropBox;
 import it.gcatania.dropboxchallenges.bididropbox.model.Rectangle;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DistanceFromOriginOverheadCalculator;
+import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxAreaOverheadCalculator;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -17,9 +18,11 @@ import java.util.Random;
 public class DropBoxBuild
 {
 
-    private static final int RND_NUM_RECTANGLES = 5;
+    private static final int RND_NUM_RECTANGLES = 20;
 
-    private static final int RND_MAX_SIDE_LENGTH = 12;
+    private static final int RND_MIN_SIDE_LENGTH = 3;
+
+    private static final int RND_MAX_SIDE_LENGTH = 18;
 
     public static void main(String[] args)
     {
@@ -45,21 +48,20 @@ public class DropBoxBuild
 
     public void runWithRandomInput()
     {
+        // 133l
         Random random = new Random();
-        random.setSeed(133l);
+        // random.setSeed(133l);
 
         List<Rectangle> rectangles = new ArrayList<Rectangle>(RND_NUM_RECTANGLES);
         for (int i = 0; i < RND_NUM_RECTANGLES; i++)
         {
-            int width = 1 + Math.abs(random.nextInt() % RND_MAX_SIDE_LENGTH);
-            int height = 1 + Math.abs(random.nextInt() % RND_MAX_SIDE_LENGTH);
+            int width = RND_MIN_SIDE_LENGTH + Math.abs(random.nextInt() % RND_MAX_SIDE_LENGTH);
+            int height = RND_MIN_SIDE_LENGTH + Math.abs(random.nextInt() % RND_MAX_SIDE_LENGTH);
             Rectangle rect = new Rectangle(width, height);
             System.out.println("Adding random " + rect);
             rectangles.add(rect);
         }
-        DropBoxBuilder dbb = new DropBoxBuilder(
-            new RectangleAreaComparator(),
-            new DistanceFromOriginOverheadCalculator());
+        DropBoxBuilder dbb = new DropBoxBuilder(new RectangleAreaComparator(), new DropBoxAreaOverheadCalculator());
         execute(dbb, rectangles);
     }
 
