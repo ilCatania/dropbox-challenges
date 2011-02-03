@@ -42,9 +42,8 @@ public class DropBox
         availableStartingPoints.add(rectangle.getLowerRight());
         availableStartingPoints.add(rectangle.getUpperLeft());
 
-        Coordinates upperRight = rectangle.getUpperRight();
-        width = Math.max(width, upperRight.getX());
-        height = Math.max(height, upperRight.getY());
+        width = getWidthWith(rectangle);
+        height = getHeightWith(rectangle);
     }
 
     public boolean overlaps(CartesianRectangle rect)
@@ -67,12 +66,24 @@ public class DropBox
         return availableStartingPoints;
     }
 
-    /**
-     * @return the height
-     */
-    public int getHeight()
+    public int getWidthWith(CartesianRectangle rect)
     {
-        return height;
+        return Math.max(width, rect.getUpperRight().getX());
+    }
+
+    public int getHeightWith(CartesianRectangle rect)
+    {
+        return Math.max(height, rect.getUpperRight().getY());
+    }
+
+    /**
+     * @param rect a cartesian rectangle
+     * @return the area that the dropbox would have after adding the input rectangle (the rectangle is not actually
+     * added)
+     */
+    public int getAreaWith(CartesianRectangle rect)
+    {
+        return getWidthWith(rect) * getHeightWith(rect);
     }
 
     /**
@@ -81,6 +92,14 @@ public class DropBox
     public int getWidth()
     {
         return width;
+    }
+
+    /**
+     * @return the height
+     */
+    public int getHeight()
+    {
+        return height;
     }
 
     public int getArea()

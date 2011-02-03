@@ -17,18 +17,9 @@ public class DropBoxOverheadCalculator implements OverheadCalculator
     @Override
     public int getOverhead(DropBox dropBox, CartesianRectangle rect)
     {
-
-        int prevWidth = dropBox.getWidth();
-        int prevHeight = dropBox.getHeight();
-        int prevArea = dropBox.getArea();
+        int areaOverhead = dropBox.getAreaWith(rect) - dropBox.getArea();
 
         Coordinates upperRight = rect.getUpperRight();
-        int newWidth = Math.max(prevWidth, upperRight.getX());
-        int newHeight = Math.max(prevHeight, upperRight.getY());
-        int newArea = newWidth * newHeight;
-
-        int areaOverhead = newArea - prevArea;
-
         int distanceFromOriginOverhead = upperRight.getX() * upperRight.getX() + upperRight.getY() * upperRight.getY();
 
         return areaOverhead + distanceFromOriginOverhead;
