@@ -1,7 +1,7 @@
 package it.gcatania.dropboxchallenges.bididropbox.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +23,7 @@ public class DropBox
     public DropBox()
     {
         addedRectangles = new ArrayList<CartesianRectangle>();
-        availableStartingPoints = new HashSet<Coordinates>();
+        availableStartingPoints = new LinkedHashSet<Coordinates>(); // preserving order optimizes results
         availableStartingPoints.add(Coordinates.ORIGIN);
     }
 
