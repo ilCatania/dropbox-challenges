@@ -1,11 +1,20 @@
 package it.gcatania.dropboxchallenges.bididropbox;
 
 import it.gcatania.dropboxchallenges.bididropbox.comparators.DropBoxFreeSpaceComparator;
+import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleAreaComparator;
+import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleMaxSideComparator;
+import it.gcatania.dropboxchallenges.bididropbox.comparators.RectanglePerimeterComparator;
 import it.gcatania.dropboxchallenges.bididropbox.model.DropBox;
 import it.gcatania.dropboxchallenges.bididropbox.model.Rectangle;
+import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.AreaOverheadCalculator;
+import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DistanceFromOriginOverheadCalculator;
+import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxAreaOverheadCalculator;
+import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxOverheadCalculator;
+import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.FreeSpaceOverheadCalculator;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.OverheadCalculator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -35,11 +44,21 @@ public class DropboxOptimizationTest
     {
         // 133l
         Random random = new Random();
-        // random.setSeed(133l);
+        random.setSeed(133l);
+
         Map<String, Integer> results = new HashMap<String, Integer>();
         for (int i = 0; i < NUM_ITERATIONS; i++)
         {
-            String best = singlePass(random, null, null); // TODO fill lists
+            @SuppressWarnings("unchecked")
+            String best = singlePass(random, Arrays.asList(
+                new RectangleAreaComparator(),
+                new RectangleMaxSideComparator(),
+                new RectanglePerimeterComparator()), Arrays.asList(
+                new AreaOverheadCalculator(),
+                new DistanceFromOriginOverheadCalculator(),
+                new DropBoxAreaOverheadCalculator(),
+                new FreeSpaceOverheadCalculator(),
+                new DropBoxOverheadCalculator()));
             Integer count = results.get(best);
             if (count == null)
             {
@@ -50,6 +69,11 @@ public class DropboxOptimizationTest
                 count = count + 1;
             }
             results.put(best, count);
+        }
+        System.out.println("results:\n");
+        for (Map.Entry<String, Integer> e : results.entrySet())
+        {
+            System.out.println(e.getKey() + ": " + e.getValue());
         }
     }
 
