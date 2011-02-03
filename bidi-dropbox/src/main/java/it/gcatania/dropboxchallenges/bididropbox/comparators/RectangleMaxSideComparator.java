@@ -17,7 +17,7 @@ public class RectangleMaxSideComparator implements Comparator<Rectangle>
     @Override
     public int compare(Rectangle o1, Rectangle o2)
     {
-        return getMaxSide(o2) - getMaxSide(o1);
+        return getMaxSide(o1) - getMaxSide(o2);
     }
 
     private static int getMaxSide(Rectangle rect)

@@ -1,5 +1,6 @@
 package it.gcatania.dropboxchallenges.bididropbox;
 
+import it.gcatania.dropboxchallenges.bididropbox.comparators.ReverseComparator;
 import it.gcatania.dropboxchallenges.bididropbox.model.CartesianRectangle;
 import it.gcatania.dropboxchallenges.bididropbox.model.Coordinates;
 import it.gcatania.dropboxchallenges.bididropbox.model.DropBox;
@@ -30,7 +31,7 @@ public class DropBoxBuilder
 
     public DropBox build(List<Rectangle> rectangles)
     {
-        Collections.sort(rectangles, rectangleComparator);
+        Collections.sort(rectangles, new ReverseComparator<Rectangle>(rectangleComparator));
         DropBox dropBox = new DropBox();
 
         for (Rectangle rect : rectangles)

@@ -17,7 +17,7 @@ public class RectanglePerimeterComparator implements Comparator<Rectangle>
     @Override
     public int compare(Rectangle o1, Rectangle o2)
     {
-        return o2.getSemiPerimeter() - o1.getSemiPerimeter();
+        return o1.getSemiPerimeter() - o2.getSemiPerimeter();
     }
 
 }
