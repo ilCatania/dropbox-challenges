@@ -33,11 +33,11 @@ public class DropboxOptimizationTest
 
     private static final int NUM_ITERATIONS = 100;
 
-    private static final int NUM_RECTANGLES = 20;
+    private static final int NUM_RECTANGLES = 200;
 
-    private static final int MIN_SIDE_LENGTH = 3;
+    private static final int MIN_SIDE_LENGTH = 1;
 
-    private static final int MAX_SIDE_LENGTH = 18;
+    private static final int MAX_SIDE_LENGTH = 30;
 
     @Test
     public void testOptimization()
@@ -49,6 +49,7 @@ public class DropboxOptimizationTest
         Map<String, Integer> results = new HashMap<String, Integer>();
         for (int i = 0; i < NUM_ITERATIONS; i++)
         {
+            System.out.println("pass " + i);
             @SuppressWarnings("unchecked")
             List<String> bestStrategies = singlePass(random, Arrays.asList(
                 new RectangleAreaComparator(),
@@ -76,7 +77,8 @@ public class DropboxOptimizationTest
         System.out.println("results:\n");
         for (Map.Entry<String, Integer> e : results.entrySet())
         {
-            System.out.println(e.getKey() + ": " + e.getValue());
+            int value = e.getValue();
+            System.out.println(e.getKey() + ": " + value + " (" + (value * 100 / NUM_ITERATIONS) + "%)");
         }
     }
 
@@ -90,7 +92,7 @@ public class DropboxOptimizationTest
             int width = MIN_SIDE_LENGTH + Math.abs(random.nextInt() % MAX_SIDE_LENGTH);
             int height = MIN_SIDE_LENGTH + Math.abs(random.nextInt() % MAX_SIDE_LENGTH);
             Rectangle rect = new Rectangle(width, height);
-            System.out.println("Adding random " + rect);
+            // System.out.println("Adding random " + rect);
             rectangles.add(rect);
         }
 
