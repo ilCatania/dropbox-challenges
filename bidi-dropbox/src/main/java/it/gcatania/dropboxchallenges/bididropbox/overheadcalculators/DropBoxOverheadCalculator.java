@@ -1,7 +1,6 @@
 package it.gcatania.dropboxchallenges.bididropbox.overheadcalculators;
 
 import it.gcatania.dropboxchallenges.bididropbox.model.CartesianRectangle;
-import it.gcatania.dropboxchallenges.bididropbox.model.Coordinates;
 import it.gcatania.dropboxchallenges.bididropbox.model.DropBox;
 
 
@@ -11,17 +10,16 @@ import it.gcatania.dropboxchallenges.bididropbox.model.DropBox;
 public class DropBoxOverheadCalculator implements OverheadCalculator
 {
 
+    private final DistanceFromOriginOverheadCalculator dfo = new DistanceFromOriginOverheadCalculator();
+
+    private final AreaOverheadCalculator ao = new AreaOverheadCalculator();
+
     /**
      * {@inheritDoc}
      */
     @Override
     public int getOverhead(DropBox dropBox, CartesianRectangle rect)
     {
-        int areaOverhead = dropBox.getAreaWith(rect) - dropBox.getArea();
-
-        Coordinates upperRight = rect.getUpperRight();
-        int distanceFromOriginOverhead = upperRight.getX() * upperRight.getX() + upperRight.getY() * upperRight.getY();
-
-        return areaOverhead + distanceFromOriginOverhead;
+        return dfo.getOverhead(dropBox, rect) + ao.getOverhead(dropBox, rect);
     }
 }
