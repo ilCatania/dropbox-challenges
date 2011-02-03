@@ -4,12 +4,11 @@ import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleAreaCompar
 import it.gcatania.dropboxchallenges.bididropbox.model.DropBox;
 import it.gcatania.dropboxchallenges.bididropbox.model.Rectangle;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DistanceFromOriginOverheadCalculator;
-import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxAreaOverheadCalculator;
+import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.OverheadCalculator;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 
 /**
@@ -18,58 +17,38 @@ import java.util.Random;
 public class DropBoxBuild
 {
 
-    private static final int RND_NUM_RECTANGLES = 20;
-
-    private static final int RND_MIN_SIDE_LENGTH = 3;
-
-    private static final int RND_MAX_SIDE_LENGTH = 18;
-
     public static void main(String[] args)
     {
-        DropBoxBuild dropBoxBuild = new DropBoxBuild();
-        if (args.length > 0)
+        if (args.length == 0)
         {
-            dropBoxBuild.run(args[0]);
+            // TODO display syntax
+            return;
         }
-        else
-        {
-            dropBoxBuild.runWithRandomInput();
-        }
-    }
+        String filename = getFileName(args);
+        Comparator<Rectangle> rectangleComparator = getComparator(args);
+        OverheadCalculator overheadCalculator = getOverheadCalculator(args);
 
-    public void run(String filename)
-    {
         List<Rectangle> parsed = RectangleParsingSupport.parse(filename);
-        DropBoxBuilder dbb = new DropBoxBuilder(
-            new RectangleAreaComparator(),
-            new DistanceFromOriginOverheadCalculator());
-        execute(dbb, parsed);
-    }
 
-    public void runWithRandomInput()
-    {
-        // 133l
-        Random random = new Random();
-        // random.setSeed(133l);
+        DropBox built = new DropBoxBuilder(rectangleComparator, overheadCalculator).build(parsed);
 
-        List<Rectangle> rectangles = new ArrayList<Rectangle>(RND_NUM_RECTANGLES);
-        for (int i = 0; i < RND_NUM_RECTANGLES; i++)
-        {
-            int width = RND_MIN_SIDE_LENGTH + Math.abs(random.nextInt() % RND_MAX_SIDE_LENGTH);
-            int height = RND_MIN_SIDE_LENGTH + Math.abs(random.nextInt() % RND_MAX_SIDE_LENGTH);
-            Rectangle rect = new Rectangle(width, height);
-            System.out.println("Adding random " + rect);
-            rectangles.add(rect);
-        }
-        DropBoxBuilder dbb = new DropBoxBuilder(new RectangleAreaComparator(), new DropBoxAreaOverheadCalculator());
-        execute(dbb, rectangles);
-    }
-
-    private int execute(DropBoxBuilder dbb, List<Rectangle> rectangles)
-    {
-        DropBox built = dbb.build(rectangles);
         System.out.println(MessageFormat.format("{0}x{1}", built.getWidth(), built.getHeight()));
         System.err.println(built.draw());
-        return built.getArea();
     }
+
+    public static String getFileName(String[] args)
+    {
+        return args[0];
+    }
+
+    public static Comparator<Rectangle> getComparator(String[] args)
+    {
+        return new RectangleAreaComparator();
+    }
+
+    public static OverheadCalculator getOverheadCalculator(String[] args)
+    {
+        return new DistanceFromOriginOverheadCalculator();
+    }
+
 }
