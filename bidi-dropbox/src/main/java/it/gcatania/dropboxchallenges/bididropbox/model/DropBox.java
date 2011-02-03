@@ -20,11 +20,14 @@ public class DropBox
 
     private int width;
 
+    private int containedRectanglesArea;
+
     public DropBox()
     {
         addedRectangles = new ArrayList<CartesianRectangle>();
         availableStartingPoints = new LinkedHashSet<Coordinates>(); // preserving order optimizes results
         availableStartingPoints.add(Coordinates.ORIGIN);
+        containedRectanglesArea = 0;
     }
 
     public void put(CartesianRectangle rectangle)
@@ -44,6 +47,7 @@ public class DropBox
 
         width = getWidthWith(rectangle);
         height = getHeightWith(rectangle);
+        containedRectanglesArea += rectangle.getArea();
     }
 
     public boolean overlaps(CartesianRectangle rect)
@@ -102,9 +106,28 @@ public class DropBox
         return height;
     }
 
+    /**
+     * @return the sum of the areas of the contained rectangles
+     */
+    public int getContainedRectanglesArea()
+    {
+        return containedRectanglesArea;
+    }
+
+    /**
+     * @return the area of the (rectangular) drobox
+     */
     public int getArea()
     {
         return width * height;
+    }
+
+    /**
+     * @return the currently free space in the dropbox
+     */
+    public int getFreeSpace()
+    {
+        return getArea() - getContainedRectanglesArea();
     }
 
     private static enum PointType {
