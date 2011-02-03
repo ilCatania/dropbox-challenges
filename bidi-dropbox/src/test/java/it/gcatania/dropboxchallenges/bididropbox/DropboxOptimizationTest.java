@@ -1,6 +1,6 @@
 package it.gcatania.dropboxchallenges.bididropbox;
 
-import it.gcatania.dropboxchallenges.bididropbox.comparators.DropBoxFreeSpaceComparator;
+import it.gcatania.dropboxchallenges.bididropbox.comparators.DropBoxAreaComparator;
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleAreaComparator;
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleMaxSideComparator;
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectanglePerimeterComparator;
@@ -50,7 +50,7 @@ public class DropboxOptimizationTest
         for (int i = 0; i < NUM_ITERATIONS; i++)
         {
             @SuppressWarnings("unchecked")
-            String best = singlePass(random, Arrays.asList(
+            List<String> bestStrategies = singlePass(random, Arrays.asList(
                 new RectangleAreaComparator(),
                 new RectangleMaxSideComparator(),
                 new RectanglePerimeterComparator()), Arrays.asList(
@@ -59,16 +59,19 @@ public class DropboxOptimizationTest
                 new DropBoxAreaOverheadCalculator(),
                 new FreeSpaceOverheadCalculator(),
                 new DropBoxOverheadCalculator()));
-            Integer count = results.get(best);
-            if (count == null)
+            for (String best : bestStrategies)
             {
-                count = 1;
+                Integer count = results.get(best);
+                if (count == null)
+                {
+                    count = 1;
+                }
+                else
+                {
+                    count = count + 1;
+                }
+                results.put(best, count);
             }
-            else
-            {
-                count = count + 1;
-            }
-            results.put(best, count);
         }
         System.out.println("results:\n");
         for (Map.Entry<String, Integer> e : results.entrySet())
@@ -77,7 +80,7 @@ public class DropboxOptimizationTest
         }
     }
 
-    private String singlePass(Random random, List<Comparator<Rectangle>> comparators,
+    private List<String> singlePass(Random random, List<Comparator<Rectangle>> comparators,
         List<OverheadCalculator> overheadCalculators)
     {
 
@@ -91,7 +94,8 @@ public class DropboxOptimizationTest
             rectangles.add(rect);
         }
 
-        Map<DropBox, String> results = new HashMap<DropBox, String>(comparators.size() * overheadCalculators.size(), 1f);
+        Map<DropBox, String> dropBoxesToUsed = new HashMap<DropBox, String>(comparators.size()
+            * overheadCalculators.size(), 1f);
         for (Comparator<Rectangle> comp : comparators)
         {
             for (OverheadCalculator o : overheadCalculators)
@@ -99,13 +103,22 @@ public class DropboxOptimizationTest
                 DropBoxBuilder dbb = new DropBoxBuilder(comp, o);
                 DropBox result = dbb.build(rectangles);
                 String toolsUsed = comp.getClass().getSimpleName() + ";" + o.getClass().getSimpleName();
-                results.put(result, toolsUsed);
+                dropBoxesToUsed.put(result, toolsUsed);
             }
         }
-        List<DropBox> dropBoxes = new ArrayList<DropBox>(results.keySet());
-        Collections.sort(dropBoxes, new DropBoxFreeSpaceComparator());
+        List<DropBox> dropBoxes = new ArrayList<DropBox>(dropBoxesToUsed.keySet());
+        Collections.sort(dropBoxes, new DropBoxAreaComparator());
         DropBox best = dropBoxes.get(0);
-        return results.get(best);
+        int bestArea = best.getArea();
+        List<String> result = new ArrayList<String>();
+        for (DropBox db : dropBoxes)
+        {
+            if (db.getArea() == bestArea)
+            {
+                result.add(dropBoxesToUsed.get(db));
+            }
+        }
+        return result;
     }
 
 }
