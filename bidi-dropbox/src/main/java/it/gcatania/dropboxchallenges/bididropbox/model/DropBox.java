@@ -200,4 +200,27 @@ public class DropBox
 
         return sb.toString();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode()
+    {
+        return addedRectangles.hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof DropBox)
+        {
+            DropBox other = (DropBox) obj;
+            return addedRectangles.equals(other.addedRectangles);
+        }
+        return false;
+    }
 }
