@@ -6,7 +6,7 @@ import it.gcatania.dropboxchallenges.bididropbox.model.Rectangle;
 /**
  * @author gcatania
  */
-public class RectangleSuperComparator extends CompositeComparator<Rectangle>
+public class RectangleSuperComparator extends SequentialComparator<Rectangle>
 {
 
     @SuppressWarnings("unchecked")

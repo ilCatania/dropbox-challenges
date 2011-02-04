@@ -6,12 +6,12 @@ import java.util.Comparator;
 /**
  * @author gcatania
  */
-public class CompositeComparator<T> implements Comparator<T>
+public class SequentialComparator<T> implements Comparator<T>
 {
 
     private final Comparator<T>[] comparators;
 
-    public CompositeComparator(Comparator<T>... comparators)
+    public SequentialComparator(Comparator<T>... comparators)
     {
         this.comparators = comparators;
     }
