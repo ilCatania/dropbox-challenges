@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.testng.annotations.Test;
-
 
 /**
  * @author gcatania
@@ -117,7 +115,11 @@ public class DropboxOptimizationTest
         }
     }
 
-    @Test
+    public static void main(String[] args) throws Exception
+    {
+        new DropboxOptimizationTest().testOptimization();
+    }
+
     public void testOptimization() throws IOException
     {
         // 133l
