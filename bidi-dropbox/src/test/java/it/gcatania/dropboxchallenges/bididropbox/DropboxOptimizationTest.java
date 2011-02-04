@@ -97,9 +97,9 @@ public class DropboxOptimizationTest
 
         private int firstPlaces = 0;
 
-        private int totalArea = 0;
+        private long totalArea = 0;
 
-        private int totalFreeSpace = 0;
+        private long totalFreeSpace = 0;
 
         /**
          * {@inheritDoc}
@@ -153,20 +153,20 @@ public class DropboxOptimizationTest
                 int firstPlacesDiff = score2.firstPlaces - score1.firstPlaces;
                 if (firstPlacesDiff == 0)
                 {
-                    int totalAreaDiff = score1.totalArea - score2.totalArea;
+                    long totalAreaDiff = score1.totalArea - score2.totalArea;
                     if (totalAreaDiff == 0)
                     {
-                        return score1.totalFreeSpace - score2.totalFreeSpace;
+                        return Long.signum(score1.totalFreeSpace - score2.totalFreeSpace);
                     }
-                    return totalAreaDiff;
+                    return Long.signum(totalAreaDiff);
                 }
                 return firstPlacesDiff;
             }
         });
 
         int totalFirstPlaces = 0;
-        int minArea = Integer.MAX_VALUE;
-        int maxFreeSpace = 0;
+        long minArea = Integer.MAX_VALUE;
+        long maxFreeSpace = 0;
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Score score = e.getValue();
@@ -188,8 +188,8 @@ public class DropboxOptimizationTest
             Setup setup = e.getKey();
             Score score = e.getValue();
             int firstPlacesPerc = 100 * score.firstPlaces / totalFirstPlaces;
-            int totalAreaPerc = 100 * score.totalArea / minArea;
-            int freeSpacePerc = 100 * score.totalFreeSpace / maxFreeSpace;
+            long totalAreaPerc = 100 * score.totalArea / minArea;
+            long freeSpacePerc = 100 * score.totalFreeSpace / maxFreeSpace;
             System.out.println(new StringBuilder(setup.comparator.getClass().getSimpleName())
                 .append(';')
                 .append(setup.calculator.getClass().getSimpleName())
