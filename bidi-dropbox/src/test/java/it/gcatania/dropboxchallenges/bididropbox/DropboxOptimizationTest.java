@@ -78,17 +78,6 @@ public class DropboxOptimizationTest
             return 1 + comparator.hashCode() + 13 * calculator.hashCode();
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString()
-        {
-            return new StringBuilder(comparator.getClass().getSimpleName())
-                .append(' ')
-                .append(calculator.getClass().getSimpleName())
-                .toString();
-        }
     }
 
     private static final class Score
@@ -100,20 +89,6 @@ public class DropboxOptimizationTest
 
         private long totalFreeSpace = 0;
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString()
-        {
-            return new StringBuilder("First places: ")
-                .append(firstPlaces)
-                .append("; total area: ")
-                .append(totalArea)
-                .append("; total free space: ")
-                .append(totalFreeSpace)
-                .toString();
-        }
     }
 
     public static void main(String[] args) throws Exception
