@@ -5,10 +5,7 @@ import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleMaxSideCom
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectanglePerimeterComparator;
 import it.gcatania.dropboxchallenges.bididropbox.model.DropBox;
 import it.gcatania.dropboxchallenges.bididropbox.model.Rectangle;
-import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.AreaOverheadCalculator;
-import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DistanceFromOriginOverheadCalculator;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxAreaOverheadCalculator;
-import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxOverheadCalculator;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.OverheadCalculator;
 
 import java.io.BufferedWriter;
@@ -116,12 +113,13 @@ public class DropboxOptimizationTest
             new RectangleAreaComparator(),
             new RectangleMaxSideComparator(),
             new RectanglePerimeterComparator());
-        List<OverheadCalculator> overheadCalculators = Arrays.asList(
-            new AreaOverheadCalculator(),
-            new DistanceFromOriginOverheadCalculator(),
-            new DropBoxAreaOverheadCalculator(),
+        List<OverheadCalculator> overheadCalculators = Arrays.<OverheadCalculator> asList(
+        // new AreaOverheadCalculator(), // not optimal
+        // new DistanceFromOriginOverheadCalculator(), // not optimal
+            new DropBoxAreaOverheadCalculator()
             // new FreeSpaceOverheadCalculator(), // same as DropBoxAreaOverheadCalculator
-            new DropBoxOverheadCalculator());
+            // new DropBoxOverheadCalculator() // not optimal
+            );
 
         for (int i = 0; i < NUM_ITERATIONS; i++)
         {
