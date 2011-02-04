@@ -3,6 +3,7 @@ package it.gcatania.dropboxchallenges.bididropbox;
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleAreaComparator;
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleMaxSideComparator;
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectanglePerimeterComparator;
+import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleUltraComparator;
 import it.gcatania.dropboxchallenges.bididropbox.model.DropBox;
 import it.gcatania.dropboxchallenges.bididropbox.model.Rectangle;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxAreaOverheadCalculator;
@@ -110,6 +111,7 @@ public class DropboxOptimizationTest
         @SuppressWarnings("unchecked")
         List<Comparator<Rectangle>> comparators = Arrays.asList(
         // new RectangleSuperComparator(), // same as RectangleAreaComparator
+            new RectangleUltraComparator(),
             new RectangleAreaComparator(),
             new RectangleMaxSideComparator(),
             new RectanglePerimeterComparator());
