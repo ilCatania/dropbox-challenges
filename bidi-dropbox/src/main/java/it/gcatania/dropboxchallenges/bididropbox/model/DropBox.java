@@ -1,9 +1,11 @@
 package it.gcatania.dropboxchallenges.bididropbox.model;
 
+import it.gcatania.dropboxchallenges.bididropbox.comparators.DistanceFromOriginComparator;
+
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
@@ -25,7 +27,7 @@ public class DropBox
     public DropBox()
     {
         addedRectangles = new ArrayList<CartesianRectangle>();
-        availableStartingPoints = new LinkedHashSet<Coordinates>(); // preserving order optimizes results
+        availableStartingPoints = new TreeSet<Coordinates>(new DistanceFromOriginComparator());
         availableStartingPoints.add(Coordinates.ORIGIN);
         containedRectanglesArea = 0;
     }
