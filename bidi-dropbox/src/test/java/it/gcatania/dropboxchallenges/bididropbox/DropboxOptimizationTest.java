@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -32,13 +33,15 @@ public class DropboxOptimizationTest
 
     private static final int NUM_ITERATIONS = 1000;
 
-    private static final int NUM_RECTANGLES = 200;
+    private static final int NUM_RECTANGLES = 20;
 
-    private static final int MIN_SIDE_LENGTH = 1;
+    private static final int MIN_SIDE_LENGTH = 2;
 
-    private static final int MAX_SIDE_LENGTH = 30;
+    private static final int MAX_SIDE_LENGTH = 15;
 
     private Map<Setup, Score> optimizationData;
+
+    private StringBuilder samples;
 
     private static final class Setup
     {
@@ -104,6 +107,9 @@ public class DropboxOptimizationTest
         Random random = new Random();
         random.setSeed(133l);
 
+        optimizationData = new HashMap<Setup, Score>();
+        samples = new StringBuilder();
+
         @SuppressWarnings("unchecked")
         List<Comparator<Rectangle>> comparators = Arrays.asList(
         // new RectangleSuperComparator(), // same as RectangleAreaComparator
@@ -116,7 +122,7 @@ public class DropboxOptimizationTest
             new DropBoxAreaOverheadCalculator(),
             // new FreeSpaceOverheadCalculator(), // same as DropBoxAreaOverheadCalculator
             new DropBoxOverheadCalculator());
-        optimizationData = new HashMap<Setup, Score>();
+
         for (int i = 0; i < NUM_ITERATIONS; i++)
         {
             System.out.println("pass " + i);
@@ -204,6 +210,7 @@ public class DropboxOptimizationTest
                 .toString());
         }
         w.close();
+        System.out.println(samples.toString());
     }
 
     private void singlePass(Random random, List<Comparator<Rectangle>> comparators,
@@ -214,7 +221,9 @@ public class DropboxOptimizationTest
 
         int minArea = Integer.MAX_VALUE;
         int areaGain = 0;
+        List<Setup> minAreaSetups = new ArrayList<Setup>();
         List<Score> minAreaScores = new ArrayList<Score>();
+        List<DropBox> minAreaBoxes = new ArrayList<DropBox>();
         for (Comparator<Rectangle> comp : comparators)
         {
             for (OverheadCalculator o : overheadCalculators)
@@ -223,11 +232,12 @@ public class DropboxOptimizationTest
                 DropBox dropBox = builder.build(rectangles);
                 int currentArea = dropBox.getArea();
 
-                Score score = optimizationData.get(new Setup(comp, o));
+                Setup setup = new Setup(comp, o);
+                Score score = optimizationData.get(setup);
                 if (score == null)
                 {
                     score = new Score();
-                    optimizationData.put(new Setup(comp, o), score);
+                    optimizationData.put(setup, score);
                 }
                 score.totalArea += currentArea;
                 score.totalFreeSpace += dropBox.getFreeSpace();
@@ -235,19 +245,46 @@ public class DropboxOptimizationTest
                 {
                     areaGain = minArea - currentArea;
                     minArea = currentArea;
+                    minAreaSetups.clear();
                     minAreaScores.clear();
-                    minAreaScores.add(score);
+                    minAreaBoxes.clear();
                 }
-                else if (currentArea == minArea)
+                else if (currentArea != minArea)
                 {
-                    minAreaScores.add(score);
+                    continue;
                 }
+                minAreaSetups.add(setup);
+                minAreaScores.add(score);
+                minAreaBoxes.add(dropBox);
             }
         }
-        for (Score score : minAreaScores)
+
+        Iterator<Setup> iSetups = minAreaSetups.iterator();
+        Iterator<Score> iScores = minAreaScores.iterator();
+        Iterator<DropBox> iBoxes = minAreaBoxes.iterator();
+
+        boolean zeroFirstPlaces = false;
+        while (iSetups.hasNext())
         {
+            Setup setup = iSetups.next();
+            Score score = iScores.next();
+            DropBox box = iBoxes.next();
+            if (score.firstPlaces == 0)
+            {
+                zeroFirstPlaces = true;
+                samples
+                    .append(setup.comparator.getClass().getSimpleName())
+                    .append('-')
+                    .append(setup.calculator.getClass().getSimpleName())
+                    .append('\n')
+                    .append(box.draw());
+            }
             score.firstPlaces++;
             score.totalAreaGain += areaGain;
+        }
+        if (zeroFirstPlaces)
+        {
+            samples.append("end sampleset\n");
         }
     }
 
