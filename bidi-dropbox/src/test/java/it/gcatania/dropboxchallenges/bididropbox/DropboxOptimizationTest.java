@@ -12,6 +12,8 @@ import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxOver
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.FreeSpaceOverheadCalculator;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.OverheadCalculator;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -183,8 +185,8 @@ public class DropboxOptimizationTest
             }
         }
 
-        System.out
-            .println("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc");
+        BufferedWriter w = new BufferedWriter(new FileWriter("target/results.csv", false));
+        w.write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc\n");
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Setup setup = e.getKey();
@@ -192,9 +194,10 @@ public class DropboxOptimizationTest
             int firstPlacesPerc = 100 * score.firstPlaces / totalFirstPlaces;
             long totalAreaPerc = 100 * score.totalArea / minArea;
             long freeSpacePerc = 100 * score.totalFreeSpace / maxFreeSpace;
-            System.out.println(new StringBuilder(setup.comparator.getClass().getSimpleName())
+            w.write(new StringBuilder(setup.comparator.getClass().getSimpleName())
                 .append(';')
                 .append(setup.calculator.getClass().getSimpleName())
+                .append(';')
                 .append(score.firstPlaces)
                 .append(';')
                 .append(firstPlacesPerc)
@@ -206,8 +209,10 @@ public class DropboxOptimizationTest
                 .append(score.totalFreeSpace)
                 .append(';')
                 .append(freeSpacePerc)
+                .append('\n')
                 .toString());
         }
+        w.close();
     }
 
     private void singlePass(Random random, List<Comparator<Rectangle>> comparators,
