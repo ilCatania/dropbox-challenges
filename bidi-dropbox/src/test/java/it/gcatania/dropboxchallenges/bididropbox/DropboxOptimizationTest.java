@@ -89,6 +89,8 @@ public class DropboxOptimizationTest
 
         private long totalFreeSpace = 0;
 
+        private long totalAreaGain = 0;
+
     }
 
     public static void main(String[] args) throws Exception
@@ -146,6 +148,7 @@ public class DropboxOptimizationTest
         int totalFirstPlaces = 0;
         long minArea = Integer.MAX_VALUE;
         long minFreeSpace = Integer.MAX_VALUE;
+        long maxAreaGain = 0;
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Score score = e.getValue();
@@ -158,10 +161,15 @@ public class DropboxOptimizationTest
             {
                 minFreeSpace = score.totalFreeSpace;
             }
+            if (maxAreaGain < score.totalAreaGain)
+            {
+                maxAreaGain = score.totalAreaGain;
+            }
         }
 
         BufferedWriter w = new BufferedWriter(new FileWriter("target/results.csv", false));
-        w.write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc\n");
+        w
+            .write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc;AreaGain;AreaGainPerc;AreaGainAvg\n");
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Setup setup = e.getKey();
@@ -169,6 +177,8 @@ public class DropboxOptimizationTest
             int firstPlacesPerc = 100 * score.firstPlaces / totalFirstPlaces;
             long totalAreaPerc = 100 * score.totalArea / minArea;
             long freeSpacePerc = 100 * score.totalFreeSpace / minFreeSpace;
+            long areaGainPerc = 100 * score.totalAreaGain / maxAreaGain;
+            long areaGainAvg = score.firstPlaces > 0 ? score.totalAreaGain / score.firstPlaces : 0L;
             w.write(new StringBuilder(setup.comparator.getClass().getSimpleName())
                 .append(';')
                 .append(setup.calculator.getClass().getSimpleName())
@@ -184,6 +194,12 @@ public class DropboxOptimizationTest
                 .append(score.totalFreeSpace)
                 .append(';')
                 .append(freeSpacePerc)
+                .append(';')
+                .append(score.totalAreaGain)
+                .append(';')
+                .append(areaGainPerc)
+                .append(';')
+                .append(areaGainAvg)
                 .append('\n')
                 .toString());
         }
@@ -197,6 +213,7 @@ public class DropboxOptimizationTest
         List<Rectangle> rectangles = createRandomRectangles(random);
 
         int minArea = Integer.MAX_VALUE;
+        int areaGain = 0;
         List<Score> minAreaScores = new ArrayList<Score>();
         for (Comparator<Rectangle> comp : comparators)
         {
@@ -216,6 +233,7 @@ public class DropboxOptimizationTest
                 score.totalFreeSpace += dropBox.getFreeSpace();
                 if (currentArea < minArea)
                 {
+                    areaGain = minArea - currentArea;
                     minArea = currentArea;
                     minAreaScores.clear();
                     minAreaScores.add(score);
@@ -229,6 +247,7 @@ public class DropboxOptimizationTest
         for (Score score : minAreaScores)
         {
             score.firstPlaces++;
+            score.totalAreaGain += areaGain;
         }
     }
 
