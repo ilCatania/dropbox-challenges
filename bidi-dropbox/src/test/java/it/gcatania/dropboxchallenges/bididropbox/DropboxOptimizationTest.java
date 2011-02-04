@@ -9,7 +9,6 @@ import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.AreaOverhea
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DistanceFromOriginOverheadCalculator;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxAreaOverheadCalculator;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxOverheadCalculator;
-import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.FreeSpaceOverheadCalculator;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.OverheadCalculator;
 
 import java.io.BufferedWriter;
@@ -31,7 +30,7 @@ import java.util.Random;
 public class DropboxOptimizationTest
 {
 
-    private static final int NUM_ITERATIONS = 1080;
+    private static final int NUM_ITERATIONS = 1000;
 
     private static final int NUM_RECTANGLES = 200;
 
@@ -130,6 +129,7 @@ public class DropboxOptimizationTest
 
         @SuppressWarnings("unchecked")
         List<Comparator<Rectangle>> comparators = Arrays.asList(
+        // new RectangleSuperComparator(), // same as RectangleAreaComparator
             new RectangleAreaComparator(),
             new RectangleMaxSideComparator(),
             new RectanglePerimeterComparator());
@@ -137,7 +137,7 @@ public class DropboxOptimizationTest
             new AreaOverheadCalculator(),
             new DistanceFromOriginOverheadCalculator(),
             new DropBoxAreaOverheadCalculator(),
-            new FreeSpaceOverheadCalculator(),
+            // new FreeSpaceOverheadCalculator(), // same as DropBoxAreaOverheadCalculator
             new DropBoxOverheadCalculator());
         optimizationData = new HashMap<Setup, Score>();
         for (int i = 0; i < NUM_ITERATIONS; i++)
@@ -170,7 +170,7 @@ public class DropboxOptimizationTest
 
         int totalFirstPlaces = 0;
         long minArea = Integer.MAX_VALUE;
-        long maxFreeSpace = 0;
+        long minFreeSpace = Integer.MAX_VALUE;
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Score score = e.getValue();
@@ -179,9 +179,9 @@ public class DropboxOptimizationTest
             {
                 minArea = score.totalArea;
             }
-            if (maxFreeSpace < score.totalFreeSpace)
+            if (minFreeSpace > score.totalFreeSpace)
             {
-                maxFreeSpace = score.totalFreeSpace;
+                minFreeSpace = score.totalFreeSpace;
             }
         }
 
@@ -193,7 +193,7 @@ public class DropboxOptimizationTest
             Score score = e.getValue();
             int firstPlacesPerc = 100 * score.firstPlaces / totalFirstPlaces;
             long totalAreaPerc = 100 * score.totalArea / minArea;
-            long freeSpacePerc = 100 * score.totalFreeSpace / maxFreeSpace;
+            long freeSpacePerc = 100 * score.totalFreeSpace / minFreeSpace;
             w.write(new StringBuilder(setup.comparator.getClass().getSimpleName())
                 .append(';')
                 .append(setup.calculator.getClass().getSimpleName())
