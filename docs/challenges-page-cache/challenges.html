@@ -1,0 +1,659 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+
+
+
+
+    <script type="text/javascript">window.ST=new Date().getTime();</script>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    <meta name="description" content="Dropbox is the easiest way to store, sync, and, share files online. There's no complicated interface to learn. Dropbox works seamlessly with your operating system and automatically makes sure your files are up-to-date. Available for Windows, Mac, and Linux.">
+    <meta name="keywords" content="online storage, free storage, file sharing, share files, cloud storage, online backup, cross platform, sync, sharing, mac, windows, os x, linux, backup, collaboration, file versioning, file revisions, remote access, undelete">
+    <meta name="google-site-verification" content="TnuSyOnBMNmtugbpL1ZvW2PbSF9LKvoTzrvOGS9h-b0">
+    <meta name="google-site-verification" content="EZKIczQcM1-DVUMz8heu1dIhNtxNbLqbaA9-HbOnCQ4">
+    <meta name="norton-safeweb-site-verification" content="tz8iotmk-pkhui406y41y5bfmfxdwmaa4a-yc0hm6r0fga7s6j0j27qmgqkmc7oovihzghbzhbdjk-uiyrz438nxsjdbj3fggwgl8oq2nf4ko8gi7j4z7t78kegbidl4">
+    <title>Dropbox 
+                - Challenges
+        - Online backup, file sync, and sharing made easy.
+    </title>
+
+    <link rel="shortcut icon" href="http://www.dropbox.com/static/15104/images/favicon.ico">
+
+    <link href="challenges_files/main.css" rel="stylesheet" type="text/css">
+    <link href="challenges_files/lib.css" rel="stylesheet" type="text/css" media="screen">
+    <link href="challenges_files/sprites.css" rel="stylesheet" type="text/css" media="screen">
+
+    <link rel="apple-touch-icon" href="http://www.dropbox.com/static/15104/images/dropbox_webclip.png">
+    <link rel="P3Pv1" href="http://www.dropbox.com/w3c/p3p.xml">
+    
+
+
+<script type="text/javascript">
+var Constants = {
+  BLOCK_CLUSTER: 'dl-web.dropbox.com',
+  PUBSERVER: 'dl.dropbox.com',
+  WEBSERVER: 'www.dropbox.com',
+  block: 'dl-web.dropbox.com',
+  protocol: 'http',
+  uid: '',
+  root_ns: '',
+  SVN_REV: '15104',
+  TOKEN: '',
+  IS_PROD: 1,
+  WIT_ENABLED: 0,
+  upload_debug: false,
+  tcn: 'touch',
+  date_format: 'M/d/yyyy',
+  referrer: '', 
+  TWO_ITEM_LIST: '%(x)s and %(y)s',
+  THREE_ITEM_LIST: '%(x)s, %(y)s and %(z)s',
+  LOCALES: [["en", "English"], ["es", "Espa\u00f1ol"], ["fr", "Fran\u00e7ais"], ["de", "Deutsch"], ["ja", "\u65e5\u672c\u8a9e"]],
+  USER_LOCALE: 'en_US'
+};
+</script>
+    <script type="text/javascript" src="challenges_files/lib-mini.js"></script>
+    <script type="text/javascript">
+        function global_report_exception (e, f, l, tb, force) {
+            if (!window.reported_exception || force) {
+                var stack_str = "";
+                try {
+                    if (!tb) {
+                        var stack = get_stack_rep();
+                        stack.pop(); // remove global_report_exception
+                        stack.pop(); // remove onerror handler
+                        stack_str = stack.join("\n");
+                    }
+                } catch (e) { }
+                var dbr = new Ajax.Request("/jse", {parameters: {'e': e, 'f': f || window.location.href, 'l': l, 'loc': window.location.href, 'ref': Constants.referrer, 'tb': tb || stack_str }});
+                window.reported_exception = true;
+           }
+        }
+        window.LoadedJsSuccessfully = false; // this constant gets set to true at the bottom of dropbox.js
+        Event.observe(window, "load", function () {
+            if (!window.LoadedJsSuccessfully) {
+                global_report_exception("Failed to load javascript!");
+            }
+        });
+        window.onerror = function (e, f, l) {
+            global_report_exception(e, f, l);
+        };
+    </script>
+    <script type="text/javascript" src="challenges_files/dropbox-mini.js"></script>
+
+    <style type="text/css">
+      .hny-nqgtz { display: none; }
+    </style>
+        <style type="text/css" media="screen">
+        #challenges-container {
+            width: 90%;
+            margin: 3em auto 0 auto;
+            font-size: 12px;   
+        }
+        #strawberry-table {
+            border: 1px solid #ccc;
+            background: #fafafa;
+            margin: 0 auto;
+        }
+        #strawberry-table td {
+            padding: 20px 50px;
+        }
+        .in-out-table {
+            width: 100%;
+        }
+        .in-out-table td {
+            vertical-align: top;
+            padding: 10px;
+            width: 50%;
+        }
+        h1 {
+            font-weight: bold;
+            font-size: 40px;
+        }
+        .borderbox p {
+            font-size: 12px;
+            line-height: 2em;
+        }
+        #psychobox {
+            float: right;
+            margin: -10px 0;
+            margin-left: 15px;
+        }
+        #challenges-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        #challenges-list li {
+            float: left;
+            width: 50%;
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+        }
+        #challenges-container .hotbox {
+            float: left;
+            width: 230px;
+            padding: 10px;
+            margin-right: 10px;
+        }
+        #challenges-container .hotbox h3 {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        #challenges-container .hotbox p {
+            margin-left: 22px;
+        }
+    </style>
+
+</head><body class="en_US has_box_shadow has_border_radius has_rgba gecko">
+
+    
+
+    <div id="modal-behind" style="display: none;"></div>
+
+    <div id="modal" style="display: none;">
+        <div id="modal-box">
+            <a onclick="javascript: Modal.hide(); Event.stop(event); return false;" href="#" style="float: right;"><img src="challenges_files/icon_spacer.gif" alt="" class="sprite s_x" border="0"></a>
+            <h2 id="modal-title"></h2>
+            <div id="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-overlay" style="display: none;" onclick="Modal.hide(); Event.stop(event); return false;"></div>
+    <div id="floaters"></div><div id="trash-can" style="display: none;"></div><div id="grave-yard" style="display: none;"></div>
+
+
+    <div id="feedback-div" style="display: none;">
+        <div id="feedback">
+            <form method="post" action="/feedback">
+                Suggestions, ideas, bug reports, and comments are always
+ welcome. If you'd like to interact with other Dropbox users, check out 
+our <a href="http://forums.dropbox.com/" id="forums_link">forums</a>.
+                <script type="text/javascript">
+                   Util.jag('forums_link', 'href', 'http://forums.dropbox.com');
+                </script>
+                <br><br>
+
+                Email Address (optional)<br>
+                <input style="width: 1px;" name="feedback_email" class="textinput act_as_block" id="feedback_email" type="text"><br><br>
+                <textarea style="width: 1px;" class="textinput act_as_block" name="content" id="feedback_textarea" rows="1" cols="1"></textarea>
+
+                <div align="right">
+                    <input name="email" class="hny-nqgtz" type="text"> 
+                    <input value="Send feedback" class="button" type="submit">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="server-error" class="notify server-er" style="display: none;">
+        <table cellpadding="0" cellspacing="0">
+            <tbody><tr>
+                <td class="msg-td">
+                    <span class="msg-span">There was a problem completing this request.</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b class="rbottom"><b class="r0"></b><b class="r1"></b></b>
+                </td>
+            </tr>
+        </tbody></table>
+    </div>
+    <div id="server-success" class="notify server-ok" style="display: none;">
+        <table cellpadding="0" cellspacing="0">
+            <tbody><tr>
+                <td class="msg-td">
+                    <span>Request completed successfully.</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b class="rbottom"><b class="r0"></b><b class="r1"></b></b>
+                </td>
+            </tr>
+        </tbody></table>
+    </div>
+<div id="main-container">
+
+        <div id="header" class="clearfix">
+
+        <ul id="topnav">
+            <li id="top-login-wrapper">
+
+<a id="login-hover-link" href="http://www.dropbox.com/login"><img src="challenges_files/icon_spacer.gif" alt="" class="sprite s_door_in link-img">Log in<img src="challenges_files/icon_spacer.gif" style="padding: 0pt; margin-left: 2px; margin-top: -1px;" id="login-hover-dropdown-icon" alt="" class="sprite s_login_arrow link-img"></a>
+<div id="login-hover-cover"></div>
+<div id="login-hover-cont" class="offscreen">
+    <form action="https://www.dropbox.com/login" method="post">
+<input name="t" value="791206fc33" type="hidden">
+        <p>
+            Email<br>
+            <input id="login_email_elm" name="login_email" class="textinput" tabindex="1" type="text">
+        </p>
+        <p style="margin-bottom: 0.25em;">
+            Password<br>
+            <input name="login_password" class="textinput" tabindex="2" type="password">
+        </p>
+        <p style="margin-bottom: 0.5em;">
+            <input class="no-border" name="remember_me" id="remember_me" style="vertical-align: middle; margin-left: 0pt;" tabindex="3" type="checkbox">
+            <label for="remember_me" style="vertical-align: middle; cursor: pointer;">Remember me</label>
+        </p>
+        <p style="margin-bottom: 0pt;">
+            <input value="Log in" class="welcome-submit button" style="float: right;" tabindex="4" type="submit">
+            <a id="login-create-an-account" href="http://www.dropbox.com/register">Create an account</a>
+        </p>
+
+    </form>
+</div>
+            </li>
+        </ul>
+        <a href="http://www.dropbox.com/" id="logo"><img id="logo_img" alt="Dropbox - Secure backup, sync and sharing made easy." src="challenges_files/logo.png" border="0">
+        </a>
+    </div>
+
+
+        <div name="main tabs" id="tabs-container" class="wit_group clearfix">
+                <a class="no-tab-link" href="http://www.dropbox.com/"><img src="challenges_files/icon_spacer.gif" alt="" class="sprite s_arrow_turn_left link-img">Back to home</a>
+        </div>
+
+    <div id="content" style="background: none repeat scroll 0% 0% rgb(255, 255, 255);" class="clearfix">
+        
+        <div id="full-content">
+            <div class="borderbox clearfix">
+    <img id="psychobox" src="challenges_files/psychoboxclean.png" alt="">
+    <h1>Test your might</h1>
+    <p>
+        We get a lot of interest in working at Dropbox but it's not 
+always easy to tell how a person's brain works from a resume.
+        If you're like us, you love a good puzzle.  That's why this page
+ is here! 
+        It's a great way to share why we love working at Dropbox:
+        innovative thinking, a bit of elbow grease, and some good fun.
+        Who knows?
+        If you knock these puzzles out of the park, we'll have something
+ to talk about when you come in.
+    </p>
+    <br>
+    <p>
+        Send all submissions to <a href="mailto:challenges@dropbox.com">challenges@dropbox.com</a>. 
+        The subject line should match the puzzle name.
+    </p>
+</div>
+
+<div id="challenges-container">
+    <div class="hotbox">
+        <h3><img src="challenges_files/icon_spacer.gif" alt="" class="sprite s_plugin h2-img"><a href="#packing-your-dropbox">Packing your Dropbox</a></h3>
+        <p>
+            Pack your files into as small a Dropbox as possible.
+        </p>
+    </div>
+    <div class="hotbox">
+        <h3><img src="challenges_files/icon_spacer.gif" alt="" class="sprite s_magnifier h2-img"><a href="#file-events">File Events</a></h3>
+        <p>
+            Turn Dropbox file changes into a human-readable events feed.
+        </p>
+    </div>
+    <div class="hotbox" style="margin-right: 0pt;">
+        <h3><img src="challenges_files/icon_spacer.gif" alt="" class="sprite s_pill h2-img"><a href="#the-dropbox-diet">The Dropbox Diet</a></h3>
+        <p>
+            Plan a well-balanced diet for a Dropboxer.
+        </p>
+    </div>
+    <br class="clear"><br>
+    <br>
+    <h2 id="packing-your-dropbox">Packing your Dropbox</h2>
+    <p>
+        When you're working with petabytes of data, you have to store 
+files wherever they can fit. All of us here at Dropbox are always 
+searching for more ways
+        to efficiently pack data into smaller and more manageable 
+chunks. The fun begins when you bend the rules a little bit and 
+visualize it in two dimensions.
+    </p>
+    <p>
+        You'll be given a list of rectangular "files" that you'll need 
+to pack into as small a "Dropbox" as possible. The dimensions of each 
+file will be 
+        specified by a tuple <code>(width, height)</code>, both of which
+ will be integers. The output of your function should be the area of the
+ smallest
+        rectangular Dropbox that can enclose all of them without any 
+overlap. Files can be rotated 90° if it helps. Bonus points if you can 
+draw pictures
+        of the winning configurations along the way. While drawing 
+pictures, any files sharing dimensions should be considered 
+identical/interchangeable.
+    </p>
+<h3>Input</h3>
+<p>
+        Your program must read a small integer <strong>N</strong> (1 &lt;= <strong>N</strong> &lt;= 100) from <code>STDIN</code> representing the maximum number of files to consider, followed by the width and height of each file, one per line.</p>
+<h3>Output</h3>
+<p>        Output should be simply be the area of the smallest 
+containing Dropbox. If you want to print pretty pictures, send that to <code>stderr</code>. Only the output on <code>stdout</code> will be judged.
+    </p>
+    <table class="in-out-table">
+        <tbody><tr>
+            <td>
+                <h5>Sample Input</h5>
+                <pre class="code-sample">3
+8 8
+4 3
+3 4</pre>
+            </td>
+            <td>
+                <h5>Sample Output</h5>
+                <pre class="code-sample">88
+
+
+
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="width: 100%;">
+    <br>
+    <h5>Sample Output (stderr, optional)</h5>
+    <pre class="code-sample">11x8:
++ - - - - - - + + - + 
+|             | |   | 
+|             | |   | 
+|             | + - + 
+|             | + - + 
+|             | |   | 
+|             | |   | 
++ - - - - - - + + - + 
+
+8x11:
++ - - - - - - + 
+|             |
+|             | 
+|             | 
+|             | 
+|             | 
+|             | 
++ - - - - - - + 
++ - - + + - - + 
+|     | |     | 
++ - - + + - - + 
+
+11x8:
++ - + + - - - - - - + 
+|   | |             | 
+|   | |             | 
++ - + |             | 
++ - + |             | 
+|   | |             | 
+|   | |             | 
++ - + + - - - - - - + 
+
+8x11:
++ - - + + - - + 
+|     | |     | 
++ - - + + - - + 
++ - - - - - - + 
+|             | 
+|             | 
+|             | 
+|             | 
+|             | 
+|             | 
++ - - - - - - + 
+</pre>
+            </td>
+        </tr>
+    </tbody></table>
+<br>
+
+    <h2 id="file-events">File Events</h2>
+    <p>
+        To keep all your computers in sync, Dropbox watches your file 
+system for any changes within your Dropbox folder. Unfortunately, in 
+many cases the file events received are too coarse to be presentable to 
+non-savvy users, usually just an <code>ADD</code> event for any new file and a <code>DEL</code> event for any file that went missing.
+    </p>
+    <p>
+    You'll be given a list of <code>ADD</code>/<code>DEL</code> file 
+events that should be processed and turned into a human-readable event 
+feed that includes richer events like file and directory renames, moves,
+ and copies.
+    </p>
+<h3>Input</h3>
+    <p>
+        Your program must read an integer <strong>N</strong> (1 &lt;= <strong>N</strong> &lt;= 50000) from <code>STDIN</code>
+ representing the number of file events in the test input, followed by 
+that many file event rows.
+        Each row will have the file event type, a UNIX timestamp of when
+ the event occurred, the path of the file relative to the Dropbox root, 
+and an 8-character hash of the contents (or former contents) of the 
+file. Each row is separated by a space. No file paths include spaces. 
+Directories are files too and may be empty (they'll have "-" as their 
+file hash).
+    </p>
+<h3>Output</h3>
+<p>
+        Your output should be a series of English sentences to <code>stdout</code>,
+ one per line, in some way describing the file events in a user-friendly
+ manner. There is no objectively
+        'right' answer here, and in fact there may be multiple ways to 
+interpret a provided list of file events. We'll be judging submissions 
+on a number of criteria
+        including raw efficiency, friendliness of output, ability to 
+handle ambiguity, and more. As one example, the sample output below is 
+(probably) the correct
+        interpretation of the input file events, but is not particularly
+ user-friendly. Feel free to deviate substantially from the sample.
+    </p>
+    <table class="in-out-table">
+        <tbody><tr>
+            <td>
+                <h5>Sample Input</h5>
+                <pre class="code-sample">6
+ADD 1282352346 /test -
+ADD 1282353016 /test/1.txt f2fa762f
+DEL 1282354012 /test -
+DEL 1282354012 /test/1.txt f2fa762f
+ADD 1282354013 /test2 -
+ADD 1282354013 /test2/1.txt f2fa762f
+</pre>
+            </td>
+            <td>
+                <h5>Sample Output</h5>
+                <pre class="code-sample">Added dir /test.
+Added file /test/1.txt.
+Renamed dir /test -&gt; /test2.
+
+
+
+
+</pre>
+            </td>
+        </tr>
+    </tbody></table>
+<br>
+    <h2 id="the-dropbox-diet">The Dropbox Diet</h2>
+    <p>
+        Of the boatload of <a href="http://www.dropbox.com/jobs#whywork">perks Dropbox offers</a>,
+ the ones most threatening to our engineers' waistlines are the daily 
+lunches, the fully-stocked drink fridge, and a full-length bar covered 
+with every snack you could want. All of those calories add up. Luckily, 
+the office is also well-equipped with ping-pong, a DDR machine, and a 
+subsidized gym right across the street that can burn those calories 
+right back off. Although we often don't, Dropboxers should choose the 
+food they eat to counterbalance the activities they perform so that they
+ don't end up with caloric deficit or excess.
+    </p>
+    <p>
+       Help us keep our caloric intake in check. You'll be given a list 
+of activities and their caloric impact. Write a program that outputs the
+ names of activities a Dropboxer should choose to partake in so that the
+ sum of their caloric impact is zero. Once the activity is selected, it 
+cannot be chosen again.
+    </p>
+
+    <h3>Input</h3>
+    <p>Your program reads an integer <strong>N</strong> (1 &lt;= <strong>N</strong> &lt;= 50) from <code>STDIN</code>representing
+ the number of list items in the test input. The list is comprised of 
+activities or food items and its respective calorie impact separated by a
+ space, one pair per line. Activity names will use only lowercase ASCII 
+letters and the dash (-) character.</p>
+    <h3>Output</h3>
+    <p>Output should be sent to <code>stdout</code>, one activity name per line, alphabetized. If there is no possible solution, the output should be <code>no solution</code>. If there are multiple solutions, your program can output any one of them.</p>
+
+    <table class="in-out-table">
+        <tbody><tr>
+            <td>
+                <h5>Sample Input</h5>
+                <pre class="code-sample">2
+red-bull 140
+coke 110
+</pre>
+            </td>
+            <td>
+                <h5>Sample Output</h5>
+                <pre class="code-sample">no solution
+
+
+</pre>
+            </td>
+        </tr>
+    </tbody></table>
+
+    <table class="in-out-table">
+        <tbody><tr>
+            <td>
+                <pre class="code-sample">12
+free-lunch 802
+mixed-nuts 421
+orange-juice 143
+heavy-ddr-session -302
+cheese-snacks 137
+cookies 316
+mexican-coke 150
+dropballers-basketball -611
+coding-six-hours -466
+riding-scooter -42
+rock-band -195
+playing-drums -295
+</pre>
+            </td>
+            <td>
+                <pre class="code-sample">coding-six-hours
+cookies
+mexican-coke
+
+
+
+
+
+
+
+
+
+
+</pre>
+            </td>
+        </tr>
+    </tbody></table>
+</div>
+
+        </div>
+        <br class="clear">
+    </div>
+
+
+    <div id="ghost-icons" style="cursor: move; height: 0pt; width: 0pt;"></div>
+    <br class="clear">
+
+
+    <!-- Footer -->
+    <div name="footer" class="wit_group" id="footer">
+        <div style="margin: 0pt auto;">
+            <p id="copyright">
+                 <img src="challenges_files/icon_spacer.gif" alt="" class="sprite s_gray_logo text-img">© 2011 Dropbox<br>
+            </p>
+            <div class="footer-col">
+                <ul>
+                    <li class="header">Dropbox</li>
+                    <li><a href="http://www.dropbox.com/">Home</a></li>
+                    <li><a href="http://www.dropbox.com/install">Install</a></li>
+                    <li><a href="http://www.dropbox.com/anywhere">Mobile</a></li>
+                    <li><a href="http://www.dropbox.com/pricing">Pricing</a></li>
+                    <li><a href="http://www.dropbox.com/features">Features</a></li>
+                    <li><a href="http://www.dropbox.com/tour">Tour</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <ul>
+                    <li class="header">Community</li>
+                    <li><a href="http://www.dropbox.com/referrals" onmouseup="javascript: MCLog.log('referrals_via_footer');">Referrals</a></li>
+                    <li><a href="http://twitter.com/dropbox" target="_blank">Twitter</a></li>
+                    <li><a href="http://facebook.com/Dropbox" target="_blank">Facebook</a></li>
+                    <li><a href="http://wiki.dropbox.com/">Wiki</a></li>
+                    <li><a href="http://www.dropbox.com/developers">Developers</a></li>
+                    <li><a href="http://www.dropbox.com/anywhere/apps">Partners</a></li>
+
+            </ul>
+            </div>
+            <div class="footer-col">
+                <ul>
+                    <li class="header">Support</li>
+                    <li><a href="http://www.dropbox.com/help">Help Center</a></li>
+                    <li><a href="http://forums.dropbox.com/">Forums</a></li>
+                    <li><a href="http://www.dropbox.com/votebox">Votebox</a></li>
+                    <li><a href="#" onclick="return Home.showFeedback();">Feedback</a></li>
+                    <li><a href="http://www.dropbox.com/contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <ul>
+                    <li class="header">About Us</li>
+                    <li><a href="http://blog.dropbox.com/">Dropbox Blog</a></li>
+                    <li><a href="http://www.dropbox.com/about">Our Team</a></li>
+                    <li><a href="http://www.dropbox.com/press">Press</a></li>
+                    <li><a href="http://www.dropbox.com/terms">Policies</a></li>
+                    <li><a href="http://www.dropbox.com/jobs">Jobs</a></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    document.observe("dom:loaded", function() {
+        e = $("feedback-link");
+        if (e) {
+            new Effect.Highlight(e , {duration: 0.5});
+        }
+
+        Tabs.init();
+        Tabs.check_interval = setInterval("Tabs.check_url('');", 300);
+        Dropdown.init();
+    });
+</script>
+
+<script type="text/javascript">
+if (_gat) {
+    GA.pageTracker = _gat._getTracker("UA-279179-2");
+    Element.observe(window, 'load', function() {
+      GA.pageTracker._trackPageview()
+      GA.setPendingVars();
+    });
+}
+</script>
+<!--[if IE]>
+<iframe id="hashkeeper" name='hashkeeper' width="1" height="1" style="display: none" src="/blank" onload="HashKeeper.reloading=false;"></iframe>
+<![endif]-->
+
+<div id="ieconsole" style="position: absolute; top: 0pt; left: 0pt; font-family: Courier;"></div>
+<div id="FB_HiddenContainer" style="position: absolute; top: -10000px; width: 0px; height: 0px; left: 0pt;"></div>
+<script>
+TranslationSuggest.update_i18n_messages({});
+</script>
+
+
+
+<div id="notice-container" class="clearfix" style="display: none;">
+</div>
+
+</body></html>
