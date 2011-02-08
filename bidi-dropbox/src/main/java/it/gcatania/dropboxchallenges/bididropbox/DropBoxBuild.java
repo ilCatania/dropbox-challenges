@@ -31,13 +31,20 @@ public class DropBoxBuild
     {
         if (args.length == 0)
         {
-            System.out.println("usage:\n DropBoxBuild filename [comparatorClass] [overheadCalculatorClass]");
+            System.out
+                .println("usage:\n DropBoxBuild filename [comparatorClass] [overheadCalculatorClass]"
+                    + "\nexamples:"
+                    + "\n\tDropBoxBuild rectangles.txt"
+                    + "\n\tDropBoxBuild rectangles.txt it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleSideRatioComparator");
             return;
         }
         String filename = getFileName(args);
         Comparator<Rectangle> rectangleComparator = getComparator(args);
         OverheadCalculator overheadCalculator = getOverheadCalculator(args);
 
+        System.out.println("Using: " + rectangleComparator.getClass().getSimpleName());
+        System.out.println("Using: " + overheadCalculator.getClass().getSimpleName());
+        System.out.println("Parsing: " + filename);
         List<Rectangle> parsed = RectangleParsingSupport.parse(filename);
 
         DropBox built = new DropBoxBuilder(rectangleComparator, overheadCalculator).build(parsed);
@@ -59,7 +66,7 @@ public class DropBoxBuild
             try
             {
                 Class< ? > cl = Class.forName(s);
-                if (cl.isAssignableFrom(Comparator.class))
+                if (Comparator.class.isAssignableFrom(cl))
                 {
                     return (Comparator<Rectangle>) cl.newInstance();
                 }
@@ -79,7 +86,7 @@ public class DropBoxBuild
             try
             {
                 Class< ? > cl = Class.forName(s);
-                if (cl.isAssignableFrom(OverheadCalculator.class))
+                if (OverheadCalculator.class.isAssignableFrom(cl))
                 {
                     return (OverheadCalculator) cl.newInstance();
                 }
