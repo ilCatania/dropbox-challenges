@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.commons.lang.time.StopWatch;
+
 
 /**
  * @author gcatania
@@ -92,6 +94,8 @@ public class DropboxOptimizationTest
 
         private long totalAreaGain = 0;
 
+        private final StopWatch watch = new StopWatch();
+
     }
 
     public static void main(String[] args) throws Exception
@@ -152,8 +156,9 @@ public class DropboxOptimizationTest
         });
 
         int totalFirstPlaces = 0;
-        long minArea = Integer.MAX_VALUE;
-        long minFreeSpace = Integer.MAX_VALUE;
+        long minArea = Long.MAX_VALUE;
+        long minFreeSpace = Long.MAX_VALUE;
+        long minTime = Long.MAX_VALUE;
         long maxAreaGain = 0;
         for (Map.Entry<Setup, Score> e : entrySet)
         {
@@ -171,11 +176,16 @@ public class DropboxOptimizationTest
             {
                 maxAreaGain = score.totalAreaGain;
             }
+            long time = score.watch.getTime();
+            if (minTime > time)
+            {
+                minTime = time;
+            }
         }
 
         BufferedWriter w = new BufferedWriter(new FileWriter("target/results.csv", false));
         w
-            .write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc;AreaGain;AreaGainPerc;AreaGainAvg\n");
+            .write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc;TimeMillis;TimeMillisPerc;AreaGain;AreaGainPerc;AreaGainAvg\n");
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Setup setup = e.getKey();
@@ -183,6 +193,7 @@ public class DropboxOptimizationTest
             int firstPlacesPerc = 100 * score.firstPlaces / totalFirstPlaces;
             long totalAreaPerc = 100 * score.totalArea / minArea;
             long freeSpacePerc = 100 * score.totalFreeSpace / minFreeSpace;
+            long timePerc = 100 * score.watch.getTime() / minTime;
             long areaGainPerc = 100 * score.totalAreaGain / maxAreaGain;
             long areaGainAvg = score.firstPlaces > 0 ? score.totalAreaGain / score.firstPlaces : 0L;
             w.write(new StringBuilder(setup.comparator.getClass().getSimpleName())
@@ -200,6 +211,10 @@ public class DropboxOptimizationTest
                 .append(score.totalFreeSpace)
                 .append(';')
                 .append(freeSpacePerc)
+                .append(';')
+                .append(score.watch.getTime())
+                .append(';')
+                .append(timePerc)
                 .append(';')
                 .append(score.totalAreaGain)
                 .append(';')
@@ -228,17 +243,23 @@ public class DropboxOptimizationTest
         {
             for (OverheadCalculator o : overheadCalculators)
             {
-                DropBoxBuilder builder = new DropBoxBuilder(comp, o);
-                DropBox dropBox = builder.build(rectangles);
-                int currentArea = dropBox.getArea();
-
                 Setup setup = new Setup(comp, o);
                 Score score = optimizationData.get(setup);
                 if (score == null)
                 {
                     score = new Score();
                     optimizationData.put(setup, score);
+                    score.watch.start();
                 }
+                else
+                {
+                    score.watch.resume();
+                }
+
+                DropBoxBuilder builder = new DropBoxBuilder(comp, o);
+                DropBox dropBox = builder.build(rectangles);
+                score.watch.suspend();
+                int currentArea = dropBox.getArea();
                 score.totalArea += currentArea;
                 score.totalFreeSpace += dropBox.getFreeSpace();
                 if (currentArea < minArea)
