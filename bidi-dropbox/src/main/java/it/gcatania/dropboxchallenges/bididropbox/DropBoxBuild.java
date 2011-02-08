@@ -1,9 +1,9 @@
 package it.gcatania.dropboxchallenges.bididropbox;
 
-import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleAreaComparator;
+import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleMaxSideComparator;
 import it.gcatania.dropboxchallenges.bididropbox.model.DropBox;
 import it.gcatania.dropboxchallenges.bididropbox.model.Rectangle;
-import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DistanceFromOriginOverheadCalculator;
+import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.DropBoxAreaOverheadCalculator;
 import it.gcatania.dropboxchallenges.bididropbox.overheadcalculators.OverheadCalculator;
 
 import java.text.MessageFormat;
@@ -17,11 +17,21 @@ import java.util.List;
 public class DropBoxBuild
 {
 
+    /**
+     * works best
+     */
+    private static final DropBoxAreaOverheadCalculator DEFAULT_OVERHEAD_CALC = new DropBoxAreaOverheadCalculator();
+
+    /**
+     * works best when rectangles are far from being squares
+     */
+    private static final RectangleMaxSideComparator DEFAULT_RECTANGLE_COMP = new RectangleMaxSideComparator();
+
     public static void main(String[] args)
     {
         if (args.length == 0)
         {
-            // TODO display syntax
+            System.out.println("usage:\n DropBoxBuild filename [comparatorClass] [overheadCalculatorClass]");
             return;
         }
         String filename = getFileName(args);
@@ -41,14 +51,45 @@ public class DropBoxBuild
         return args[0];
     }
 
+    @SuppressWarnings("unchecked")
     public static Comparator<Rectangle> getComparator(String[] args)
     {
-        return new RectangleAreaComparator();
+        for (String s : args)
+        {
+            try
+            {
+                Class< ? > cl = Class.forName(s);
+                if (cl.isAssignableFrom(Comparator.class))
+                {
+                    return (Comparator<Rectangle>) cl.newInstance();
+                }
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
+        return DEFAULT_RECTANGLE_COMP;
     }
 
     public static OverheadCalculator getOverheadCalculator(String[] args)
     {
-        return new DistanceFromOriginOverheadCalculator();
+        for (String s : args)
+        {
+            try
+            {
+                Class< ? > cl = Class.forName(s);
+                if (cl.isAssignableFrom(OverheadCalculator.class))
+                {
+                    return (OverheadCalculator) cl.newInstance();
+                }
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
+        return DEFAULT_OVERHEAD_CALC;
     }
 
 }
