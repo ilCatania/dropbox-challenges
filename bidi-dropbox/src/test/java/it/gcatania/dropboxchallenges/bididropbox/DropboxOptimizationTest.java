@@ -1,5 +1,6 @@
 package it.gcatania.dropboxchallenges.bididropbox;
 
+import it.gcatania.dropboxchallenges.bididropbox.comparators.FakeComparator;
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleAreaComparator;
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectangleMaxSideComparator;
 import it.gcatania.dropboxchallenges.bididropbox.comparators.RectanglePerimeterComparator;
@@ -118,6 +119,7 @@ public class DropboxOptimizationTest
             new RectangleUltraComparator(),
             new RectangleAreaComparator(),
             new RectangleMaxSideComparator(),
+            new FakeComparator<Rectangle>(),
             new RectanglePerimeterComparator());
         List<OverheadCalculator> overheadCalculators = Arrays.<OverheadCalculator> asList(
         // new AreaOverheadCalculator(), // not optimal
