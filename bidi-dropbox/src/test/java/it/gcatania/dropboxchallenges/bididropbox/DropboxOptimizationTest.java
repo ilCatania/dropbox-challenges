@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -42,7 +41,7 @@ public class DropboxOptimizationTest
 
     private Map<Setup, Score> optimizationData;
 
-    private StringBuilder samples;
+    // private StringBuilder samples;
 
     private static final class Setup
     {
@@ -93,9 +92,11 @@ public class DropboxOptimizationTest
 
         private long totalFreeSpace = 0;
 
-        private long totalAreaGain = 0;
+        private long totalAreaOverhead = 0;
 
         private final StopWatch watch = new StopWatch();
+
+        private DropBox lastDropBox = null;
 
     }
 
@@ -111,7 +112,7 @@ public class DropboxOptimizationTest
         random.setSeed(133l);
 
         optimizationData = new HashMap<Setup, Score>();
-        samples = new StringBuilder();
+        // samples = new StringBuilder();
 
         @SuppressWarnings("unchecked")
         List<Comparator<Rectangle>> comparators = Arrays.asList(
@@ -161,7 +162,7 @@ public class DropboxOptimizationTest
         long minArea = Long.MAX_VALUE;
         long minFreeSpace = Long.MAX_VALUE;
         long minTime = Long.MAX_VALUE;
-        long maxAreaGain = 0;
+        long minAreaOverhead = Long.MAX_VALUE;
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Score score = e.getValue();
@@ -174,9 +175,9 @@ public class DropboxOptimizationTest
             {
                 minFreeSpace = score.totalFreeSpace;
             }
-            if (maxAreaGain < score.totalAreaGain)
+            if (minAreaOverhead > score.totalAreaOverhead)
             {
-                maxAreaGain = score.totalAreaGain;
+                minAreaOverhead = score.totalAreaOverhead;
             }
             long time = score.watch.getTime();
             if (minTime > time)
@@ -187,7 +188,7 @@ public class DropboxOptimizationTest
 
         BufferedWriter w = new BufferedWriter(new FileWriter("target/results.csv", false));
         w
-            .write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc;TimeMillis;TimeMillisPerc;AreaGain;AreaGainPerc;AreaGainAvg\n");
+            .write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc;TimeMillis;TimeMillisPerc;AreaOverhead;AreaOverheadPerc\n");
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Setup setup = e.getKey();
@@ -196,8 +197,7 @@ public class DropboxOptimizationTest
             long totalAreaPerc = 100 * score.totalArea / minArea;
             long freeSpacePerc = 100 * score.totalFreeSpace / minFreeSpace;
             long timePerc = 100 * score.watch.getTime() / minTime;
-            long areaGainPerc = 100 * score.totalAreaGain / maxAreaGain;
-            long areaGainAvg = score.firstPlaces > 0 ? score.totalAreaGain / score.firstPlaces : 0L;
+            long areaOverheadPerc = 100 * score.totalAreaOverhead / minAreaOverhead;
             w.write(new StringBuilder(setup.comparator.getClass().getSimpleName())
                 .append(';')
                 .append(setup.calculator.getClass().getSimpleName())
@@ -218,16 +218,14 @@ public class DropboxOptimizationTest
                 .append(';')
                 .append(timePerc)
                 .append(';')
-                .append(score.totalAreaGain)
+                .append(score.totalAreaOverhead)
                 .append(';')
-                .append(areaGainPerc)
-                .append(';')
-                .append(areaGainAvg)
+                .append(areaOverheadPerc)
                 .append('\n')
                 .toString());
         }
         w.close();
-        System.out.println(samples.toString());
+        // System.out.println(samples.toString());
     }
 
     private void singlePass(Random random, List<Comparator<Rectangle>> comparators,
@@ -237,10 +235,6 @@ public class DropboxOptimizationTest
         List<Rectangle> rectangles = createRandomRectangles(random);
 
         int minArea = Integer.MAX_VALUE;
-        int areaGain = 0;
-        List<Setup> minAreaSetups = new ArrayList<Setup>();
-        List<Score> minAreaScores = new ArrayList<Score>();
-        List<DropBox> minAreaBoxes = new ArrayList<DropBox>();
         for (Comparator<Rectangle> comp : comparators)
         {
             for (OverheadCalculator o : overheadCalculators)
@@ -264,51 +258,48 @@ public class DropboxOptimizationTest
                 int currentArea = dropBox.getArea();
                 score.totalArea += currentArea;
                 score.totalFreeSpace += dropBox.getFreeSpace();
+                score.lastDropBox = dropBox;
                 if (currentArea < minArea)
                 {
-                    areaGain = minArea - currentArea;
                     minArea = currentArea;
-                    minAreaSetups.clear();
-                    minAreaScores.clear();
-                    minAreaBoxes.clear();
                 }
-                else if (currentArea != minArea)
-                {
-                    continue;
-                }
-                minAreaSetups.add(setup);
-                minAreaScores.add(score);
-                minAreaBoxes.add(dropBox);
             }
         }
 
-        Iterator<Setup> iSetups = minAreaSetups.iterator();
-        Iterator<Score> iScores = minAreaScores.iterator();
-        Iterator<DropBox> iBoxes = minAreaBoxes.iterator();
-
-        boolean zeroFirstPlaces = false;
-        while (iSetups.hasNext())
+        for (Score score : optimizationData.values())
         {
-            Setup setup = iSetups.next();
-            Score score = iScores.next();
-            DropBox box = iBoxes.next();
-            if (score.firstPlaces == 0)
+            DropBox db = score.lastDropBox;
+            int areaOverhead = db.getArea() - minArea;
+            if (areaOverhead == 0)
             {
-                zeroFirstPlaces = true;
-                samples
-                    .append(setup.comparator.getClass().getSimpleName())
-                    .append('-')
-                    .append(setup.calculator.getClass().getSimpleName())
-                    .append('\n')
-                    .append(box.draw());
+                score.firstPlaces++;
             }
-            score.firstPlaces++;
-            score.totalAreaGain += areaGain;
+            else
+            {
+                score.totalAreaOverhead += areaOverhead;
+            }
         }
-        if (zeroFirstPlaces)
-        {
-            samples.append("end sampleset\n");
-        }
+        // boolean zeroFirstPlaces = false;
+        // while (iSetups.hasNext())
+        // {
+        // Setup setup = iSetups.next();
+        // Score score = iScores.next();
+        // DropBox box = iBoxes.next();
+        // if (score.firstPlaces == 0)
+        // {
+        // zeroFirstPlaces = true;
+        // samples
+        // .append(setup.comparator.getClass().getSimpleName())
+        // .append('-')
+        // .append(setup.calculator.getClass().getSimpleName())
+        // .append('\n')
+        // .append(box.draw());
+        // }
+        // }
+        // if (zeroFirstPlaces)
+        // {
+        // samples.append("end sampleset\n");
+        // }
     }
 
     private static List<Rectangle> createRandomRectangles(Random random)
