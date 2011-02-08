@@ -22,22 +22,22 @@ public class CartesianRectangle extends Rectangle
     {
         super(rectangle.width, rectangle.height);
         this.lowerLeft = lowerLeft;
-        int x = lowerLeft.getX();
-        int y = lowerLeft.getY();
+        long x = lowerLeft.getX();
+        long y = lowerLeft.getY();
         lowerRight = new Coordinates(x + width, y);
         upperRight = new Coordinates(x + width, y + height);
         upperLeft = new Coordinates(x, y + height);
     }
 
-    public CartesianRectangle(int lowerLeftX, int lowerLeftY, int width, int height)
+    public CartesianRectangle(long lowerLeftX, long lowerLeftY, int width, int height)
     {
         this(new Coordinates(lowerLeftX, lowerLeftY), new Rectangle(width, height));
     }
 
     public boolean contains(Coordinates point)
     {
-        int x = point.getX();
-        int y = point.getY();
+        long x = point.getX();
+        long y = point.getY();
         return (lowerLeft.getX() <= x)
             && (lowerLeft.getY() <= y)
             && (upperRight.getX() >= x)
@@ -46,8 +46,8 @@ public class CartesianRectangle extends Rectangle
 
     public boolean perimeterContains(Coordinates point)
     {
-        int x = point.getX();
-        int y = point.getY();
+        long x = point.getX();
+        long y = point.getY();
         if (x == lowerLeft.getX() || x == upperRight.getX())
         {
             return y >= lowerLeft.getY() && y <= upperRight.getY();
@@ -61,22 +61,22 @@ public class CartesianRectangle extends Rectangle
 
     public boolean isAngle(Coordinates point)
     {
-        int x = point.getX();
-        int y = point.getY();
+        long x = point.getX();
+        long y = point.getY();
         return (x == lowerLeft.getX() || x == upperRight.getX()) && (y == lowerLeft.getY() || y == upperRight.getY());
     }
 
     public boolean isVerticalPerimeter(Coordinates point)
     {
-        int x = point.getX();
-        int y = point.getY();
+        long x = point.getX();
+        long y = point.getY();
         return (x == lowerLeft.getX() || x == upperRight.getX()) && (y >= lowerLeft.getY() && y <= upperRight.getY());
     }
 
     public boolean isHorizontalPerimeter(Coordinates point)
     {
-        int x = point.getX();
-        int y = point.getY();
+        long x = point.getX();
+        long y = point.getY();
         return (y == lowerLeft.getY() || y == upperRight.getY()) && (x >= lowerLeft.getX() && x <= upperRight.getX());
     }
 
@@ -93,7 +93,7 @@ public class CartesianRectangle extends Rectangle
      * @param e2 the end of the second segment
      * @return true if the intersection between the two segments is a segment, false otherwise
      */
-    private static boolean intersect(int s1, int e1, int s2, int e2)
+    private static boolean intersect(long s1, long e1, long s2, long e2)
     {
         if (s1 < s2)
         {

@@ -18,11 +18,11 @@ public class DropBox
 
     private final Set<Coordinates> availableStartingPoints;
 
-    private int height;
+    private long height;
 
-    private int width;
+    private long width;
 
-    private int containedRectanglesArea;
+    private long containedRectanglesArea;
 
     public DropBox()
     {
@@ -72,12 +72,13 @@ public class DropBox
         return availableStartingPoints;
     }
 
-    public int getWidthWith(CartesianRectangle rect)
+    public long getWidthWith(CartesianRectangle rect)
     {
+
         return Math.max(width, rect.getUpperRight().getX());
     }
 
-    public int getHeightWith(CartesianRectangle rect)
+    public long getHeightWith(CartesianRectangle rect)
     {
         return Math.max(height, rect.getUpperRight().getY());
     }
@@ -87,7 +88,7 @@ public class DropBox
      * @return the area that the dropbox would have after adding the input rectangle (the rectangle is not actually
      * added)
      */
-    public int getAreaWith(CartesianRectangle rect)
+    public long getAreaWith(CartesianRectangle rect)
     {
         return getWidthWith(rect) * getHeightWith(rect);
     }
@@ -95,7 +96,7 @@ public class DropBox
     /**
      * @return the width
      */
-    public int getWidth()
+    public long getWidth()
     {
         return width;
     }
@@ -103,7 +104,7 @@ public class DropBox
     /**
      * @return the height
      */
-    public int getHeight()
+    public long getHeight()
     {
         return height;
     }
@@ -111,7 +112,7 @@ public class DropBox
     /**
      * @return the sum of the areas of the contained rectangles
      */
-    public int getContainedRectanglesArea()
+    public long getContainedRectanglesArea()
     {
         return containedRectanglesArea;
     }
@@ -119,7 +120,7 @@ public class DropBox
     /**
      * @return the area of the (rectangular) drobox
      */
-    public int getArea()
+    public long getArea()
     {
         return width * height;
     }
@@ -127,7 +128,7 @@ public class DropBox
     /**
      * @return the currently free space in the dropbox
      */
-    public int getFreeSpace()
+    public long getFreeSpace()
     {
         return getArea() - getContainedRectanglesArea();
     }
@@ -142,10 +143,14 @@ public class DropBox
      */
     public String draw()
     {
-        StringBuilder sb = new StringBuilder(6 + getArea()).append(width).append('x').append(height).append(":\n");
-        for (int row = 0; row < height; row++)
+        StringBuilder sb = new StringBuilder(6 + (int) getArea())
+            .append(width)
+            .append('x')
+            .append(height)
+            .append(":\n");
+        for (long row = 0; row < height; row++)
         {
-            for (int column = 0; column < width; column++)
+            for (long column = 0; column < width; column++)
             {
                 PointType pt = PointType.SPACE;
                 Coordinates current = new Coordinates(column, row);

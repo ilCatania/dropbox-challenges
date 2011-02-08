@@ -18,7 +18,7 @@ public class DropBoxFreeSpaceComparator implements Comparator<DropBox>
     @Override
     public int compare(DropBox o1, DropBox o2)
     {
-        return o1.getFreeSpace() - o2.getFreeSpace();
+        return Long.signum(o1.getFreeSpace() - o2.getFreeSpace());
     }
 
 }

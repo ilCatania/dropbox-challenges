@@ -14,7 +14,7 @@ public class DropBoxAreaOverheadCalculator implements OverheadCalculator
      * {@inheritDoc}
      */
     @Override
-    public int getOverhead(DropBox dropBox, CartesianRectangle rect)
+    public long getOverhead(DropBox dropBox, CartesianRectangle rect)
     {
         return dropBox.getAreaWith(rect) - dropBox.getArea();
     }

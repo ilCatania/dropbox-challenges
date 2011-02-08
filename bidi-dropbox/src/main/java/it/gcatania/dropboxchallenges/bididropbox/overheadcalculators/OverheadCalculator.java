@@ -16,5 +16,5 @@ public interface OverheadCalculator
      * @param rect the cartesian rectangle rectangle to add
      * @return the overhead (an integer greater or equal than zero)
      */
-    int getOverhead(DropBox dropBox, CartesianRectangle rect);
+    long getOverhead(DropBox dropBox, CartesianRectangle rect);
 }

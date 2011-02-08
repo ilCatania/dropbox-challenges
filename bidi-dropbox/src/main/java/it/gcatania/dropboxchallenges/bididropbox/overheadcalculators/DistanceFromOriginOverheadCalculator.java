@@ -15,11 +15,11 @@ public class DistanceFromOriginOverheadCalculator implements OverheadCalculator
      * calculates the overhead as the distance between the upper right corner of the rectangle and the diagonal
      */
     @Override
-    public int getOverhead(DropBox dropBox, CartesianRectangle rect)
+    public long getOverhead(DropBox dropBox, CartesianRectangle rect)
     {
         Coordinates upperRight = rect.getUpperRight();
-        int x = upperRight.getX();
-        int y = upperRight.getY();
+        long x = upperRight.getX();
+        long y = upperRight.getY();
         return x * x + y * y;
     }
 

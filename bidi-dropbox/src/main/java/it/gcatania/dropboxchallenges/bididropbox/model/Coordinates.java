@@ -8,11 +8,11 @@ public class Coordinates
 
     public static final Coordinates ORIGIN = new Coordinates(0, 0);
 
-    private final int x;
+    private final long x;
 
-    private final int y;
+    private final long y;
 
-    public Coordinates(int x, int y)
+    public Coordinates(long x, long y)
     {
         this.x = x;
         this.y = y;
@@ -21,7 +21,7 @@ public class Coordinates
     /**
      * @return the x
      */
-    public int getX()
+    public long getX()
     {
         return x;
     }
@@ -29,7 +29,7 @@ public class Coordinates
     /**
      * @return the y
      */
-    public int getY()
+    public long getY()
     {
         return y;
     }
@@ -40,7 +40,7 @@ public class Coordinates
     @Override
     public int hashCode()
     {
-        return (1 + x) << y;
+        return (int) ((1 + x) << y);
     }
 
     /**

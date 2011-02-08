@@ -34,11 +34,11 @@ public class DropboxOptimizationTest
 
     private static final int NUM_ITERATIONS = 1000;
 
-    private static final int NUM_RECTANGLES = 100;
+    private static final int NUM_RECTANGLES = 1000;
 
     private static final int MIN_SIDE_LENGTH = 1;
 
-    private static final int MAX_SIDE_LENGTH = 20;
+    private static final int MAX_SIDE_LENGTH = 200;
 
     private Map<Setup, Score> optimizationData;
 
@@ -235,7 +235,7 @@ public class DropboxOptimizationTest
 
         List<Rectangle> rectangles = createRandomRectangles(random);
 
-        int minArea = Integer.MAX_VALUE;
+        long minArea = Long.MAX_VALUE;
         for (Comparator<Rectangle> comp : comparators)
         {
             for (OverheadCalculator o : overheadCalculators)
@@ -256,7 +256,7 @@ public class DropboxOptimizationTest
                 DropBoxBuilder builder = new DropBoxBuilder(comp, o);
                 DropBox dropBox = builder.build(rectangles);
                 score.watch.suspend();
-                int currentArea = dropBox.getArea();
+                long currentArea = dropBox.getArea();
                 score.totalArea += currentArea;
                 score.totalFreeSpace += dropBox.getFreeSpace();
                 score.lastDropBox = dropBox;
@@ -270,7 +270,7 @@ public class DropboxOptimizationTest
         for (Score score : optimizationData.values())
         {
             DropBox db = score.lastDropBox;
-            int areaOverhead = db.getArea() - minArea;
+            long areaOverhead = db.getArea() - minArea;
             if (areaOverhead == 0)
             {
                 score.firstPlaces++;

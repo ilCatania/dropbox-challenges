@@ -15,7 +15,7 @@ public class AreaOverheadCalculator implements OverheadCalculator
      * calculates the overhead as the distance between the upper right corner of the rectangle and the diagonal
      */
     @Override
-    public int getOverhead(DropBox dropBox, CartesianRectangle rect)
+    public long getOverhead(DropBox dropBox, CartesianRectangle rect)
     {
         Coordinates upperRight = rect.getUpperRight();
         return upperRight.getX() * upperRight.getY();

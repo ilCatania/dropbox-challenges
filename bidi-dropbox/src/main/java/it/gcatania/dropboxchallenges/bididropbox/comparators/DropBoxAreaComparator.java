@@ -18,7 +18,7 @@ public class DropBoxAreaComparator implements Comparator<DropBox>
     @Override
     public int compare(DropBox o1, DropBox o2)
     {
-        return o1.getArea() - o2.getArea();
+        return Long.signum(o1.getArea() - o2.getArea());
     }
 
 }

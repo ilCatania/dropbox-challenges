@@ -21,9 +21,9 @@ public class CompositeOverheadCalculator implements OverheadCalculator
      * {@inheritDoc}
      */
     @Override
-    public int getOverhead(DropBox dropBox, CartesianRectangle rect)
+    public long getOverhead(DropBox dropBox, CartesianRectangle rect)
     {
-        int overhead = 0;
+        long overhead = 0;
         for (OverheadCalculator c : calculators)
         {
             overhead += c.getOverhead(dropBox, rect);

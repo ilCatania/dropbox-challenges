@@ -14,11 +14,11 @@ public class FreeSpaceOverheadCalculator implements OverheadCalculator
      * {@inheritDoc}
      */
     @Override
-    public int getOverhead(DropBox dropBox, CartesianRectangle rect)
+    public long getOverhead(DropBox dropBox, CartesianRectangle rect)
     {
-        int area = dropBox.getAreaWith(rect);
-        int containedRectanglesArea = dropBox.getContainedRectanglesArea() + rect.getArea();
-        int freeSpace = area - containedRectanglesArea;
+        long area = dropBox.getAreaWith(rect);
+        long containedRectanglesArea = dropBox.getContainedRectanglesArea() + rect.getArea();
+        long freeSpace = area - containedRectanglesArea;
         return freeSpace;
     }
 
