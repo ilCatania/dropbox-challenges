@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
   <name>Dropbox Challenges</name>
   <modules>
-    <module>bidi-dropbox</module>
+    <module>packing-your-dropbox</module>
   </modules>
   <dependencyManagement>
     <dependencies>
