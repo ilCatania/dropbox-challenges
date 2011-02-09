@@ -10,6 +10,11 @@
   <modules>
     <module>packing-your-dropbox</module>
   </modules>
+  <scm>
+    <connection>scm:hg:https://ilCatania@bitbucket.org/ilCatania/dropbox-challenges</connection>
+    <developerConnection>scm:hg:ssh://hg@bitbucket.org/ilCatania/dropbox-challenges</developerConnection>
+    <url>https://bitbucket.org/ilCatania/dropbox-challenges</url>
+  </scm>
   <dependencyManagement>
     <dependencies>
       <dependency>
