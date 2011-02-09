@@ -19,7 +19,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>it.gcatania.dropboxchallenges.fileEvents.EventTranslator</mainClass>
+              <mainClass>it.gcatania.dropboxchallenges.fileEvents.EventTranslation</mainClass>
               <addClasspath>true</addClasspath>
             </manifest>
           </archive>

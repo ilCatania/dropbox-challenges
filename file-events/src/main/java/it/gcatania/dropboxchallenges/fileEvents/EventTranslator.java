@@ -2,6 +2,8 @@ package it.gcatania.dropboxchallenges.fileEvents;
 
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -11,24 +13,30 @@ import java.util.List;
 public class EventTranslator
 {
 
-    public static void main(String[] args)
-    {
-        // TODO
-    }
+    /*
+     * possible events: file/folder created, file/folder deleted, file modified, file moved, file inside folder moved
+     */
 
-    public static List<RawEvent> getEvents(String[] args)
+    public List<String> parseMessages(List<RawEvent> events)
     {
-        EventParsingSupport eps = new EventParsingSupport();
-        if (args.length > 0)
+
+        List<RawEvent> eventCache = new ArrayList<RawEvent>();
+
+        List<String> output = new ArrayList<String>();
+
+        Iterator<RawEvent> eventIter = events.iterator();
+        RawEvent lastEvent = eventIter.next();
+
+        while (eventIter.hasNext())
         {
-            String filename = args[0];
-            System.out.println("Parsing: " + filename);
-            return eps.parseFile(filename);
+            RawEvent ev = eventIter.next();
+            switch (ev.type)
+            {
+
+            }
         }
-        else
-        {
-            return eps.parseStandardInput();
-        }
+
+        return null;
     }
 
 }
