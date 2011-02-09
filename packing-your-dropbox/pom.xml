@@ -28,6 +28,11 @@
   </build>
   <dependencies>
     <dependency>
+      <groupId>it.gcatania.dropbox-challenges</groupId>
+      <artifactId>common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
     </dependency>
