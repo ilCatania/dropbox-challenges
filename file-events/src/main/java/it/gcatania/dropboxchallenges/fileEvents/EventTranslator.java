@@ -18,15 +18,16 @@ public class EventTranslator
 
     public static List<RawEvent> getEvents(String[] args)
     {
+        EventParsingSupport eps = new EventParsingSupport();
         if (args.length > 0)
         {
             String filename = args[0];
             System.out.println("Parsing: " + filename);
-            return EventParsingSupport.parse(filename);
+            return eps.parseFile(filename);
         }
         else
         {
-            return EventParsingSupport.prompt();
+            return eps.parseStandardInput();
         }
     }
 

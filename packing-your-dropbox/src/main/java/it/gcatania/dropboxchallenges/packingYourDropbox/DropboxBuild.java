@@ -49,15 +49,16 @@ public final class DropboxBuild
 
     public static List<Rectangle> getRectangles(String[] args)
     {
+        RectangleParsingSupport rps = new RectangleParsingSupport();
         if (args.length > 0)
         {
             String filename = args[0];
             System.out.println("Parsing: " + filename);
-            return RectangleParsingSupport.parse(filename);
+            return rps.parseFile(filename);
         }
         else
         {
-            return RectangleParsingSupport.prompt();
+            return rps.parseStandardInput();
         }
     }
 
