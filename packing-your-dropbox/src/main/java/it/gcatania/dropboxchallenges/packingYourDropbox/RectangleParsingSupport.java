@@ -110,7 +110,12 @@ public final class RectangleParsingSupport
             List<Rectangle> output = new ArrayList<Rectangle>(numRectangles);
             for (int i = 0; i < numRectangles; i++)
             {
-                String[] dimStrings = reader.readLine().split(" ");
+                String rectangleData = reader.readLine();
+                String[] dimStrings = rectangleData.split(" ");
+                if (dimStrings.length != 2)
+                {
+                    throw new IllegalArgumentException("cannot extract dimensions from: " + rectangleData);
+                }
                 int width = Integer.parseInt(dimStrings[0]);
                 int height = Integer.parseInt(dimStrings[1]);
                 output.add(new Rectangle(width, height));

@@ -4,6 +4,8 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -85,4 +87,52 @@ public class EventParsingSupport
         return output;
     }
 
+    public static List<RawEvent> parse(String filename)
+    {
+        BufferedReader reader;
+        try
+        {
+            reader = new BufferedReader(new FileReader(filename));
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new IllegalArgumentException(e);
+        }
+        try
+        {
+            int numEvents = Integer.parseInt(reader.readLine());
+            List<RawEvent> output = new ArrayList<RawEvent>(numEvents);
+            for (int i = 0; i < numEvents; i++)
+            {
+                String eventString = reader.readLine();
+                String[] eventData = eventString.split(" ");
+                if (eventData.length != 4)
+                {
+                    throw new IllegalArgumentException("Cannot read event data from: " + eventString);
+                }
+
+                RawEventType eventType = RawEventType.valueOf(eventData[0]);
+                long timeStamp = Long.parseLong(eventData[1]);
+                String path = eventData[2];
+                String hash = eventData[3];
+                output.add(new RawEvent(eventType, timeStamp, path, hash));
+            }
+            return output;
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException(e);
+        }
+        finally
+        {
+            try
+            {
+                reader.close();
+            }
+            catch (IOException e)
+            {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
 }
