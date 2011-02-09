@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author gcatania
  */
-public class DropboxBuild
+public final class DropboxBuild
 {
 
     /**
@@ -26,11 +26,12 @@ public class DropboxBuild
      */
     private static final RectangleMaxSideComparator DEFAULT_RECTANGLE_COMP = new RectangleMaxSideComparator();
 
+    private DropboxBuild()
+    {
+    }
+
     public static void main(String[] args)
     {
-        if (args.length == 0)
-        {
-        }
         Comparator<Rectangle> rectangleComparator = getComparator(args);
         OverheadCalculator overheadCalculator = getOverheadCalculator(args);
 

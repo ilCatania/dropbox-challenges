@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author gcatania
  */
-public class RectangleParsingSupport
+public final class RectangleParsingSupport
 {
 
     private RectangleParsingSupport()
