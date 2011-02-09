@@ -6,7 +6,6 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.model.Rectangle;
 import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.DropboxAreaOverheadCalculator;
 import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.OverheadCalculator;
 
-import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.List;
 
@@ -42,7 +41,8 @@ public class DropboxBuild
 
         Dropbox built = new DropboxBuilder(rectangleComparator, overheadCalculator).build(rectangles);
 
-        System.out.println(MessageFormat.format("{0}x{1}", built.getWidth(), built.getHeight()));
+        // System.out.println(MessageFormat.format("{0}x{1}", built.getWidth(), built.getHeight()));
+        System.out.println(built.getArea());
         System.err.println(built.draw());
     }
 
