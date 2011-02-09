@@ -31,31 +31,33 @@ public class DropboxBuild
     {
         if (args.length == 0)
         {
-            System.out
-                .println("usage:\n DropBoxBuild filename [comparatorClass] [overheadCalculatorClass]"
-                    + "\nexamples:"
-                    + "\n\tDropBoxBuild rectangles.txt"
-                    + "\n\tDropBoxBuild rectangles.txt it.gcatania.dropboxchallenges.packingYourDropbox.comparators.RectangleSideRatioComparator");
-            return;
         }
-        String filename = getFileName(args);
         Comparator<Rectangle> rectangleComparator = getComparator(args);
         OverheadCalculator overheadCalculator = getOverheadCalculator(args);
 
-        System.out.println("Using: " + rectangleComparator.getClass().getSimpleName());
-        System.out.println("Using: " + overheadCalculator.getClass().getSimpleName());
-        System.out.println("Parsing: " + filename);
-        List<Rectangle> parsed = RectangleParsingSupport.parse(filename);
+        // System.out.println("Using: " + rectangleComparator.getClass().getSimpleName());
+        // System.out.println("Using: " + overheadCalculator.getClass().getSimpleName());
 
-        Dropbox built = new DropboxBuilder(rectangleComparator, overheadCalculator).build(parsed);
+        List<Rectangle> rectangles = getRectangles(args);
+
+        Dropbox built = new DropboxBuilder(rectangleComparator, overheadCalculator).build(rectangles);
 
         System.out.println(MessageFormat.format("{0}x{1}", built.getWidth(), built.getHeight()));
         System.err.println(built.draw());
     }
 
-    public static String getFileName(String[] args)
+    public static List<Rectangle> getRectangles(String[] args)
     {
-        return args[0];
+        if (args.length > 0)
+        {
+            String filename = args[0];
+            System.out.println("Parsing: " + filename);
+            return RectangleParsingSupport.parse(filename);
+        }
+        else
+        {
+            return RectangleParsingSupport.prompt();
+        }
     }
 
     @SuppressWarnings("unchecked")
