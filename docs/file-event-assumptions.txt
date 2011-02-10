@@ -1,0 +1,11 @@
+Assumptions made in the file-events program:
+
+FE0. input raw events are sorted by time stamp ascending
+FE1. raw events can only be of type ADD or DEL
+FE2. file content modifications are logged as a DEL event followed by an ADD event on the same path with a different hash
+FE3. file renames are logged as a DEL event followed by an ADD event on the same path up to the last level but one, with the same hash
+FE4. a file cannot be both modified and moved in a single pass: a DEL event followed by an ADD event with different path and hash will count as an actual deletion followed by a creation
+FE5. when a non-empty folder is deleted, deletion events related to contained elements will precede the deletion event of the folder itself
+FE6. when a non-empty folder is moved, deletion events related to contained elements will precede the deletion event of the folder itself, and creation events related to contained elements will follow the creation event of the new folder
+FE7. when a non-empty folder is moved, all DEL events must precede all ADD events
+FE8. multiple raw events that compose a single structured event (e.g. a move) are not required to have the exact same timestamp
