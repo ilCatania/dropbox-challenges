@@ -2,6 +2,7 @@ package it.gcatania.dropboxchallenges.fileEvents;
 
 import it.gcatania.dropboxchallenges.fileEvents.model.CreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.DeletionEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryMoveEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileContentChangeEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileMoveEvent;
@@ -73,7 +74,7 @@ public class EventTranslator
                         output.add(new CreationEvent(ev));
                     }
                     eventCache.clear();
-                    eventCache.add(lastEvent);
+                    // eventCache.add(lastEvent); //TODO
                     lastEvent = ev;
                     lastEventType = ev.type;
                     continue;
@@ -92,9 +93,11 @@ public class EventTranslator
                         FileData lastEvData = (FileData) lastEvent.data;
                         if (evData.hash.equals(lastEvData.hash)) // FE4
                         {
+                            // TODO this may also be a file that is being moved because it's inside a directory that
+                            // was moved
                             output.add(new FileMoveEvent(lastEvent, ev));
                             eventCache.clear();
-                            eventCache.add(lastEvent);
+                            // eventCache.add(lastEvent); //TODO
                             lastEvent = ev;
                             lastEventType = ev.type;
                             continue;
@@ -103,12 +106,18 @@ public class EventTranslator
                         {
                             output.add(new DeletionEvent(lastEvent));
                             output.add(new CreationEvent(ev));
+                            eventCache.clear();
+                            // eventCache.add(lastEvent); //TODO
+                            lastEvent = ev;
+                            lastEventType = ev.type;
+                            continue;
                         }
 
                     }
                     else
                     {
                         // directory moved
+                        output.add(new DirectoryMoveEvent(lastEvent, ev));
 
                     }
 

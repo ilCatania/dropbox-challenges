@@ -19,14 +19,19 @@ public abstract class FileSystemData
 
     protected final String[] pathComponents;
 
+    private final String name;
+
+    private final String[] containingFolders;
+
     private static String DIRECTORY_HASH = "-";
 
     public FileSystemData(String path)
     {
         actualPath = path;
-        String[] parts = SEP_PATTERN.split(path);
-        int numParts = parts.length;
-        pathComponents = Arrays.copyOf(parts, numParts - 1);
+        pathComponents = SEP_PATTERN.split(path);
+        int numParts = pathComponents.length;
+        containingFolders = Arrays.copyOf(pathComponents, numParts - 1);
+        name = pathComponents[numParts - 1];
     }
 
     public static FileSystemData from(String path, String hash)
