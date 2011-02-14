@@ -49,6 +49,8 @@ public class EventTranslator
                 }
                 eventCache.clear();
                 eventCache.add(ev);
+                lastEvent = ev;
+                lastEventType = ev.type;
             }
             else
             {
@@ -63,15 +65,17 @@ public class EventTranslator
                     if (lastEvent.path instanceof FileData && ev.path instanceof FileData)
                     {
                         output.add(new FileContentChangeEvent(lastEvent, ev));
-                        lastEvent = ev;
-                        lastEventType = ev.type;
-                        continue;
                     }
                     else
                     {
                         output.add(new DeletionEvent(lastEvent));
+                        output.add(new CreationEvent(ev));
                     }
-                    output.add(new CreationEvent(ev));
+                    eventCache.clear();
+                    eventCache.add(lastEvent);
+                    lastEvent = ev;
+                    lastEventType = ev.type;
+                    continue;
                 }
                 else
                 {
