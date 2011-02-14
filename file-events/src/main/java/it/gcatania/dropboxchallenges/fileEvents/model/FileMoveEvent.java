@@ -8,6 +8,6 @@ public class FileMoveEvent extends MoveEvent
 
     public FileMoveEvent(RawEvent delEvent, RawEvent addEvent)
     {
-        super();
+        super(delEvent, addEvent);
     }
 }

@@ -15,19 +15,19 @@ public abstract class FileSystemData
 
     private static final Pattern SEP_PATTERN = Pattern.compile(SEPARATOR);
 
-    public final String actualPath;
+    public final String fullPath;
 
-    protected final String[] pathComponents;
+    public final String[] pathComponents;
 
-    private final String name;
+    public final String name;
 
-    private final String[] containingFolders;
+    public final String[] containingFolders;
 
     private static String DIRECTORY_HASH = "-";
 
     public FileSystemData(String path)
     {
-        actualPath = path;
+        fullPath = path;
         pathComponents = SEP_PATTERN.split(path);
         int numParts = pathComponents.length;
         containingFolders = Arrays.copyOf(pathComponents, numParts - 1);
@@ -37,6 +37,15 @@ public abstract class FileSystemData
     public static FileSystemData from(String path, String hash)
     {
         return DIRECTORY_HASH.equals(hash) ? new DirectoryData(path) : new FileData(path, hash);
+    }
+
+    /**
+     * @param path the path to check
+     * @return true if this file system data is contained in the input path, false otherwise
+     */
+    public boolean isContainedIn(String path)
+    {
+        return fullPath.startsWith(path);
     }
 
     /**
@@ -51,12 +60,12 @@ public abstract class FileSystemData
     @Override
     public int hashCode()
     {
-        return actualPath.hashCode();
+        return fullPath.hashCode();
     }
 
     public boolean samePathAs(FileSystemData other)
     {
-        return actualPath.equals(other.actualPath);
+        return fullPath.equals(other.fullPath);
     }
 
     /**
@@ -68,7 +77,7 @@ public abstract class FileSystemData
         if (obj instanceof FileSystemData)
         {
             FileSystemData other = (FileSystemData) obj;
-            return other.actualPath.equals(actualPath);
+            return other.fullPath.equals(fullPath);
         }
         return false;
     }

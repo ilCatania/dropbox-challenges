@@ -1,10 +1,12 @@
 package it.gcatania.dropboxchallenges.fileEvents;
 
 import it.gcatania.dropboxchallenges.fileEvents.model.CreationEvent;
-import it.gcatania.dropboxchallenges.fileEvents.model.DeletionEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
+import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryDeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryMoveEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileContentChangeEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
+import it.gcatania.dropboxchallenges.fileEvents.model.FileDeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileMoveEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
@@ -21,121 +23,107 @@ import java.util.List;
 public class EventTranslator
 {
 
-    public List<String> parseMessages(List<RawEvent> events)
+    public List<StructuredEvent> parseMessages(List<RawEvent> events)
     {
-
-        List<RawEvent> eventCache = new ArrayList<RawEvent>();
 
         List<StructuredEvent> output = new ArrayList<StructuredEvent>();
 
         Iterator<RawEvent> eventIter = events.iterator();
-        RawEvent lastEvent = eventIter.next();
-        RawEventType lastEventType = lastEvent.type;
-        RawEvent re = null;
+        StructuredEvent lastEv = null;
 
-        eventCache.add(lastEvent);
         while (eventIter.hasNext())
         {
             RawEvent ev = eventIter.next();
-            if (ev.type.equals(lastEventType))
+            if (ev.type.equals(RawEventType.ADD))
             {
-                eventCache.add(ev);
+                output.add(new CreationEvent(ev));
                 continue;
             }
+            lastEv = ev.data instanceof FileData ? new FileDeletionEvent(ev) : new DirectoryDeletionEvent(ev);
+            break;
+        }
 
+        while (eventIter.hasNext())
+        {
+            RawEvent ev = eventIter.next();
             if (ev.type.equals(RawEventType.DEL))
             {
-                for (RawEvent cached : eventCache)
+                // 1) check if folder/file has been deleted due to a deleted parent folder
+                if (lastEv instanceof DirectoryDeletionEvent)
                 {
-                    output.add(new CreationEvent(cached));
+                    DirectoryDeletionEvent delEv = (DirectoryDeletionEvent) lastEv;
+                    if (ev.data.isContainedIn(delEv.fullPath))
+                    {
+                        delEv.addDeletion(ev.data);
+                        continue;
+                    }
                 }
-                eventCache.clear();
-                eventCache.add(ev);
-                lastEvent = ev;
-                lastEventType = ev.type;
-            }
-            else
-            {
-                // ev.type = add
-                if (lastEvent.data.samePathAs(ev.data))
+                else if (lastEv instanceof DirectoryMoveEvent)
                 {
-                    for (RawEvent cached : eventCache.subList(0, eventCache.size() - 1))
+                    // 2) otherwise check if it's a move
+                    DirectoryMoveEvent moveEv = (DirectoryMoveEvent) lastEv;
+                    if (ev.data.isContainedIn(moveEv.fullPathFrom))
                     {
-                        output.add(new DeletionEvent(cached));
+                        // next must be the corresponding add because of FE4: skip it
+                        eventIter.next();
+                        moveEv.addMove(ev.data);
+                        continue;
                     }
+                }
 
-                    if (lastEvent.data instanceof FileData && ev.data instanceof FileData)
-                    {
-                        output.add(new FileContentChangeEvent(lastEvent, ev));
-                    }
-                    else
-                    {
-                        output.add(new DeletionEvent(lastEvent));
-                        output.add(new CreationEvent(ev));
-                    }
-                    eventCache.clear();
-                    // eventCache.add(lastEvent); //TODO
-                    lastEvent = ev;
-                    lastEventType = ev.type;
-                    continue;
+                if (lastEv != null)
+                {
+                    output.add(lastEv);
+                }
+
+                if (ev.data instanceof FileData)
+                {
+                    lastEv = new FileDeletionEvent(ev);
                 }
                 else
                 {
-                    if (!lastEvent.data.sameType(ev.data))
-                    {
-                        // TODO gestire i precedenti eventi
-                        output.add(new DeletionEvent(lastEvent));
-                        output.add(new CreationEvent(ev));
-                    }
-                    else if (ev.data instanceof FileData)
-                    {
-                        FileData evData = (FileData) ev.data;
-                        FileData lastEvData = (FileData) lastEvent.data;
-                        if (evData.hash.equals(lastEvData.hash)) // FE4
-                        {
-                            // TODO this may also be a file that is being moved because it's inside a directory that
-                            // was moved
-                            output.add(new FileMoveEvent(lastEvent, ev));
-                            eventCache.clear();
-                            // eventCache.add(lastEvent); //TODO
-                            lastEvent = ev;
-                            lastEventType = ev.type;
-                            continue;
-                        }
-                        else
-                        {
-                            output.add(new DeletionEvent(lastEvent));
-                            output.add(new CreationEvent(ev));
-                            eventCache.clear();
-                            // eventCache.add(lastEvent); //TODO
-                            lastEvent = ev;
-                            lastEventType = ev.type;
-                            continue;
-                        }
-
-                    }
-                    else
-                    {
-                        // directory moved
-                        output.add(new DirectoryMoveEvent(lastEvent, ev));
-
-                    }
-
-                    Iterator<RawEvent> iter = eventCache.iterator();
-                    while (iter.hasNext())
-                    {
-                        RawEvent previouslyDeleted = iter.next();
-                    }
-                    // TODO
+                    lastEv = new DirectoryDeletionEvent(ev);
                 }
             }
-
-            eventCache.clear();
-            eventCache.add(ev);
-            lastEvent = ev;
-            lastEventType = ev.type;
+            else
+            {
+                if (lastEv instanceof FileDeletionEvent && ev.data instanceof FileData)
+                {
+                    FileDeletionEvent delEv = (FileDeletionEvent) lastEv;
+                    FileData addEvData = (FileData) ev.data;
+                    if (addEvData.fullPath.equals(delEv.fullPath) && !addEvData.hash.equals(delEv.deletedData.hash))
+                    {
+                        lastEv = new FileContentChangeEvent(ev, ev); // TODO change constructor
+                        continue;
+                    }
+                    else if (addEvData.hash.equals(delEv.deletedData.hash)
+                        && addEvData.name.equals(delEv.deletedData.name)) // FE4
+                    {
+                        lastEv = new FileMoveEvent(ev, ev); // TODO change constructor
+                        continue;
+                    }
+                }
+                else if (lastEv instanceof DirectoryDeletionEvent && ev.data instanceof DirectoryData)
+                {
+                    DirectoryDeletionEvent delEv = (DirectoryDeletionEvent) lastEv;
+                    DirectoryData addEvData = (DirectoryData) ev.data;
+                    if (addEvData.name.equals(delEv.deletedData.name) && !addEvData.fullPath.equals(delEv.fullPath)) // FE4
+                    {
+                        lastEv = new DirectoryMoveEvent(ev, ev);
+                        continue;
+                    }
+                }
+                if (lastEv != null)
+                {
+                    output.add(lastEv);
+                }
+                lastEv = new CreationEvent(ev);
+            }
         }
-
-        return null;
+        if (lastEv != null)
+        {
+            output.add(lastEv);
+        }
+        return output;
     }
 }

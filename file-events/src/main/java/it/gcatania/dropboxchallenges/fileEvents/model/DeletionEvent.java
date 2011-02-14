@@ -6,9 +6,12 @@ package it.gcatania.dropboxchallenges.fileEvents.model;
 public class DeletionEvent extends StructuredEvent
 {
 
+    public final String fullPath;
+
     public DeletionEvent(RawEvent ev)
     {
         super();
+        fullPath = null;
     }
 
 }

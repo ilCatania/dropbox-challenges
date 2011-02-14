@@ -5,13 +5,14 @@ FE1. raw events can only be of type ADD or DEL
 FE2. file content modifications are logged as a DEL event immediately followed by an ADD event on the same path with a different hash
 FE3. file renames are logged as a DEL event followed by an ADD event on the same path up to the last level but one, with the same hash
 FE4. only one action may be performed at a time on a file or folder between move, rename or edit: therefore a DEL event followed by an ADD event with different path and hash will count as an actual deletion followed by a creation
-FE5. when a non-empty folder is deleted, deletion events related to contained elements will precede the deletion event of the folder itself
-FE6. when a non-empty folder is moved, deletion events related to contained elements will precede the deletion event of the folder itself, and creation events related to contained elements will follow the creation event of the new folder
-FE7. when a non-empty folder is moved, all DEL events must precede all ADD events
+FE5. when a non-empty folder is deleted, deletion events related to contained elements will follow the deletion event of the folder itself
+FE6. when a non-empty folder is moved, each DEL event (including those related to contained elements) will be immediately followed by the corresponging ADD event
+FE7. (none)
 FE8. multiple raw events that compose a single structured event (e.g. a move) are not required to have the exact same timestamp
 FE9. all file paths start with a single slash and cannot contain two consecutive slashes
-FE10. when a non-empty folder is moved, DEL events and subsequent ADD events appear in the same order with respect to the respective files moved
-FE11. files and folder
+FE10. (none)
+FE11. (none)
+
 Possible structured event types:
 file/folder creation
 file/folder deletion
