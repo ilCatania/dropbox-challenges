@@ -4,6 +4,7 @@ import it.gcatania.dropboxchallenges.fileEvents.model.CreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.DeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileContentChangeEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
+import it.gcatania.dropboxchallenges.fileEvents.model.FileMoveEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
 import it.gcatania.dropboxchallenges.fileEvents.model.StructuredEvent;
@@ -79,14 +80,42 @@ public class EventTranslator
                 }
                 else
                 {
+                    if (!lastEvent.path.sameType(ev.path))
+                    {
+                        // TODO gestire i precedenti eventi
+                        output.add(new DeletionEvent(lastEvent));
+                        output.add(new CreationEvent(ev));
+                    }
+                    else if (ev.path instanceof FileData)
+                    {
+                        FileData evData = (FileData) ev.path;
+                        FileData lastEvData = (FileData) lastEvent.path;
+                        if (evData.hash.equals(lastEvData.hash)) // FE4
+                        {
+                            output.add(new FileMoveEvent(lastEvent, ev));
+                            eventCache.clear();
+                            eventCache.add(lastEvent);
+                            lastEvent = ev;
+                            lastEventType = ev.type;
+                            continue;
+                        }
+                        else
+                        {
+                            output.add(new DeletionEvent(lastEvent));
+                            output.add(new CreationEvent(ev));
+                        }
+
+                    }
+                    else
+                    {
+                        // directory moved
+
+                    }
+
                     Iterator<RawEvent> iter = eventCache.iterator();
                     while (iter.hasNext())
                     {
                         RawEvent previouslyDeleted = iter.next();
-                        if (previouslyDeleted.path.equals(ev.path))
-                        {
-
-                        }
                     }
                     // TODO
                 }
