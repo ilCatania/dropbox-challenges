@@ -13,8 +13,9 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
 import it.gcatania.dropboxchallenges.fileEvents.model.StructuredEvent;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.regex.Pattern;
 
 
 /**
@@ -28,7 +29,7 @@ public class EventTranslator
 
         List<StructuredEvent> output = new ArrayList<StructuredEvent>();
 
-        Iterator<RawEvent> eventIter = events.iterator();
+        ListIterator<RawEvent> eventIter = events.listIterator();
         StructuredEvent lastEv = null;
 
         while (eventIter.hasNext())
@@ -64,10 +65,21 @@ public class EventTranslator
                     DirectoryMoveEvent moveEv = (DirectoryMoveEvent) lastEv;
                     if (ev.data.isContainedIn(moveEv.fullPathFrom))
                     {
-                        // next must be the corresponding add because of FE4: skip it
-                        eventIter.next();
-                        moveEv.addMove(ev.data);
-                        continue;
+                        if (eventIter.hasNext())
+                        {
+                            RawEvent next = eventIter.next();
+                            if (next.type.equals(RawEventType.ADD)
+                                && Pattern
+                                    .compile(moveEv.fullPathFrom)
+                                    .matcher(ev.data.fullPath)
+                                    .replaceFirst(moveEv.fullPathTo)
+                                    .equals(next.data.fullPath))
+                            {
+                                moveEv.addMove(ev.data);
+                                continue;
+                            }
+                            eventIter.previous();
+                        }
                     }
                 }
 
