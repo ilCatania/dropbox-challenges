@@ -11,6 +11,15 @@ public class DirectoryData extends FileSystemData
         super(path);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean sameType(FileSystemData other)
+    {
+        return other instanceof DirectoryData;
+    }
+
     public boolean contains(FileSystemData other)
     {
         if (pathComponents.length > other.pathComponents.length)

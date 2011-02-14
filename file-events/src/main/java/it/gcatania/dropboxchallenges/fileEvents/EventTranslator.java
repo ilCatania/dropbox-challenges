@@ -45,33 +45,45 @@ public class EventTranslator
             {
                 for (RawEvent cached : eventCache)
                 {
-                    output.add(new DeletionEvent());
+                    output.add(new CreationEvent(cached));
                 }
+                eventCache.clear();
+                eventCache.add(ev);
             }
             else
-            // ev.type = add
             {
+                // ev.type = add
                 if (lastEvent.path.samePathAs(ev.path))
                 {
                     for (RawEvent cached : eventCache.subList(0, eventCache.size() - 1))
                     {
-                        output.add(new CreationEvent());
+                        output.add(new DeletionEvent(cached));
                     }
 
                     if (lastEvent.path instanceof FileData && ev.path instanceof FileData)
                     {
-                        output.add(new FileContentChangeEvent());
+                        output.add(new FileContentChangeEvent(lastEvent, ev));
                         lastEvent = ev;
                         lastEventType = ev.type;
                         continue;
                     }
                     else
                     {
-                        output.add(new DeletionEvent()); // delete previous
+                        output.add(new DeletionEvent(lastEvent));
                     }
+                    output.add(new CreationEvent(ev));
                 }
                 else
                 {
+                    Iterator<RawEvent> iter = eventCache.iterator();
+                    while (iter.hasNext())
+                    {
+                        RawEvent previouslyDeleted = iter.next();
+                        if (previouslyDeleted.path.equals(ev.path))
+                        {
+
+                        }
+                    }
                     // TODO
                 }
             }

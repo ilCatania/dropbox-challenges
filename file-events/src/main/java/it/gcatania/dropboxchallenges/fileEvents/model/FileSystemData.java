@@ -35,6 +35,12 @@ public abstract class FileSystemData
     }
 
     /**
+     * @param other another file system data
+     * @return true if this file system data and the input one have the same type, false otherwise
+     */
+    public abstract boolean sameType(FileSystemData other);
+
+    /**
      * {@inheritDoc}
      */
     @Override
