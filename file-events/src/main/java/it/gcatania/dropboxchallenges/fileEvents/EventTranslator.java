@@ -56,14 +56,14 @@ public class EventTranslator
             else
             {
                 // ev.type = add
-                if (lastEvent.path.samePathAs(ev.path))
+                if (lastEvent.data.samePathAs(ev.data))
                 {
                     for (RawEvent cached : eventCache.subList(0, eventCache.size() - 1))
                     {
                         output.add(new DeletionEvent(cached));
                     }
 
-                    if (lastEvent.path instanceof FileData && ev.path instanceof FileData)
+                    if (lastEvent.data instanceof FileData && ev.data instanceof FileData)
                     {
                         output.add(new FileContentChangeEvent(lastEvent, ev));
                     }
@@ -80,16 +80,16 @@ public class EventTranslator
                 }
                 else
                 {
-                    if (!lastEvent.path.sameType(ev.path))
+                    if (!lastEvent.data.sameType(ev.data))
                     {
                         // TODO gestire i precedenti eventi
                         output.add(new DeletionEvent(lastEvent));
                         output.add(new CreationEvent(ev));
                     }
-                    else if (ev.path instanceof FileData)
+                    else if (ev.data instanceof FileData)
                     {
-                        FileData evData = (FileData) ev.path;
-                        FileData lastEvData = (FileData) lastEvent.path;
+                        FileData evData = (FileData) ev.data;
+                        FileData lastEvData = (FileData) lastEvent.data;
                         if (evData.hash.equals(lastEvData.hash)) // FE4
                         {
                             output.add(new FileMoveEvent(lastEvent, ev));

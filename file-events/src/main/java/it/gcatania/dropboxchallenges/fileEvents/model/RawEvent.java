@@ -10,7 +10,7 @@ public class RawEvent
 
     public final long timeStamp;
 
-    public final FileSystemData path;
+    public final FileSystemData data;
 
     /**
      * @param type the raw event type
@@ -21,7 +21,7 @@ public class RawEvent
     {
         this.type = type;
         this.timeStamp = timeStamp;
-        this.path = FileSystemData.from(path, hash);
+        this.data = FileSystemData.from(path, hash);
     }
 
 }
