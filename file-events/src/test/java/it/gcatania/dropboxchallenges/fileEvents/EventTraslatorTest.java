@@ -5,6 +5,7 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryCreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryDeletionEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileContentChangeEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileCreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileDeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.StructuredEvent;
@@ -98,6 +99,21 @@ public class EventTraslatorTest
             new FileCreationEvent(7, "/W.txt", "0"),
             new DirectoryDeletionEvent(8, "/A", 2, 1),
             new DirectoryDeletionEvent(10, "/C"),
+            new FileDeletionEvent(14, "/X.txt", "0"));
+    }
+
+    @Test
+    public void testChangeFileContent()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(RawEventType.ADD, 7, "/W.txt", "0"),
+            new RawEvent(RawEventType.DEL, 8, "/D/E/file.txt", "0"),
+            new RawEvent(RawEventType.ADD, 9, "/D/E/file.txt", "1"),
+            new RawEvent(RawEventType.DEL, 14, "/X.txt", "0"));
+        List<StructuredEvent> result = translator.parseMessages(raw);
+        check(result,//
+            new FileCreationEvent(7, "/W.txt", "0"),
+            new FileContentChangeEvent(9, "/D/E/file.txt", "1"),
             new FileDeletionEvent(14, "/X.txt", "0"));
     }
 
