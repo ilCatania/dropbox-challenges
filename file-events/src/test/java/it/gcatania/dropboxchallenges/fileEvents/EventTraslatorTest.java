@@ -1,9 +1,9 @@
 package it.gcatania.dropboxchallenges.fileEvents;
 
-import it.gcatania.dropboxchallenges.fileEvents.model.CreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
-import it.gcatania.dropboxchallenges.fileEvents.model.StructuredEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.CreationEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.StructuredEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ public class EventTraslatorTest
         raw.add(new RawEvent(RawEventType.ADD, 0, "/file1.txt", "0"));
 
         List<StructuredEvent> result = translator.parseMessages(raw);
-        Assert.assertEquals(result, Arrays.<StructuredEvent> asList(new CreationEvent()));
+        Assert.assertEquals(result, Arrays.<StructuredEvent> asList(new CreationEvent("/file1.txt", "0")));
     }
 
 }

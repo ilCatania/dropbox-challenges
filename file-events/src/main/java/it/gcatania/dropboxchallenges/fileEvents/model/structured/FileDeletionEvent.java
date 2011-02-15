@@ -3,18 +3,24 @@ package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
+
 /**
  * @author gcatania
  */
-public class FileDeletionEvent extends DeletionEvent
+public class FileDeletionEvent extends DeletionEvent implements FileEvent
 {
 
-    public final FileData deletedData;
+    private final FileData deletedData;
 
     public FileDeletionEvent(RawEvent ev)
     {
-        super(ev);
-        deletedData = ((FileData) ev.data);
+        deletedData = (FileData) ev.data;
+    }
+
+    @Override
+    public FileData getData()
+    {
+        return deletedData;
     }
 
 }

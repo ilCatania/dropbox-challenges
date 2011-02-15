@@ -2,10 +2,11 @@ package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
+
 /**
  * @author gcatania
  */
-public class MoveEvent extends StructuredEvent
+public abstract class MoveEvent implements StructuredEvent
 {
 
     public final String fullPathFrom;

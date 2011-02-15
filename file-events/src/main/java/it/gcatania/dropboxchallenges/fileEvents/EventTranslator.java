@@ -53,7 +53,7 @@ public class EventTranslator
                 if (lastEv instanceof DirectoryDeletionEvent)
                 {
                     DirectoryDeletionEvent delEv = (DirectoryDeletionEvent) lastEv;
-                    if (ev.data.isContainedIn(delEv.fullPath))
+                    if (ev.data.isContainedIn(delEv.getData().fullPath))
                     {
                         delEv.addDeletion(ev.data);
                         continue;
@@ -103,13 +103,13 @@ public class EventTranslator
                 {
                     FileDeletionEvent delEv = (FileDeletionEvent) lastEv;
                     FileData addEvData = (FileData) ev.data;
-                    if (addEvData.fullPath.equals(delEv.fullPath) && !addEvData.hash.equals(delEv.deletedData.hash))
+                    if (addEvData.fullPath.equals(delEv.getData().fullPath)
+                        && !addEvData.hash.equals(delEv.getData().hash))
                     {
                         lastEv = new FileContentChangeEvent(ev, ev); // TODO change constructor
                         continue;
                     }
-                    else if (addEvData.hash.equals(delEv.deletedData.hash)
-                        && addEvData.name.equals(delEv.deletedData.name)) // FE4
+                    else if (addEvData.hash.equals(delEv.getData().hash) && addEvData.name.equals(delEv.getData().name)) // FE4
                     {
                         lastEv = new FileMoveEvent(ev, ev); // TODO change constructor
                         continue;
@@ -119,7 +119,8 @@ public class EventTranslator
                 {
                     DirectoryDeletionEvent delEv = (DirectoryDeletionEvent) lastEv;
                     DirectoryData addEvData = (DirectoryData) ev.data;
-                    if (addEvData.name.equals(delEv.deletedData.name) && !addEvData.fullPath.equals(delEv.fullPath)) // FE4
+                    if (addEvData.name.equals(delEv.getData().name)
+                        && !addEvData.fullPath.equals(delEv.getData().fullPath)) // FE4
                     {
                         lastEv = new DirectoryMoveEvent(ev, ev);
                         continue;
