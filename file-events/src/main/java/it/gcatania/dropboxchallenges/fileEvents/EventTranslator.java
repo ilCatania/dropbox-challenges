@@ -1,16 +1,16 @@
 package it.gcatania.dropboxchallenges.fileEvents;
 
-import it.gcatania.dropboxchallenges.fileEvents.model.CreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
-import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryDeletionEvent;
-import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryMoveEvent;
-import it.gcatania.dropboxchallenges.fileEvents.model.FileContentChangeEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
-import it.gcatania.dropboxchallenges.fileEvents.model.FileDeletionEvent;
-import it.gcatania.dropboxchallenges.fileEvents.model.FileMoveEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
-import it.gcatania.dropboxchallenges.fileEvents.model.StructuredEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.CreationEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryDeletionEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryMoveEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileContentChangeEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileDeletionEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileMoveEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.StructuredEvent;
 
 import java.util.ArrayList;
 import java.util.List;

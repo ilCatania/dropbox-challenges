@@ -1,4 +1,4 @@
-package it.gcatania.dropboxchallenges.fileEvents.model;
+package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 
 
 /**
