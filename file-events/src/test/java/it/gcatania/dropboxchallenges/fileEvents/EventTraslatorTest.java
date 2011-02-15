@@ -28,41 +28,59 @@ public class EventTraslatorTest
     @Test
     public void testFileAdd()
     {
-        List<RawEvent> raw = make(new RawEvent(RawEventType.ADD, 1, "/file1.txt", "0"));
+        List<RawEvent> raw = make(//
+        new RawEvent(RawEventType.ADD, 1, "/file1.txt", "0"));
         List<StructuredEvent> result = translator.parseMessages(raw);
-        check(result, new CreationEvent(1, "/file1.txt", "0"));
+        check(result, //
+            new CreationEvent(1, "/file1.txt", "0"));
     }
 
     @Test
     public void testFileMultipleAdd()
     {
-        List<RawEvent> raw = make(new RawEvent(RawEventType.ADD, 1, "/file1.txt", "0"), new RawEvent(
-            RawEventType.ADD,
-            2,
-            "/file2.txt",
-            "1"));
+        List<RawEvent> raw = make(//
+            new RawEvent(RawEventType.ADD, 1, "/file1.txt", "0"),
+            new RawEvent(RawEventType.ADD, 2, "/file2.txt", "1"));
         List<StructuredEvent> result = translator.parseMessages(raw);
-        check(result, new CreationEvent(1, "/file1.txt", "0"), new CreationEvent(2, "/file2.txt", "1"));
+        check(result, //
+            new CreationEvent(1, "/file1.txt", "0"),
+            new CreationEvent(2, "/file2.txt", "1"));
     }
 
     @Test
     public void testFileDelete()
     {
-        List<RawEvent> raw = make(new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"));
+        List<RawEvent> raw = make(//
+        new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"));
         List<StructuredEvent> result = translator.parseMessages(raw);
-        check(result, new FileDeletionEvent(1, "/file1.txt", "0"));
+        check(result, //
+            new FileDeletionEvent(1, "/file1.txt", "0"));
     }
 
     @Test
     public void testFileMultipleDelete()
     {
-        List<RawEvent> raw = make(new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"), new RawEvent(
-            RawEventType.DEL,
-            2,
-            "/file2.txt",
-            FileSystemData.DIRECTORY_HASH));
+        List<RawEvent> raw = make(//
+            new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"),
+            new RawEvent(RawEventType.DEL, 2, "/file2.txt", FileSystemData.DIRECTORY_HASH));
         List<StructuredEvent> result = translator.parseMessages(raw);
-        check(result, new FileDeletionEvent(1, "/file1.txt", "0"), new DirectoryDeletionEvent(2, "/file2.txt"));
+        check(result, //
+            new FileDeletionEvent(1, "/file1.txt", "0"),
+            new DirectoryDeletionEvent(2, "/file2.txt"));
+    }
+
+    @Test
+    public void testDeleteFolder()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"),
+            new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"),
+            new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"),
+            new RawEvent(RawEventType.DEL, 2, "/file2.txt", FileSystemData.DIRECTORY_HASH));
+        List<StructuredEvent> result = translator.parseMessages(raw);
+        check(result,//
+            new FileDeletionEvent(1, "/file1.txt", "0"),
+            new DirectoryDeletionEvent(2, "/file2.txt"));
     }
 
     private static List<RawEvent> make(RawEvent... events)
