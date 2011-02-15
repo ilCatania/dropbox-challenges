@@ -7,28 +7,17 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 /**
  * @author gcatania
  */
-public class CreationEvent implements StructuredEvent
+public class CreationEvent extends StructuredEvent
 {
 
-    private final FileSystemData data;
-
-    public CreationEvent(String path, String hash)
+    public CreationEvent(long timeStamp, String path, String hash)
     {
-        data = FileSystemData.from(path, hash);
+        super(timeStamp, FileSystemData.from(path, hash));
     }
 
-    public CreationEvent(RawEvent ev)
+    public CreationEvent(RawEvent delEvent)
     {
-        data = ev.data;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public FileSystemData getData()
-    {
-        return data;
+        super(delEvent.timeStamp, delEvent.data);
     }
 
     /**

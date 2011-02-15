@@ -12,7 +12,8 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
 {
 
-    private final DirectoryData targetData;
+    public final DirectoryData data;
+
     private int movedChildFiles;
 
     private int movedChildDirectories;
@@ -22,13 +23,7 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
         super(delEvent, addEvent);
         movedChildFiles = 0;
         movedChildDirectories = 0;
-        targetData = (DirectoryData) addEvent.data;
-    }
-
-    @Override
-    public DirectoryData getData()
-    {
-        return targetData;
+        data = (DirectoryData) super.data;
     }
 
     public void addMove(FileSystemData deletedData)

@@ -7,23 +7,15 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 /**
  * @author gcatania
  */
-public class FileContentChangeEvent implements FileEvent
+public class FileContentChangeEvent extends StructuredEvent implements FileEvent
 {
 
-    private final FileData data;
+    public final FileData data;
 
     public FileContentChangeEvent(RawEvent delEvent, RawEvent addEvent)
     {
-        data = (FileData) addEvent.data;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public FileData getData()
-    {
-        return data;
+        super(addEvent.timeStamp, addEvent.data);
+        data = (FileData) super.data;
     }
 
 }

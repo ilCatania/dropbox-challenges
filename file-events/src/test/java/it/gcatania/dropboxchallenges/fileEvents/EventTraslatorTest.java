@@ -25,9 +25,9 @@ public class EventTraslatorTest
     @Test
     public void testFileAdd1()
     {
-        List<RawEvent> raw = make(new RawEvent(RawEventType.ADD, 0, "/file1.txt", "0"));
+        List<RawEvent> raw = make(new RawEvent(RawEventType.ADD, 1, "/file1.txt", "0"));
         List<StructuredEvent> result = translator.parseMessages(raw);
-        check(result, new CreationEvent("/file1.txt", "0"));
+        check(result, new CreationEvent(1, "/file1.txt", "0"));
     }
 
     private static List<RawEvent> make(RawEvent... events)

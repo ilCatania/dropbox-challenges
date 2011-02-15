@@ -6,8 +6,43 @@ import it.gcatania.dropboxchallenges.fileEvents.model.FileSystemData;
 /**
  * @author gcatania
  */
-public interface StructuredEvent
+public abstract class StructuredEvent
 {
-    FileSystemData getData();
+
+    public final long timeStamp;
+
+    public final FileSystemData data;
+
+    public StructuredEvent(long timeStamp, FileSystemData data)
+    {
+        this.timeStamp = timeStamp;
+        this.data = data;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode()
+    {
+        int hc = 1;
+        hc += new Long(timeStamp).hashCode() * 3;
+        hc += data.hashCode() * 7;
+        return hc;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof StructuredEvent)
+        {
+            StructuredEvent other = (StructuredEvent) obj;
+            return other.timeStamp == timeStamp && other.data.equals(data);
+        }
+        return false;
+    }
 
 }

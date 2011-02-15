@@ -10,17 +10,14 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 public class FileDeletionEvent extends DeletionEvent implements FileEvent
 {
 
-    private final FileData deletedData;
+    /**
+     * the deleted data
+     */
+    public final FileData data;
 
     public FileDeletionEvent(RawEvent ev)
     {
-        deletedData = (FileData) ev.data;
+        super(ev);
+        data = (FileData) super.data;
     }
-
-    @Override
-    public FileData getData()
-    {
-        return deletedData;
-    }
-
 }

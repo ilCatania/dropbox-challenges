@@ -6,7 +6,7 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 /**
  * @author gcatania
  */
-public abstract class MoveEvent implements StructuredEvent
+public abstract class MoveEvent extends StructuredEvent
 {
 
     public final String fullPathFrom;
@@ -15,6 +15,7 @@ public abstract class MoveEvent implements StructuredEvent
 
     public MoveEvent(RawEvent delEvent, RawEvent addEvent)
     {
+        super(addEvent.timeStamp, addEvent.data);
         fullPathFrom = delEvent.data.fullPath;
         fullPathTo = addEvent.data.fullPath;
     }

@@ -12,7 +12,10 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEvent
 {
 
-    private final DirectoryData data;
+    /**
+     * the deleted data
+     */
+    public final DirectoryData data;
 
     private int deletedChildFiles;
 
@@ -20,15 +23,10 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
 
     public DirectoryDeletionEvent(RawEvent ev)
     {
-        data = (DirectoryData) ev.data;
+        super(ev);
+        data = (DirectoryData) super.data;
         deletedChildFiles = 0;
         deletedChildDirectories = 0;
-    }
-
-    @Override
-    public DirectoryData getData()
-    {
-        return data;
     }
 
     public void addDeletion(FileSystemData deletedData)
