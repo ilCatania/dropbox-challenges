@@ -105,12 +105,16 @@ public class EventTranslator
                     FileData addEvData = (FileData) ev.data;
                     if (addEvData.fullPath.equals(delEv.data.fullPath) && !addEvData.hash.equals(delEv.data.hash))
                     {
-                        lastEv = new FileContentChangeEvent(ev, ev); // TODO change constructor
+                        lastEv = new FileContentChangeEvent(ev);
                         continue;
                     }
                     else if (addEvData.hash.equals(delEv.data.hash) && addEvData.name.equals(delEv.data.name)) // FE4
                     {
-                        lastEv = new FileMoveEvent(ev, ev); // TODO change constructor
+                        lastEv = new FileMoveEvent(
+                            ev.timeStamp,
+                            delEv.data.fullPath,
+                            ev.data.fullPath,
+                            ((FileData) ev.data).hash);
                         continue;
                     }
                 }

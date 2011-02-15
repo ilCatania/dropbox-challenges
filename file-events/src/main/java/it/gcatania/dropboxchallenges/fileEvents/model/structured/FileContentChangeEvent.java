@@ -12,7 +12,7 @@ public class FileContentChangeEvent extends StructuredEvent implements FileEvent
 
     public final FileData data;
 
-    public FileContentChangeEvent(RawEvent delEvent, RawEvent addEvent)
+    public FileContentChangeEvent(RawEvent addEvent)
     {
         super(addEvent.timeStamp, addEvent.data);
         data = (FileData) super.data;
