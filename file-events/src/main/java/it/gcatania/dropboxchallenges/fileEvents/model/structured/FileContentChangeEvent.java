@@ -18,4 +18,14 @@ public class FileContentChangeEvent extends StructuredEvent implements FileEvent
         data = (FileData) super.data;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        // data equality already checked by StructuredEvent.equals()
+        return obj instanceof FileContentChangeEvent && super.equals(obj);
+    }
+
 }

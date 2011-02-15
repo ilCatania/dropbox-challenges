@@ -20,4 +20,14 @@ public class FileMoveEvent extends MoveEvent implements FileEvent
         super(delEvent, addEvent);
         data = (FileData) super.data;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        // data equality already checked by StructuredEvent.equals()
+        return obj instanceof FileMoveEvent && super.equals(obj);
+    }
 }

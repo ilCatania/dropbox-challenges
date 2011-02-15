@@ -41,4 +41,18 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof DirectoryDeletionEvent && super.equals(obj))
+        {
+            DirectoryDeletionEvent other = (DirectoryDeletionEvent) obj;
+            return other.deletedChildFiles == deletedChildFiles
+                && other.deletedChildDirectories == deletedChildDirectories;
+        }
+        return false;
+    }
 }

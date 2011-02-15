@@ -26,11 +26,8 @@ public class CreationEvent extends StructuredEvent
     @Override
     public boolean equals(Object obj)
     {
-        if (obj instanceof CreationEvent)
-        {
-            CreationEvent other = (CreationEvent) obj;
-            return other.data.equals(data);
-        }
-        return false;
+        // data equality already checked by StructuredEvent.equals()
+        return obj instanceof CreationEvent && super.equals(obj);
     }
+
 }

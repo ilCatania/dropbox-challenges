@@ -37,4 +37,19 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
             movedChildDirectories++;
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof DirectoryMoveEvent && super.equals(obj))
+        {
+            DirectoryMoveEvent other = (DirectoryMoveEvent) obj;
+            return other.movedChildFiles == movedChildFiles && other.movedChildDirectories == movedChildDirectories;
+        }
+        return false;
+    }
+
 }
