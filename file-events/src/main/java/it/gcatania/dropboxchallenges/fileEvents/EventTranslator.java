@@ -4,10 +4,11 @@ import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
-import it.gcatania.dropboxchallenges.fileEvents.model.structured.CreationEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryCreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryDeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryMoveEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileContentChangeEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileCreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileDeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileMoveEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.StructuredEvent;
@@ -35,18 +36,7 @@ public class EventTranslator
         while (eventIter.hasNext())
         {
             RawEvent ev = eventIter.next();
-            if (ev.type.equals(RawEventType.ADD))
-            {
-                output.add(new CreationEvent(ev));
-                continue;
-            }
-            lastEv = ev.data instanceof FileData ? new FileDeletionEvent(ev) : new DirectoryDeletionEvent(ev);
-            break;
-        }
-
-        while (eventIter.hasNext())
-        {
-            RawEvent ev = eventIter.next();
+            boolean isDirectory = ev.data instanceof DirectoryData;
             if (ev.type.equals(RawEventType.DEL))
             {
                 // 1) check if folder/file has been deleted due to a deleted parent folder
@@ -88,18 +78,11 @@ public class EventTranslator
                     output.add(lastEv);
                 }
 
-                if (ev.data instanceof FileData)
-                {
-                    lastEv = new FileDeletionEvent(ev);
-                }
-                else
-                {
-                    lastEv = new DirectoryDeletionEvent(ev);
-                }
+                lastEv = isDirectory ? new DirectoryDeletionEvent(ev) : new FileDeletionEvent(ev);
             }
             else
             {
-                if (lastEv instanceof FileDeletionEvent && ev.data instanceof FileData)
+                if (lastEv instanceof FileDeletionEvent && !isDirectory)
                 {
                     FileDeletionEvent delEv = (FileDeletionEvent) lastEv;
                     FileData addEvData = (FileData) ev.data;
@@ -118,7 +101,7 @@ public class EventTranslator
                         continue;
                     }
                 }
-                else if (lastEv instanceof DirectoryDeletionEvent && ev.data instanceof DirectoryData)
+                else if (lastEv instanceof DirectoryDeletionEvent && isDirectory)
                 {
                     DirectoryDeletionEvent delEv = (DirectoryDeletionEvent) lastEv;
                     DirectoryData addEvData = (DirectoryData) ev.data;
@@ -132,7 +115,7 @@ public class EventTranslator
                 {
                     output.add(lastEv);
                 }
-                lastEv = new CreationEvent(ev);
+                lastEv = isDirectory ? new DirectoryCreationEvent(ev) : new FileCreationEvent(ev);
             }
         }
         if (lastEv != null)

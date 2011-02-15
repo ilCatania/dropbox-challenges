@@ -29,12 +29,17 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
         deletedChildDirectories = 0;
     }
 
-    public DirectoryDeletionEvent(long timeStamp, String path)
+    public DirectoryDeletionEvent(long timeStamp, String path, int deletedChildFiles, int deletedChildDirectories)
     {
         super(timeStamp, path, FileSystemData.DIRECTORY_HASH);
         data = (DirectoryData) super.data;
-        deletedChildFiles = 0;
-        deletedChildDirectories = 0;
+        this.deletedChildFiles = deletedChildFiles;
+        this.deletedChildDirectories = deletedChildDirectories;
+    }
+
+    public DirectoryDeletionEvent(long timeStamp, String path)
+    {
+        this(timeStamp, path, 0, 0);
     }
 
     public void addDeletion(FileSystemData deletedData)
