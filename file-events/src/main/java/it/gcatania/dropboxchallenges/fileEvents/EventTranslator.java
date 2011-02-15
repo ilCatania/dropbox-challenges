@@ -124,7 +124,7 @@ public class EventTranslator
                     DirectoryData addEvData = (DirectoryData) ev.data;
                     if (addEvData.name.equals(delEv.data.name) && !addEvData.fullPath.equals(delEv.data.fullPath)) // FE4
                     {
-                        lastEv = new DirectoryMoveEvent(ev, ev);
+                        lastEv = new DirectoryMoveEvent(ev.timeStamp, delEv.data.fullPath, ev.data.fullPath);
                         continue;
                     }
                 }
