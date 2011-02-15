@@ -1,6 +1,5 @@
 package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 
-import it.gcatania.dropboxchallenges.fileEvents.model.FileSystemData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
 
@@ -10,14 +9,14 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 public class CreationEvent extends StructuredEvent
 {
 
-    public CreationEvent(long timeStamp, String path, String hash)
-    {
-        super(timeStamp, FileSystemData.from(path, hash));
-    }
-
     public CreationEvent(RawEvent delEvent)
     {
         super(delEvent.timeStamp, delEvent.data);
+    }
+
+    public CreationEvent(long timeStamp, String path, String hash)
+    {
+        super(timeStamp, path, hash);
     }
 
     /**

@@ -26,6 +26,14 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
         data = (DirectoryData) super.data;
     }
 
+    public DirectoryMoveEvent(long timeStamp, String pathFrom, String pathTo)
+    {
+        super(timeStamp, pathFrom, pathTo, FileSystemData.DIRECTORY_HASH);
+        movedChildFiles = 0;
+        movedChildDirectories = 0;
+        data = (DirectoryData) super.data;
+    }
+
     public void addMove(FileSystemData deletedData)
     {
         if (deletedData instanceof FileData)

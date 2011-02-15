@@ -14,6 +14,11 @@ public abstract class DeletionEvent extends StructuredEvent
         super(delEvent.timeStamp, delEvent.data);
     }
 
+    public DeletionEvent(long timeStamp, String path, String hash)
+    {
+        super(timeStamp, path, hash);
+    }
+
     /**
      * {@inheritDoc}
      */

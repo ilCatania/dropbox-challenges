@@ -21,6 +21,12 @@ public class FileMoveEvent extends MoveEvent implements FileEvent
         data = (FileData) super.data;
     }
 
+    public FileMoveEvent(long timeStamp, String pathFrom, String pathTo, String hash)
+    {
+        super(timeStamp, pathFrom, pathTo, hash);
+        data = (FileData) super.data;
+    }
+
     /**
      * {@inheritDoc}
      */

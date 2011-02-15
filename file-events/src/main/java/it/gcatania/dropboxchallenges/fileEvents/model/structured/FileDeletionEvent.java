@@ -21,6 +21,12 @@ public class FileDeletionEvent extends DeletionEvent implements FileEvent
         data = (FileData) super.data;
     }
 
+    public FileDeletionEvent(long timeStamp, String path, String hash)
+    {
+        super(timeStamp, path, hash);
+        data = (FileData) super.data;
+    }
+
     /**
      * {@inheritDoc}
      */

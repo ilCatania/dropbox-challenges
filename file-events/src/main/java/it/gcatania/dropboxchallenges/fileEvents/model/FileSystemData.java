@@ -23,7 +23,7 @@ public abstract class FileSystemData
 
     public final String[] containingFolders;
 
-    private static String DIRECTORY_HASH = "-";
+    public static String DIRECTORY_HASH = "-";
 
     public FileSystemData(String path)
     {

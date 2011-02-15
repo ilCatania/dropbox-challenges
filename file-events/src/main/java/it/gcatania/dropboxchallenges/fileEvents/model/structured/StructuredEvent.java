@@ -19,6 +19,12 @@ public abstract class StructuredEvent
         this.data = data;
     }
 
+    public StructuredEvent(long timeStamp, String path, String hash)
+    {
+        this.timeStamp = timeStamp;
+        data = FileSystemData.from(path, hash);
+    }
+
     /**
      * {@inheritDoc}
      */

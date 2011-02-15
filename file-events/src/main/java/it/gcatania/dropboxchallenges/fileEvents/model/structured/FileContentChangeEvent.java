@@ -18,6 +18,12 @@ public class FileContentChangeEvent extends StructuredEvent implements FileEvent
         data = (FileData) super.data;
     }
 
+    public FileContentChangeEvent(long timeStamp, String path, String hash)
+    {
+        super(timeStamp, path, hash);
+        data = (FileData) super.data;
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -20,6 +20,13 @@ public abstract class MoveEvent extends StructuredEvent
         fullPathTo = addEvent.data.fullPath;
     }
 
+    public MoveEvent(long timeStamp, String pathFrom, String pathTo, String hash)
+    {
+        super(timeStamp, pathTo, hash);
+        fullPathFrom = pathFrom;
+        fullPathTo = pathTo;
+    }
+
     /**
      * {@inheritDoc}
      */
