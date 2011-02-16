@@ -15,10 +15,14 @@ public abstract class FileSystemData
 
     public final String name;
 
+    public final String parentFolder;
+
     public FileSystemData(String path)
     {
         fullPath = path;
-        name = path.substring(path.lastIndexOf(SEPARATOR) + 1);
+        int lastSeparatorPos = path.lastIndexOf(SEPARATOR);
+        parentFolder = path.substring(0, lastSeparatorPos);
+        name = path.substring(lastSeparatorPos + 1);
     }
 
     /**
