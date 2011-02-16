@@ -34,29 +34,13 @@ public class EventTranslator
             RawEvent ev = eventIter.next();
             if (ev.isDel)
             {
-                // 1) check if folder/file has been deleted due to a deleted parent folder
                 if (lastEv instanceof DirectoryDeletionEvent)
                 {
                     DirectoryDeletionEvent delEv = (DirectoryDeletionEvent) lastEv;
                     if (delEv.data.contains(ev.path))
                     {
-                        delEv.addDeletion(ev.isDirectory);
+                        delEv.addDeletion(ev.path, ev.isDirectory);
                         continue;
-                    }
-                }
-                else if (lastEv instanceof DirectoryMoveEvent)
-                {
-                    // 2) otherwise check if it's a move
-                    DirectoryMoveEvent moveEv = (DirectoryMoveEvent) lastEv;
-                    if (moveEv.fromData.contains(ev.path) && eventIter.hasNext())
-                    {
-                        RawEvent next = eventIter.next();
-                        if (next.isAdd && moveEv.isChildMove(ev, next))
-                        {
-                            moveEv.addMove(ev.isDirectory);
-                            continue;
-                        }
-                        eventIter.previous();
                     }
                 }
 
@@ -69,14 +53,22 @@ public class EventTranslator
             }
             else
             {
+                if (lastEv instanceof DirectoryMoveEvent)
+                {
+                    DirectoryMoveEvent moveEv = (DirectoryMoveEvent) lastEv;
+                    if (moveEv.addMove(ev.path, ev.isDirectory))
+                    {
+                        continue;
+                    }
+                }
                 if (ev.isDirectory)
                 {
                     if (lastEv instanceof DirectoryDeletionEvent)
                     {
                         DirectoryDeletionEvent delEv = (DirectoryDeletionEvent) lastEv;
-                        if (delEv.data.sameName(ev.path) && !ev.path.equals(delEv.data.fullPath)) // FE4
+                        if (delEv.data.sameName(ev.path))
                         {
-                            lastEv = new DirectoryMoveEvent(ev.timeStamp, delEv.data.fullPath, ev.path);
+                            lastEv = new DirectoryMoveEvent(delEv, ev);
                             continue;
                         }
                     }

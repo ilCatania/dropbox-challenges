@@ -5,6 +5,8 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 /**
@@ -19,41 +21,27 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
 
     public final DirectoryData data;
 
-    private int deletedChildFiles;
+    public final Queue<String> deletedChildFiles;
 
-    private int deletedChildDirectories;
+    public final Queue<String> deletedChildDirectories;
 
     public DirectoryDeletionEvent(RawEvent ev)
     {
-        super(ev);
-        data = (DirectoryData) super.data;
-        deletedChildFiles = 0;
-        deletedChildDirectories = 0;
-    }
-
-    public DirectoryDeletionEvent(long timeStamp, String path, int deletedChildFiles, int deletedChildDirectories)
-    {
-        super(timeStamp, path);
-        data = (DirectoryData) super.data;
-        this.deletedChildFiles = deletedChildFiles;
-        this.deletedChildDirectories = deletedChildDirectories;
+        this(ev.timeStamp, ev.path);
     }
 
     public DirectoryDeletionEvent(long timeStamp, String path)
     {
-        this(timeStamp, path, 0, 0);
+        super(timeStamp, path);
+        data = (DirectoryData) super.data;
+        deletedChildFiles = new LinkedList<String>();
+        deletedChildDirectories = new LinkedList<String>();
     }
 
-    public void addDeletion(boolean directory)
+    public void addDeletion(String deletedPath, boolean directory)
     {
-        if (directory)
-        {
-            deletedChildDirectories++;
-        }
-        else
-        {
-            deletedChildFiles++;
-        }
+        Queue<String> q = directory ? deletedChildDirectories : deletedChildFiles;
+        q.add(deletedPath);
     }
 
     /**
@@ -62,7 +50,13 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), data.name, data.parentFolder, deletedChildFiles, deletedChildDirectories);
+        return fmt(
+            FMT,
+            tsFmt(df),
+            data.name,
+            data.parentFolder,
+            deletedChildFiles.size(),
+            deletedChildDirectories.size());
     }
 
     /**
@@ -74,8 +68,8 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
         if (obj instanceof DirectoryDeletionEvent && super.equals(obj))
         {
             DirectoryDeletionEvent other = (DirectoryDeletionEvent) obj;
-            return other.deletedChildFiles == deletedChildFiles
-                && other.deletedChildDirectories == deletedChildDirectories;
+            return other.deletedChildFiles.equals(deletedChildFiles)
+                && other.deletedChildDirectories.equals(deletedChildDirectories);
         }
         return false;
     }

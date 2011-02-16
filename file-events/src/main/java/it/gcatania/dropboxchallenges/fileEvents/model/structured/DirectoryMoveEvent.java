@@ -5,6 +5,7 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.util.Queue;
 import java.util.regex.Pattern;
 
 
@@ -22,60 +23,54 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
 
     public final DirectoryData data;
 
-    private int movedChildFiles;
+    private final Queue<String> childFilesLeftToMove;
 
-    private int movedChildDirectories;
+    private final Queue<String> childDirectoriesLeftToMove;
 
-    private Pattern fromPattern;
+    private final int movedChildDirectories;
 
-    public DirectoryMoveEvent(RawEvent delEvent, RawEvent addEvent)
-    {
-        super(delEvent, addEvent);
-        data = (DirectoryData) super.data;
-        fromData = (DirectoryData) super.fromData;
-        movedChildFiles = 0;
-        movedChildDirectories = 0;
-    }
+    private final int movedChildFiles;
+
+    private Pattern toPattern;
 
     public DirectoryMoveEvent(
         long timeStamp,
         String pathFrom,
         String pathTo,
-        int movedChildFiles,
-        int movedChildDirectories)
+        Queue<String> deletedChildFiles,
+        Queue<String> deletedChildDirectories)
     {
         super(timeStamp, pathFrom, pathTo);
         data = (DirectoryData) super.data;
         fromData = (DirectoryData) super.fromData;
-        this.movedChildFiles = movedChildFiles;
-        this.movedChildDirectories = movedChildDirectories;
+        childFilesLeftToMove = deletedChildFiles;
+        childDirectoriesLeftToMove = deletedChildDirectories;
+        movedChildFiles = deletedChildFiles.size();
+        movedChildDirectories = deletedChildDirectories.size();
+        toPattern = Pattern.compile(fullPathTo, Pattern.LITERAL);
     }
 
-    public DirectoryMoveEvent(long timeStamp, String pathFrom, String pathTo)
+    public DirectoryMoveEvent(DirectoryDeletionEvent delEv, RawEvent firstAddEv)
     {
-        this(timeStamp, pathFrom, pathTo, 0, 0);
+        this(
+            firstAddEv.timeStamp,
+            delEv.data.fullPath,
+            firstAddEv.path,
+            delEv.deletedChildFiles,
+            delEv.deletedChildDirectories);
     }
 
-    public void addMove(boolean directory)
+    public boolean addMove(String path, boolean directory)
     {
-        if (directory)
-        {
-            movedChildDirectories++;
-        }
-        else
-        {
-            movedChildFiles++;
-        }
+        Queue<String> q = directory ? childDirectoriesLeftToMove : childFilesLeftToMove;
+        String pathBeforeMove = toPattern.matcher(path).replaceFirst(fullPathFrom);
+        return pathBeforeMove.equals(q.poll());
     }
 
     public boolean isChildMove(RawEvent delEvent, RawEvent addEvent)
     {
-        if (fromPattern == null)
-        {
-            fromPattern = Pattern.compile(fullPathFrom, Pattern.LITERAL);
-        }
         return delEvent.hash.equals(addEvent.hash)
-            && fromPattern.matcher(delEvent.path).replaceFirst(fullPathTo).equals(addEvent.path);
+            && toPattern.matcher(delEvent.path).replaceFirst(fullPathTo).equals(addEvent.path);
     }
 
     /**
@@ -103,7 +98,10 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
         if (obj instanceof DirectoryMoveEvent && super.equals(obj))
         {
             DirectoryMoveEvent other = (DirectoryMoveEvent) obj;
-            return other.movedChildFiles == movedChildFiles && other.movedChildDirectories == movedChildDirectories;
+            return other.movedChildFiles == movedChildFiles
+                && other.movedChildDirectories == movedChildDirectories
+                && other.childFilesLeftToMove.equals(childFilesLeftToMove)
+                && other.childDirectoriesLeftToMove.equals(childDirectoriesLeftToMove);
         }
         return false;
     }

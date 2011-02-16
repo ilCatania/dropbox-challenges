@@ -15,6 +15,7 @@ import it.gcatania.dropboxchallenges.fileEvents.model.structured.StructuredEvent
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.testng.Assert;
@@ -91,6 +92,10 @@ public class EventTraslatorTest
             new RawEvent(DEL, 10, "/C"),
             new RawEvent(DEL, 14, "/X.txt", "0"));
         List<StructuredEvent> result = translator.translate(raw);
+        DirectoryDeletionEvent delEv = new DirectoryDeletionEvent(8, "/A");
+        delEv.addDeletion("/A/B", true);
+        delEv.addDeletion("/A/Y.txt", false);
+        delEv.addDeletion("/A/Z.txt", false);
         check(result,//
             new DirectoryCreationEvent(1, "/A"),
             new DirectoryCreationEvent(2, "/A/B"),
@@ -99,7 +104,7 @@ public class EventTraslatorTest
             new FileCreationEvent(5, "/A/Y.txt", "0"),
             new FileCreationEvent(6, "/A/Z.txt", "0"),
             new FileCreationEvent(7, "/W.txt", "0"),
-            new DirectoryDeletionEvent(8, "/A", 2, 1),
+            delEv,
             new DirectoryDeletionEvent(10, "/C"),
             new FileDeletionEvent(14, "/X.txt", "0"));
     }
@@ -140,22 +145,37 @@ public class EventTraslatorTest
         List<RawEvent> raw = make(//
             new RawEvent(ADD, 7, "/W.txt", "0"),
             new RawEvent(DEL, 8, "/A/B/C/D"),
-            new RawEvent(ADD, 8, "/A/D"),
             new RawEvent(DEL, 8, "/A/B/C/D/E"),
-            new RawEvent(ADD, 8, "/A/D/E"),
             new RawEvent(DEL, 8, "/A/B/C/D/E/f1.txt", "f1hash"),
-            new RawEvent(ADD, 8, "/A/D/E/f1.txt", "f1hash"),
             new RawEvent(DEL, 8, "/A/B/C/D/f2.txt", "f2hash"),
+            new RawEvent(ADD, 8, "/A/D"),
+            new RawEvent(ADD, 8, "/A/D/E"),
+            new RawEvent(ADD, 8, "/A/D/E/f1.txt", "f1hash"),
             new RawEvent(ADD, 8, "/A/D/f2.txt", "f2hash"),
-            new RawEvent(DEL, 8, "/A/B/C/D/f3.txt", "f3hash"),
-            new RawEvent(ADD, 9, "/A/D/f3.txt", "f3hashNew"),
+            new RawEvent(ADD, 9, "/A/D/f3.txt", "f3hash"),
+            new RawEvent(DEL, 10, "/A/B/C/D/f3.txt", "f3hashNew"),
             new RawEvent(DEL, 14, "/X.txt", "0"));
         List<StructuredEvent> result = translator.translate(raw);
+        LinkedList<String> deletedChildDirectories = new LinkedList<String>(Arrays.asList("/A/B/C/D/E"));
+        LinkedList<String> deletedChildFiles = new LinkedList<String>(Arrays.asList(
+            "/A/B/C/D/E/f1.txt",
+            "/A/B/C/D/E/f2.txt"));
+        DirectoryMoveEvent directoryMoveEvent = new DirectoryMoveEvent(
+            8,
+            "/A/B/C/D",
+            "/A/D",
+            deletedChildFiles,
+            deletedChildDirectories);
+
+        // hacks to avoid polluting production code
+        deletedChildDirectories.clear();
+        deletedChildFiles.clear();
+
         check(result,//
             new FileCreationEvent(7, "/W.txt", "0"),
-            new DirectoryMoveEvent(8, "/A/B/C/D", "/A/D", 2, 1),
-            new FileDeletionEvent(8, "/A/B/C/D/f3.txt", "f3hash"),
-            new FileCreationEvent(9, "/A/D/f3.txt", "f3hashNew"),
+            directoryMoveEvent,
+            new FileCreationEvent(9, "/A/D/f3.txt", "f3hash"),
+            new FileDeletionEvent(10, "/A/B/C/D/f3.txt", "f3hashNew"),
             new FileDeletionEvent(14, "/X.txt", "0"));
     }
 
