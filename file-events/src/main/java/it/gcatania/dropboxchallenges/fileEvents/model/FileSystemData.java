@@ -9,23 +9,16 @@ import java.io.File;
 public abstract class FileSystemData
 {
 
-    protected static final String SEPARATOR = File.separator;
+    public static final String SEPARATOR = File.separator;
 
     public final String fullPath;
 
     public final String name;
 
-    public static String DIRECTORY_HASH = "-";
-
     public FileSystemData(String path)
     {
         fullPath = path;
         name = path.substring(path.lastIndexOf(SEPARATOR) + 1);
-    }
-
-    public static FileSystemData from(String path, String hash)
-    {
-        return DIRECTORY_HASH.equals(hash) ? new DirectoryData(path) : new FileData(path, hash);
     }
 
     /**
@@ -46,9 +39,14 @@ public abstract class FileSystemData
         return fullPath.hashCode();
     }
 
-    public boolean samePathAs(FileSystemData other)
+    public boolean samePath(FileSystemData other)
     {
         return fullPath.equals(other.fullPath);
+    }
+
+    public boolean sameName(String path)
+    {
+        return path.endsWith(SEPARATOR + name);
     }
 
     /**

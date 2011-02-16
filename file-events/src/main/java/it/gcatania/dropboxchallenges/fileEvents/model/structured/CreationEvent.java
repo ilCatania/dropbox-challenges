@@ -11,12 +11,17 @@ public abstract class CreationEvent extends StructuredEvent
 
     public CreationEvent(RawEvent delEvent)
     {
-        super(delEvent.timeStamp, delEvent.data);
+        super(delEvent);
     }
 
-    public CreationEvent(long timeStamp, String path, String hash)
+    public CreationEvent(long timeStamp, String filePath, String hash)
     {
-        super(timeStamp, path, hash);
+        super(timeStamp, filePath, hash);
+    }
+
+    public CreationEvent(long timeStamp, String directoryPath)
+    {
+        super(timeStamp, directoryPath);
     }
 
     /**

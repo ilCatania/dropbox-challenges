@@ -1,6 +1,5 @@
 package it.gcatania.dropboxchallenges.fileEvents;
 
-import it.gcatania.dropboxchallenges.fileEvents.model.FileSystemData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryCreationEvent;
@@ -66,7 +65,7 @@ public class EventTraslatorTest
     {
         List<RawEvent> raw = make(//
             new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"),
-            new RawEvent(RawEventType.DEL, 2, "/file2.txt", FileSystemData.DIRECTORY_HASH));
+            new RawEvent(RawEventType.DEL, 2, "/file2.txt"));
         List<StructuredEvent> result = translator.translate(raw);
         check(result, //
             new FileDeletionEvent(1, "/file1.txt", "0"),
@@ -77,18 +76,18 @@ public class EventTraslatorTest
     public void testDeleteFolder()
     {
         List<RawEvent> raw = make(//
-            new RawEvent(RawEventType.ADD, 1, "/A", FileSystemData.DIRECTORY_HASH),
-            new RawEvent(RawEventType.ADD, 2, "/A/B", FileSystemData.DIRECTORY_HASH),
-            new RawEvent(RawEventType.ADD, 3, "/C", FileSystemData.DIRECTORY_HASH),
+            new RawEvent(RawEventType.ADD, 1, "/A"),
+            new RawEvent(RawEventType.ADD, 2, "/A/B"),
+            new RawEvent(RawEventType.ADD, 3, "/C"),
             new RawEvent(RawEventType.ADD, 4, "/X.txt", "0"),
-            new RawEvent(RawEventType.ADD, 5, "/A/Y.txt", FileSystemData.DIRECTORY_HASH),
+            new RawEvent(RawEventType.ADD, 5, "/A/Y.txt"),
             new RawEvent(RawEventType.ADD, 6, "/A/Z.txt", "0"),
             new RawEvent(RawEventType.ADD, 7, "/W.txt", "0"),
-            new RawEvent(RawEventType.DEL, 8, "/A", FileSystemData.DIRECTORY_HASH),
-            new RawEvent(RawEventType.DEL, 9, "/A/B", FileSystemData.DIRECTORY_HASH),
+            new RawEvent(RawEventType.DEL, 8, "/A"),
+            new RawEvent(RawEventType.DEL, 9, "/A/B"),
             new RawEvent(RawEventType.DEL, 11, "/A/Y.txt", "0"),
             new RawEvent(RawEventType.DEL, 12, "/A/Z.txt", "0"),
-            new RawEvent(RawEventType.DEL, 10, "/C", FileSystemData.DIRECTORY_HASH),
+            new RawEvent(RawEventType.DEL, 10, "/C"),
             new RawEvent(RawEventType.DEL, 14, "/X.txt", "0"));
         List<StructuredEvent> result = translator.translate(raw);
         check(result,//
@@ -139,10 +138,10 @@ public class EventTraslatorTest
     {
         List<RawEvent> raw = make(//
             new RawEvent(RawEventType.ADD, 7, "/W.txt", "0"),
-            new RawEvent(RawEventType.DEL, 8, "/A/B/C/D", FileSystemData.DIRECTORY_HASH),
-            new RawEvent(RawEventType.ADD, 8, "/A/D", FileSystemData.DIRECTORY_HASH),
-            new RawEvent(RawEventType.DEL, 8, "/A/B/C/D/E", FileSystemData.DIRECTORY_HASH),
-            new RawEvent(RawEventType.ADD, 8, "/A/D/E", FileSystemData.DIRECTORY_HASH),
+            new RawEvent(RawEventType.DEL, 8, "/A/B/C/D"),
+            new RawEvent(RawEventType.ADD, 8, "/A/D"),
+            new RawEvent(RawEventType.DEL, 8, "/A/B/C/D/E"),
+            new RawEvent(RawEventType.ADD, 8, "/A/D/E"),
             new RawEvent(RawEventType.DEL, 8, "/A/B/C/D/E/f1.txt", "f1hash"),
             new RawEvent(RawEventType.ADD, 8, "/A/D/E/f1.txt", "f1hash"),
             new RawEvent(RawEventType.DEL, 8, "/A/B/C/D/f2.txt", "f2hash"),

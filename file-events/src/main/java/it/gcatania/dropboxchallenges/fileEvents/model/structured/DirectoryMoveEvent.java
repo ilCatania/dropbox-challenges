@@ -1,8 +1,6 @@
 package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 
 import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
-import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
-import it.gcatania.dropboxchallenges.fileEvents.model.FileSystemData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
 
@@ -11,6 +9,8 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
  */
 public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
 {
+
+    public final DirectoryData fromData;
 
     public final DirectoryData data;
 
@@ -21,9 +21,10 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
     public DirectoryMoveEvent(RawEvent delEvent, RawEvent addEvent)
     {
         super(delEvent, addEvent);
+        data = (DirectoryData) super.data;
+        fromData = (DirectoryData) super.fromData;
         movedChildFiles = 0;
         movedChildDirectories = 0;
-        data = (DirectoryData) super.data;
     }
 
     public DirectoryMoveEvent(
@@ -33,8 +34,9 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
         int movedChildFiles,
         int movedChildDirectories)
     {
-        super(timeStamp, pathFrom, pathTo, FileSystemData.DIRECTORY_HASH);
+        super(timeStamp, pathFrom, pathTo);
         data = (DirectoryData) super.data;
+        fromData = (DirectoryData) super.fromData;
         this.movedChildFiles = movedChildFiles;
         this.movedChildDirectories = movedChildDirectories;
     }
@@ -44,15 +46,15 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
         this(timeStamp, pathFrom, pathTo, 0, 0);
     }
 
-    public void addMove(FileSystemData deletedData)
+    public void addMove(boolean directory)
     {
-        if (deletedData instanceof FileData)
+        if (directory)
         {
-            movedChildFiles++;
+            movedChildDirectories++;
         }
         else
         {
-            movedChildDirectories++;
+            movedChildFiles++;
         }
     }
 

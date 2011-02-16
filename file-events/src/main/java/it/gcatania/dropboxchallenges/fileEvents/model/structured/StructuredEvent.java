@@ -1,6 +1,9 @@
 package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 
+import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
+import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileSystemData;
+import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
 
 /**
@@ -13,16 +16,22 @@ public abstract class StructuredEvent
 
     public final FileSystemData data;
 
-    public StructuredEvent(long timeStamp, FileSystemData data)
+    public StructuredEvent(RawEvent ev)
     {
-        this.timeStamp = timeStamp;
-        this.data = data;
+        timeStamp = ev.timeStamp;
+        data = ev.isDirectory ? new DirectoryData(ev.path) : new FileData(ev.path, ev.hash);
     }
 
-    public StructuredEvent(long timeStamp, String path, String hash)
+    public StructuredEvent(long timeStamp, String filePath, String hash)
     {
         this.timeStamp = timeStamp;
-        data = FileSystemData.from(path, hash);
+        data = new FileData(filePath, hash);
+    }
+
+    public StructuredEvent(long timeStamp, String directoryPath)
+    {
+        this.timeStamp = timeStamp;
+        data = new DirectoryData(directoryPath);
     }
 
     /**

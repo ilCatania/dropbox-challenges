@@ -10,21 +10,22 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 public class FileMoveEvent extends MoveEvent implements FileEvent
 {
 
-    /**
-     * the target data
-     */
+    public final FileData fromData;
+
     public final FileData data;
 
     public FileMoveEvent(RawEvent delEvent, RawEvent addEvent)
     {
         super(delEvent, addEvent);
         data = (FileData) super.data;
+        fromData = (FileData) super.fromData;
     }
 
     public FileMoveEvent(long timeStamp, String pathFrom, String pathTo, String hash)
     {
         super(timeStamp, pathFrom, pathTo, hash);
         data = (FileData) super.data;
+        fromData = (FileData) super.fromData;
     }
 
     /**

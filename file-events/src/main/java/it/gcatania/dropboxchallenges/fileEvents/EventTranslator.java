@@ -1,7 +1,5 @@
 package it.gcatania.dropboxchallenges.fileEvents;
 
-import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
-import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryCreationEvent;
@@ -36,16 +34,15 @@ public class EventTranslator
         while (eventIter.hasNext())
         {
             RawEvent ev = eventIter.next();
-            boolean isDirectory = ev.data instanceof DirectoryData;
             if (ev.type.equals(RawEventType.DEL))
             {
                 // 1) check if folder/file has been deleted due to a deleted parent folder
                 if (lastEv instanceof DirectoryDeletionEvent)
                 {
                     DirectoryDeletionEvent delEv = (DirectoryDeletionEvent) lastEv;
-                    if (ev.data.isContainedIn(delEv.data.fullPath))
+                    if (delEv.data.contains(ev.path))
                     {
-                        delEv.addDeletion(ev.data);
+                        delEv.addDeletion(ev.isDirectory);
                         continue;
                     }
                 }
@@ -53,25 +50,22 @@ public class EventTranslator
                 {
                     // 2) otherwise check if it's a move
                     DirectoryMoveEvent moveEv = (DirectoryMoveEvent) lastEv;
-                    if (ev.data.isContainedIn(moveEv.fullPathFrom))
+                    if (moveEv.fromData.contains(ev.path))
                     {
                         if (eventIter.hasNext())
                         {
                             RawEvent next = eventIter.next();
+                            // TODO move to utility method
                             if (next.type.equals(RawEventType.ADD)
+                                && ev.hash.equals(next.hash)
                                 && Pattern
                                     .compile(moveEv.fullPathFrom)
-                                    .matcher(ev.data.fullPath)
+                                    .matcher(ev.path)
                                     .replaceFirst(moveEv.fullPathTo)
-                                    .equals(next.data.fullPath))
+                                    .equals(next.path))
                             {
-                                if (isDirectory
-                                    || (next.data instanceof FileData && ((FileData) ev.data).hash
-                                        .equals(((FileData) next.data).hash)))
-                                {
-                                    moveEv.addMove(ev.data);
-                                    continue;
-                                }
+                                moveEv.addMove(ev.isDirectory);
+                                continue;
                             }
                             eventIter.previous();
                         }
@@ -83,36 +77,32 @@ public class EventTranslator
                     output.add(lastEv);
                 }
 
-                lastEv = isDirectory ? new DirectoryDeletionEvent(ev) : new FileDeletionEvent(ev);
+                lastEv = ev.isDirectory ? new DirectoryDeletionEvent(ev) : new FileDeletionEvent(ev);
             }
             else
             {
-                if (lastEv instanceof FileDeletionEvent && !isDirectory)
+                if (lastEv instanceof FileDeletionEvent && !ev.isDirectory)
                 {
                     FileDeletionEvent delEv = (FileDeletionEvent) lastEv;
-                    FileData addEvData = (FileData) ev.data;
-                    if (addEvData.fullPath.equals(delEv.data.fullPath) && !addEvData.hash.equals(delEv.data.hash))
+                    boolean sameHash = ev.hash.equals(delEv.data.hash);
+                    if (ev.path.equals(delEv.data.fullPath) && !sameHash)
                     {
                         lastEv = new FileContentChangeEvent(ev);
                         continue;
                     }
-                    else if (addEvData.hash.equals(delEv.data.hash) && addEvData.name.equals(delEv.data.name)) // FE4
+                    else if (sameHash && delEv.data.sameName(ev.path))
                     {
-                        lastEv = new FileMoveEvent(
-                            ev.timeStamp,
-                            delEv.data.fullPath,
-                            ev.data.fullPath,
-                            ((FileData) ev.data).hash);
+                        lastEv = new FileMoveEvent(ev.timeStamp, delEv.data.fullPath, ev.path, ev.hash);
                         continue;
                     }
                 }
-                else if (lastEv instanceof DirectoryDeletionEvent && isDirectory)
+                else if (lastEv instanceof DirectoryDeletionEvent && ev.isDirectory)
                 {
                     DirectoryDeletionEvent delEv = (DirectoryDeletionEvent) lastEv;
-                    DirectoryData addEvData = (DirectoryData) ev.data;
-                    if (addEvData.name.equals(delEv.data.name) && !addEvData.fullPath.equals(delEv.data.fullPath)) // FE4
+                    // DirectoryData addEvData = (DirectoryData) ev.data;
+                    if (delEv.data.sameName(ev.path) && !ev.path.equals(delEv.data.fullPath)) // FE4
                     {
-                        lastEv = new DirectoryMoveEvent(ev.timeStamp, delEv.data.fullPath, ev.data.fullPath);
+                        lastEv = new DirectoryMoveEvent(ev.timeStamp, delEv.data.fullPath, ev.path);
                         continue;
                     }
                 }
@@ -120,7 +110,7 @@ public class EventTranslator
                 {
                     output.add(lastEv);
                 }
-                lastEv = isDirectory ? new DirectoryCreationEvent(ev) : new FileCreationEvent(ev);
+                lastEv = ev.isDirectory ? new DirectoryCreationEvent(ev) : new FileCreationEvent(ev);
             }
         }
         if (lastEv != null)

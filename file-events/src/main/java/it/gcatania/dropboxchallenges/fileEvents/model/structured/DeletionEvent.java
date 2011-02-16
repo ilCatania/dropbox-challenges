@@ -11,12 +11,17 @@ public abstract class DeletionEvent extends StructuredEvent
 
     public DeletionEvent(RawEvent delEvent)
     {
-        super(delEvent.timeStamp, delEvent.data);
+        super(delEvent);
     }
 
-    public DeletionEvent(long timeStamp, String path, String hash)
+    public DeletionEvent(long timeStamp, String filePath, String hash)
     {
-        super(timeStamp, path, hash);
+        super(timeStamp, filePath, hash);
+    }
+
+    public DeletionEvent(long timeStamp, String directoryPath)
+    {
+        super(timeStamp, directoryPath);
     }
 
     /**

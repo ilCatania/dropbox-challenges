@@ -1,8 +1,6 @@
 package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 
 import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
-import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
-import it.gcatania.dropboxchallenges.fileEvents.model.FileSystemData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
 
@@ -31,7 +29,7 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
 
     public DirectoryDeletionEvent(long timeStamp, String path, int deletedChildFiles, int deletedChildDirectories)
     {
-        super(timeStamp, path, FileSystemData.DIRECTORY_HASH);
+        super(timeStamp, path);
         data = (DirectoryData) super.data;
         this.deletedChildFiles = deletedChildFiles;
         this.deletedChildDirectories = deletedChildDirectories;
@@ -42,15 +40,15 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
         this(timeStamp, path, 0, 0);
     }
 
-    public void addDeletion(FileSystemData deletedData)
+    public void addDeletion(boolean directory)
     {
-        if (deletedData instanceof FileData)
+        if (directory)
         {
-            deletedChildFiles++;
+            deletedChildDirectories++;
         }
         else
         {
-            deletedChildDirectories++;
+            deletedChildFiles++;
         }
     }
 
