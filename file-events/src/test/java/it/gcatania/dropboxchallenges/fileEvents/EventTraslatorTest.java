@@ -34,7 +34,7 @@ public class EventTraslatorTest
     {
         List<RawEvent> raw = make(//
         new RawEvent(RawEventType.ADD, 1, "/file1.txt", "0"));
-        List<StructuredEvent> result = translator.parseMessages(raw);
+        List<StructuredEvent> result = translator.translate(raw);
         check(result, //
             new FileCreationEvent(1, "/file1.txt", "0"));
     }
@@ -45,7 +45,7 @@ public class EventTraslatorTest
         List<RawEvent> raw = make(//
             new RawEvent(RawEventType.ADD, 1, "/file1.txt", "0"),
             new RawEvent(RawEventType.ADD, 2, "/file2.txt", "1"));
-        List<StructuredEvent> result = translator.parseMessages(raw);
+        List<StructuredEvent> result = translator.translate(raw);
         check(result, //
             new FileCreationEvent(1, "/file1.txt", "0"),
             new FileCreationEvent(2, "/file2.txt", "1"));
@@ -56,7 +56,7 @@ public class EventTraslatorTest
     {
         List<RawEvent> raw = make(//
         new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"));
-        List<StructuredEvent> result = translator.parseMessages(raw);
+        List<StructuredEvent> result = translator.translate(raw);
         check(result, //
             new FileDeletionEvent(1, "/file1.txt", "0"));
     }
@@ -67,7 +67,7 @@ public class EventTraslatorTest
         List<RawEvent> raw = make(//
             new RawEvent(RawEventType.DEL, 1, "/file1.txt", "0"),
             new RawEvent(RawEventType.DEL, 2, "/file2.txt", FileSystemData.DIRECTORY_HASH));
-        List<StructuredEvent> result = translator.parseMessages(raw);
+        List<StructuredEvent> result = translator.translate(raw);
         check(result, //
             new FileDeletionEvent(1, "/file1.txt", "0"),
             new DirectoryDeletionEvent(2, "/file2.txt"));
@@ -90,7 +90,7 @@ public class EventTraslatorTest
             new RawEvent(RawEventType.DEL, 12, "/A/Z.txt", "0"),
             new RawEvent(RawEventType.DEL, 10, "/C", FileSystemData.DIRECTORY_HASH),
             new RawEvent(RawEventType.DEL, 14, "/X.txt", "0"));
-        List<StructuredEvent> result = translator.parseMessages(raw);
+        List<StructuredEvent> result = translator.translate(raw);
         check(result,//
             new DirectoryCreationEvent(1, "/A"),
             new DirectoryCreationEvent(2, "/A/B"),
@@ -112,7 +112,7 @@ public class EventTraslatorTest
             new RawEvent(RawEventType.DEL, 8, "/D/E/file.txt", "0"),
             new RawEvent(RawEventType.ADD, 9, "/D/E/file.txt", "1"),
             new RawEvent(RawEventType.DEL, 14, "/X.txt", "0"));
-        List<StructuredEvent> result = translator.parseMessages(raw);
+        List<StructuredEvent> result = translator.translate(raw);
         check(result,//
             new FileCreationEvent(7, "/W.txt", "0"),
             new FileContentChangeEvent(9, "/D/E/file.txt", "1"),
@@ -127,7 +127,7 @@ public class EventTraslatorTest
             new RawEvent(RawEventType.DEL, 8, "/D/E/file.txt", "33"),
             new RawEvent(RawEventType.ADD, 9, "/file.txt", "33"),
             new RawEvent(RawEventType.DEL, 14, "/X.txt", "0"));
-        List<StructuredEvent> result = translator.parseMessages(raw);
+        List<StructuredEvent> result = translator.translate(raw);
         check(result,//
             new FileCreationEvent(7, "/W.txt", "0"),
             new FileMoveEvent(9, "/D/E/file.txt", "/file.txt", "33"),
@@ -150,7 +150,7 @@ public class EventTraslatorTest
             new RawEvent(RawEventType.DEL, 8, "/A/B/C/D/f3.txt", "f3hash"),
             new RawEvent(RawEventType.ADD, 9, "/A/D/f3.txt", "f3hashNew"),
             new RawEvent(RawEventType.DEL, 14, "/X.txt", "0"));
-        List<StructuredEvent> result = translator.parseMessages(raw);
+        List<StructuredEvent> result = translator.translate(raw);
         check(result,//
             new FileCreationEvent(7, "/W.txt", "0"),
             new DirectoryMoveEvent(8, "/A/B/C/D", "/A/D", 2, 1),

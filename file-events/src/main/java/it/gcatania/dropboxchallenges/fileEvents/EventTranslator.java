@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 public class EventTranslator
 {
 
-    public List<StructuredEvent> parseMessages(List<RawEvent> events)
+    public List<StructuredEvent> translate(List<RawEvent> events)
     {
 
         List<StructuredEvent> output = new ArrayList<StructuredEvent>();
