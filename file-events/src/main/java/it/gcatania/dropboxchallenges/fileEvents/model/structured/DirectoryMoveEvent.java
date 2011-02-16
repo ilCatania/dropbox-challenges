@@ -3,6 +3,8 @@ package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
+import java.util.regex.Pattern;
+
 
 /**
  * @author gcatania
@@ -17,6 +19,8 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
     private int movedChildFiles;
 
     private int movedChildDirectories;
+
+    private Pattern fromPattern;
 
     public DirectoryMoveEvent(RawEvent delEvent, RawEvent addEvent)
     {
@@ -56,6 +60,16 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
         {
             movedChildFiles++;
         }
+    }
+
+    public boolean isChildMove(RawEvent delEvent, RawEvent addEvent)
+    {
+        if (fromPattern == null)
+        {
+            fromPattern = Pattern.compile(fullPathFrom, Pattern.LITERAL);
+        }
+        return delEvent.hash.equals(addEvent.hash)
+            && fromPattern.matcher(delEvent.path).replaceFirst(fullPathTo).equals(addEvent.path);
     }
 
     /**

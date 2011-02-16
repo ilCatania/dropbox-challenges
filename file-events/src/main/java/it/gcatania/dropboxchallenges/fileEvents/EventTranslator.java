@@ -14,7 +14,6 @@ import it.gcatania.dropboxchallenges.fileEvents.model.structured.StructuredEvent
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.regex.Pattern;
 
 
 /**
@@ -55,14 +54,7 @@ public class EventTranslator
                         if (eventIter.hasNext())
                         {
                             RawEvent next = eventIter.next();
-                            // TODO move to utility method
-                            if (next.type.equals(RawEventType.ADD)
-                                && ev.hash.equals(next.hash)
-                                && Pattern
-                                    .compile(moveEv.fullPathFrom)
-                                    .matcher(ev.path)
-                                    .replaceFirst(moveEv.fullPathTo)
-                                    .equals(next.path))
+                            if (next.type.equals(RawEventType.ADD) && moveEv.isChildMove(ev, next))
                             {
                                 moveEv.addMove(ev.isDirectory);
                                 continue;
