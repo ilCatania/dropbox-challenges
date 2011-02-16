@@ -1,7 +1,6 @@
 package it.gcatania.dropboxchallenges.fileEvents;
 
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
-import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryCreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryDeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryMoveEvent;
@@ -33,7 +32,7 @@ public class EventTranslator
         while (eventIter.hasNext())
         {
             RawEvent ev = eventIter.next();
-            if (ev.type.equals(RawEventType.DEL))
+            if (ev.isDel)
             {
                 // 1) check if folder/file has been deleted due to a deleted parent folder
                 if (lastEv instanceof DirectoryDeletionEvent)
@@ -54,7 +53,7 @@ public class EventTranslator
                         if (eventIter.hasNext())
                         {
                             RawEvent next = eventIter.next();
-                            if (next.type.equals(RawEventType.ADD) && moveEv.isChildMove(ev, next))
+                            if (next.isAdd && moveEv.isChildMove(ev, next))
                             {
                                 moveEv.addMove(ev.isDirectory);
                                 continue;

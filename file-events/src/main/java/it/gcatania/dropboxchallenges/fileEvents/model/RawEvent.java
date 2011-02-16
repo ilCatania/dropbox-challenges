@@ -8,8 +8,6 @@ public class RawEvent
 
     public static String DIRECTORY_HASH = "-";
 
-    public final RawEventType type;
-
     public final long timeStamp;
 
     public final String path;
@@ -18,6 +16,10 @@ public class RawEvent
 
     public final boolean isDirectory;
 
+    public final boolean isAdd;
+
+    public final boolean isDel;
+
     /**
      * @param type the raw event type
      * @param timeStamp the event time stamp
@@ -25,11 +27,12 @@ public class RawEvent
      */
     public RawEvent(RawEventType type, long timeStamp, String path, String hash)
     {
-        this.type = type;
         this.timeStamp = timeStamp;
         this.path = path;
         this.hash = hash;
         isDirectory = hash.equals(DIRECTORY_HASH);
+        isAdd = RawEventType.ADD.equals(type);
+        isDel = !isAdd;
     }
 
     /**
@@ -40,11 +43,11 @@ public class RawEvent
      */
     public RawEvent(RawEventType type, long timeStamp, String path)
     {
-        this.type = type;
         this.timeStamp = timeStamp;
         this.path = path;
         hash = DIRECTORY_HASH = "-";
         isDirectory = true;
+        isAdd = RawEventType.ADD.equals(type);
+        isDel = !isAdd;
     }
-
 }
