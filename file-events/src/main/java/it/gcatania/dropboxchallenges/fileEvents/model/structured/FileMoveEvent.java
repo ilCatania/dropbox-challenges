@@ -3,12 +3,18 @@ package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
+import java.text.DateFormat;
+import java.text.MessageFormat;
+
 
 /**
  * @author gcatania
  */
 public class FileMoveEvent extends MoveEvent implements FileEvent
 {
+
+    // warning: not thread safe
+    private static final MessageFormat FMT = new MessageFormat("{0}: file {0} moved from {1} to {2}.");
 
     public final FileData fromData;
 
@@ -26,6 +32,15 @@ public class FileMoveEvent extends MoveEvent implements FileEvent
         super(timeStamp, pathFrom, pathTo, hash);
         data = (FileData) super.data;
         fromData = (FileData) super.fromData;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String display(DateFormat df)
+    {
+        return fmt(FMT, tsFmt(df), data.name, fromData.parentFolder, data.parentFolder);
     }
 
     /**

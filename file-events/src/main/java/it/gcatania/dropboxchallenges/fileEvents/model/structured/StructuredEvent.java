@@ -5,6 +5,10 @@ import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
 import it.gcatania.dropboxchallenges.fileEvents.model.FileSystemData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.util.Date;
+
 
 /**
  * @author gcatania
@@ -60,4 +64,15 @@ public abstract class StructuredEvent
         return false;
     }
 
+    public abstract String display(DateFormat df);
+
+    protected final String fmt(MessageFormat format, Object... args)
+    {
+        return format.format(args);
+    }
+
+    protected final String tsFmt(DateFormat df)
+    {
+        return df.format(new Date(timeStamp));
+    }
 }

@@ -3,6 +3,8 @@ package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
+import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.util.regex.Pattern;
 
 
@@ -11,6 +13,10 @@ import java.util.regex.Pattern;
  */
 public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
 {
+
+    // warning: not thread safe
+    private static final MessageFormat FMT = new MessageFormat(
+        "{0}: directory {1} moved from {2} to {3} (with {4} contained files and {5} contained directories).");
 
     public final DirectoryData fromData;
 
@@ -70,6 +76,22 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
         }
         return delEvent.hash.equals(addEvent.hash)
             && fromPattern.matcher(delEvent.path).replaceFirst(fullPathTo).equals(addEvent.path);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String display(DateFormat df)
+    {
+        return fmt(
+            FMT,
+            tsFmt(df),
+            data.name,
+            fromData.parentFolder,
+            data.parentFolder,
+            movedChildFiles,
+            movedChildDirectories);
     }
 
     /**

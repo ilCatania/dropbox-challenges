@@ -3,6 +3,9 @@ package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 import it.gcatania.dropboxchallenges.fileEvents.model.DirectoryData;
 import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
+import java.text.DateFormat;
+import java.text.MessageFormat;
+
 
 /**
  * @author gcatania
@@ -10,9 +13,10 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEvent
 {
 
-    /**
-     * the deleted data
-     */
+    // warning: not thread safe
+    private static final MessageFormat FMT = new MessageFormat(
+        "{0}: directory {1} deleted from {2} (with {3} contained files and {4} contained directories).");
+
     public final DirectoryData data;
 
     private int deletedChildFiles;
@@ -50,6 +54,15 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
         {
             deletedChildFiles++;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String display(DateFormat df)
+    {
+        return fmt(FMT, tsFmt(df), data.name, data.parentFolder, deletedChildFiles, deletedChildDirectories);
     }
 
     /**
