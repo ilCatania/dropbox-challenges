@@ -65,8 +65,13 @@ public class EventTranslator
                                     .replaceFirst(moveEv.fullPathTo)
                                     .equals(next.data.fullPath))
                             {
-                                moveEv.addMove(ev.data);
-                                continue;
+                                if (isDirectory
+                                    || (next.data instanceof FileData && ((FileData) ev.data).hash
+                                        .equals(((FileData) next.data).hash)))
+                                {
+                                    moveEv.addMove(ev.data);
+                                    continue;
+                                }
                             }
                             eventIter.previous();
                         }
