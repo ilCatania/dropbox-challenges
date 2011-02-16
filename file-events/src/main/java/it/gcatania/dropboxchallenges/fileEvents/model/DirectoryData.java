@@ -11,29 +11,24 @@ public class DirectoryData extends FileSystemData
         super(path);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean sameType(FileSystemData other)
-    {
-        return other instanceof DirectoryData;
-    }
-
     public boolean contains(FileSystemData other)
     {
-        if (pathComponents.length > other.pathComponents.length)
+        if (equals(other))
         {
-            return false;
+            return true;
         }
-        for (int i = 0; i < pathComponents.length; i++)
+        if (other.fullPath.startsWith(fullPath))
         {
-            if (!pathComponents[i].equals(other.pathComponents[i]))
+            int pathLength = fullPath.length();
+            if (other.fullPath.length() == pathLength)
             {
-                return false;
+                return true;
             }
+            // must ensure that there is a separator at the end of the containing path. For example, /dir contains
+            // /dir/subdir but does not contain /directory
+            String candidateSeparator = other.fullPath.substring(pathLength, pathLength + SEPARATOR.length());
+            return candidateSeparator.equals(SEPARATOR);
         }
-        return true;
+        return false;
     }
-
 }

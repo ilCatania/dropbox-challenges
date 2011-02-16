@@ -18,15 +18,6 @@ public class FileData extends FileSystemData
      * {@inheritDoc}
      */
     @Override
-    public boolean sameType(FileSystemData other)
-    {
-        return other instanceof FileData;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof FileData && super.equals(obj))

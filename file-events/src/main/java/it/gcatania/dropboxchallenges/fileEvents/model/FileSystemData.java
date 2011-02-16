@@ -1,8 +1,6 @@
 package it.gcatania.dropboxchallenges.fileEvents.model;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.regex.Pattern;
 
 
 /**
@@ -11,27 +9,18 @@ import java.util.regex.Pattern;
 public abstract class FileSystemData
 {
 
-    private static final String SEPARATOR = File.separator;
-
-    private static final Pattern SEP_PATTERN = Pattern.compile(SEPARATOR);
+    protected static final String SEPARATOR = File.separator;
 
     public final String fullPath;
 
-    public final String[] pathComponents;
-
     public final String name;
-
-    public final String[] containingFolders;
 
     public static String DIRECTORY_HASH = "-";
 
     public FileSystemData(String path)
     {
         fullPath = path;
-        pathComponents = SEP_PATTERN.split(path);
-        int numParts = pathComponents.length;
-        containingFolders = Arrays.copyOf(pathComponents, numParts - 1);
-        name = pathComponents[numParts - 1];
+        name = path.substring(path.lastIndexOf(SEPARATOR) + 1);
     }
 
     public static FileSystemData from(String path, String hash)
@@ -47,12 +36,6 @@ public abstract class FileSystemData
     {
         return fullPath.startsWith(path);
     }
-
-    /**
-     * @param other another file system data
-     * @return true if this file system data and the input one have the same type, false otherwise
-     */
-    public abstract boolean sameType(FileSystemData other);
 
     /**
      * {@inheritDoc}
