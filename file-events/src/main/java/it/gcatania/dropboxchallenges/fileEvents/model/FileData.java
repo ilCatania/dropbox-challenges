@@ -1,7 +1,5 @@
 package it.gcatania.dropboxchallenges.fileEvents.model;
 
-
-
 /**
  * @author gcatania
  */
@@ -31,10 +29,10 @@ public class FileData extends FileSystemData
     @Override
     public boolean equals(Object obj)
     {
-        if (obj instanceof FileData)
+        if (obj instanceof FileData && super.equals(obj))
         {
             FileData other = (FileData) obj;
-            return hash.equals(other.hash) && super.equals(obj);
+            return hash.equals(other.hash);
         }
         return false;
     }
