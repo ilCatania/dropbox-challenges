@@ -11,7 +11,8 @@ FE7. when a non-empty folder is moved, the order of deletion events matches the 
 FE8. multiple raw events that compose a single structured event (e.g. a move) are not required to have the exact same timestamp
 FE9. all file paths start with a single slash and cannot contain two consecutive slashes
 FE10. when a folder is created with the same name of a folder currently being deleted, it is considered as being moved
-FE11. (none)
+FE11. a folder cannot be moved inside one of its subfolders
+FE12. all events related to a single structured action must be available at the time of processing
 
 Possible structured event types:
 file/folder creation
