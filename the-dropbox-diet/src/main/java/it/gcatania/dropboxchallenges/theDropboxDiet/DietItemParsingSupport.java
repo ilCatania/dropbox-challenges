@@ -24,8 +24,9 @@ public class DietItemParsingSupport extends ParsingSupport<DietItem>
         {
             throw new IllegalArgumentException("cannot extract diet item from: " + objectLine);
         }
-        // TODO Auto-generated method stub
-        return null;
+        String itemName = itemStrings[0];
+        int cals = Integer.parseInt(itemStrings[1]);
+        return new DietItem(itemName, cals);
     }
 
 }
