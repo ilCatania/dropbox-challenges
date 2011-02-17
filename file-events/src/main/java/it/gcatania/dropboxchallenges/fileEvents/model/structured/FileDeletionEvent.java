@@ -16,21 +16,17 @@ public class FileDeletionEvent extends DeletionEvent implements FileEvent
     // warning: not thread safe
     private static final MessageFormat FMT = new MessageFormat("{0}: file {1} created in {2}.");
 
-    /**
-     * the deleted data
-     */
-    public final FileData data;
+    public final FileData deletedData;
 
     public FileDeletionEvent(RawEvent ev)
     {
-        super(ev);
-        data = (FileData) super.data;
+        this(ev.timeStamp, ev.path, ev.hash);
     }
 
     public FileDeletionEvent(long timeStamp, String path, String hash)
     {
-        super(timeStamp, path, hash);
-        data = (FileData) super.data;
+        super(timeStamp);
+        deletedData = new FileData(path, hash);
     }
 
     /**
@@ -39,7 +35,7 @@ public class FileDeletionEvent extends DeletionEvent implements FileEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), data.name, data.parentFolder);
+        return fmt(FMT, tsFmt(df), deletedData.name, deletedData.parentFolder);
     }
 
     /**
@@ -49,6 +45,11 @@ public class FileDeletionEvent extends DeletionEvent implements FileEvent
     public boolean equals(Object obj)
     {
         // data equality already checked by StructuredEvent.equals()
-        return obj instanceof FileDeletionEvent && super.equals(obj);
+        if (obj instanceof FileDeletionEvent && super.equals(obj))
+        {
+            FileDeletionEvent other = (FileDeletionEvent) obj;
+            return other.deletedData.equals(deletedData);
+        }
+        return false;
     }
 }

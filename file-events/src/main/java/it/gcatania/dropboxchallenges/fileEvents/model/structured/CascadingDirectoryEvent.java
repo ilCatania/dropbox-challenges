@@ -23,7 +23,7 @@ public class CascadingDirectoryEvent extends StructuredEvent implements Director
     /**
      * the data this event is initialized with upon first deletion
      */
-    public final DirectoryData data;
+    public final DirectoryData parentDelData;
 
     private final Queue<RawEvent> childDeleteEvents;
 
@@ -61,8 +61,8 @@ public class CascadingDirectoryEvent extends StructuredEvent implements Director
 
     public CascadingDirectoryEvent(RawEvent ev)
     {
-        super(ev);
-        data = (DirectoryData) super.data;
+        super(ev.timeStamp);
+        parentDelData = new DirectoryData(ev.path);
         childDeleteEvents = new LinkedList<RawEvent>();
         childCreateEvents = new LinkedList<RawEvent>();
         adding = false;
@@ -70,7 +70,7 @@ public class CascadingDirectoryEvent extends StructuredEvent implements Director
 
     public boolean addDeletion(RawEvent delEv)
     {
-        if (adding || !data.contains(delEv.path))
+        if (adding || !parentDelData.contains(delEv.path))
         {
             return false;
         }
@@ -91,7 +91,7 @@ public class CascadingDirectoryEvent extends StructuredEvent implements Director
         if (!adding)
         {
             adding = true;
-            pathFrom = data.fullPath;
+            pathFrom = parentDelData.fullPath;
             pathTo = addEv.path;
             // TODO throw an exception if pathTo contains pathFrom
             fromPattern = Pattern.compile(pathFrom, Pattern.LITERAL);
@@ -128,7 +128,7 @@ public class CascadingDirectoryEvent extends StructuredEvent implements Director
                 numMaxDirs));
         }
         List<StructuredEvent> output = new ArrayList<StructuredEvent>(2 + childCreateEvents.size());
-        output.add(new DirectoryDeletionEvent(timeStamp, data.fullPath, numMaxFiles, numMaxDirs));
+        output.add(new DirectoryDeletionEvent(timeStamp, parentDelData.fullPath, numMaxFiles, numMaxDirs));
         if (adding)
         {
             output.add(new DirectoryCreationEvent(timeStamp, pathTo));

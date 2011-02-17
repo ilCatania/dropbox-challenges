@@ -18,7 +18,7 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
 
     public final DirectoryData fromData;
 
-    public final DirectoryData data;
+    public final DirectoryData toData;
 
     private final int movedChildFiles;
 
@@ -32,8 +32,8 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
         int movedChildDirectories)
     {
         super(timeStamp, pathFrom, pathTo);
-        data = (DirectoryData) super.data;
-        fromData = (DirectoryData) super.fromData;
+        fromData = new DirectoryData(pathFrom);
+        toData = new DirectoryData(pathTo);
         this.movedChildFiles = movedChildFiles;
         this.movedChildDirectories = movedChildDirectories;
     }
@@ -47,9 +47,9 @@ public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
         return fmt(
             FMT,
             tsFmt(df),
-            data.name,
+            toData.name,
             fromData.parentFolder,
-            data.parentFolder,
+            toData.parentFolder,
             movedChildFiles,
             movedChildDirectories);
     }

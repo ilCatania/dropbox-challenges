@@ -16,18 +16,17 @@ public class FileContentChangeEvent extends StructuredEvent implements FileEvent
     // warning: not thread safe
     private static final MessageFormat FMT = new MessageFormat("{0}: file {1} in {2} modified.");
 
-    public final FileData data;
-
-    public FileContentChangeEvent(RawEvent addEvent)
-    {
-        super(addEvent);
-        data = (FileData) super.data;
-    }
+    public final FileData modifiedData;
 
     public FileContentChangeEvent(long timeStamp, String path, String hash)
     {
-        super(timeStamp, path, hash);
-        data = (FileData) super.data;
+        super(timeStamp);
+        modifiedData = new FileData(path, hash);
+    }
+
+    public FileContentChangeEvent(RawEvent addEv)
+    {
+        this(addEv.timeStamp, addEv.path, addEv.hash);
     }
 
     /**
@@ -36,7 +35,7 @@ public class FileContentChangeEvent extends StructuredEvent implements FileEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), data.name, data.parentFolder);
+        return fmt(FMT, tsFmt(df), modifiedData.name, modifiedData.parentFolder);
     }
 
     /**
@@ -45,8 +44,12 @@ public class FileContentChangeEvent extends StructuredEvent implements FileEvent
     @Override
     public boolean equals(Object obj)
     {
-        // data equality already checked by StructuredEvent.equals()
-        return obj instanceof FileContentChangeEvent && super.equals(obj);
+        if (obj instanceof FileContentChangeEvent && super.equals(obj))
+        {
+            FileContentChangeEvent other = (FileContentChangeEvent) obj;
+            return other.modifiedData.equals(modifiedData);
+        }
+        return false;
     }
 
 }

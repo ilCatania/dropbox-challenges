@@ -76,15 +76,15 @@ public class EventTranslator
                 else if (lastEv instanceof FileDeletionEvent)
                 {
                     FileDeletionEvent delEv = (FileDeletionEvent) lastEv;
-                    if (ev.hash.equals(delEv.data.hash))
+                    if (ev.hash.equals(delEv.deletedData.hash))
                     {
-                        if (delEv.data.sameName(ev.path))
+                        if (delEv.deletedData.sameName(ev.path))
                         {
-                            lastEv = new FileMoveEvent(ev.timeStamp, delEv.data.fullPath, ev.path, ev.hash);
+                            lastEv = new FileMoveEvent(ev.timeStamp, delEv.deletedData.fullPath, ev.path, ev.hash);
                             continue;
                         }
                     }
-                    else if (ev.path.equals(delEv.data.fullPath))
+                    else if (ev.path.equals(delEv.deletedData.fullPath))
                     {
                         lastEv = new FileContentChangeEvent(ev);
                         continue;

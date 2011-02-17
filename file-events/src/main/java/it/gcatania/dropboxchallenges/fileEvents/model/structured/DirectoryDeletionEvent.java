@@ -24,8 +24,8 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
 
     public DirectoryDeletionEvent(long timeStamp, String path, int deletedChildFiles, int deletedChildDirectories)
     {
-        super(timeStamp, path);
-        data = (DirectoryData) super.data;
+        super(timeStamp);
+        data = new DirectoryData(path);
         this.deletedChildFiles = deletedChildFiles;
         this.deletedChildDirectories = deletedChildDirectories;
     }
@@ -48,7 +48,8 @@ public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEv
         if (obj instanceof DirectoryDeletionEvent && super.equals(obj))
         {
             DirectoryDeletionEvent other = (DirectoryDeletionEvent) obj;
-            return other.deletedChildFiles == deletedChildFiles
+            return other.data.equals(data)
+                && other.deletedChildFiles == deletedChildFiles
                 && other.deletedChildDirectories == deletedChildDirectories;
         }
         return false;
