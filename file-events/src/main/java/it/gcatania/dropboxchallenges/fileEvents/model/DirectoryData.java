@@ -1,6 +1,7 @@
 package it.gcatania.dropboxchallenges.fileEvents.model;
 
 /**
+ * wrapper for directory data.
  * @author gcatania
  */
 public class DirectoryData extends FileSystemData

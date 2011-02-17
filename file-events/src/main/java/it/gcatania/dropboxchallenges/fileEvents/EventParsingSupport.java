@@ -6,6 +6,7 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEventType;
 
 
 /**
+ * helper class for parsing raw events.
  * @author gcatania
  */
 public class EventParsingSupport extends ParsingSupport<RawEvent>

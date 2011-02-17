@@ -1,11 +1,15 @@
 package it.gcatania.dropboxchallenges.fileEvents.model;
 
 /**
+ * wrapper for file data.
  * @author gcatania
  */
 public class FileData extends FileSystemData
 {
 
+    /**
+     * the file hash.
+     */
     public final String hash;
 
     public FileData(String path, String hash)

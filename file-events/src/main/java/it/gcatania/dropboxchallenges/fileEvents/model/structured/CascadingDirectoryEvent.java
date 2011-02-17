@@ -13,27 +13,50 @@ import java.util.regex.Pattern;
 
 
 /**
+ * an internal structured event type used as a temporary container for event sequences that do not identify a structured
+ * event type yet.
  * @author gcatania
  */
 public class CascadingDirectoryEvent extends StructuredEvent implements DirectoryEvent
 {
 
+    /**
+     * the data this event is initialized with upon first deletion
+     */
     public final DirectoryData data;
 
     private final Queue<RawEvent> childDeleteEvents;
 
     private final Queue<RawEvent> childCreateEvents;
 
+    /**
+     * the number of directories marked for deletion received by this event
+     */
     private int numMaxDirs;
 
+    /**
+     * the number of files marked for deletion received by this event
+     */
     private int numMaxFiles;
 
+    /**
+     * the current add state: once an add event is added, no more delete events can be added
+     */
     private boolean adding;
 
+    /**
+     * compiled pattern used to detect path moves is cached here for performance
+     */
     private Pattern fromPattern;
 
+    /**
+     * populated on first add, the candidate path we are moving from
+     */
     private String pathFrom;
 
+    /**
+     * populated on first add, the candidate path we are moving to
+     */
     private String pathTo;
 
     public CascadingDirectoryEvent(RawEvent ev)

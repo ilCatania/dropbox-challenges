@@ -1,12 +1,16 @@
 package it.gcatania.dropboxchallenges.fileEvents.model;
 
 /**
+ * thin wrapper for raw filesystem events.
  * @author gcatania
  */
 public class RawEvent
 {
 
-    public static String DIRECTORY_HASH = "-";
+    /**
+     * the hash value that identified directories
+     */
+    private static String DIRECTORY_HASH = "-";
 
     public final long timeStamp;
 

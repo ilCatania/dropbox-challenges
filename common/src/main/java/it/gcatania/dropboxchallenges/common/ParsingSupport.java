@@ -11,6 +11,7 @@ import java.util.List;
 
 
 /**
+ * base helper class to parse a list of objects either from standard input or from a file, one object per line.
  * @param <T> the type of the model objects parsed by this class
  * @author gcatania
  */
@@ -18,7 +19,7 @@ public abstract class ParsingSupport<T>
 {
 
     /**
-     * parses an object from an input character string
+     * parses an object from an input character string.
      * @param objectLine the line to parse from
      * @return the parsed object
      * @throws IllegalArgumentException if parse fails
@@ -26,7 +27,7 @@ public abstract class ParsingSupport<T>
     protected abstract T getObject(String objectLine) throws IllegalArgumentException;
 
     /**
-     * parse a list of objects from an input reader, one object per line
+     * parse a list of objects from an input reader, one object per line.
      * @param input the input stream to read from
      * @return the parsed objects
      */

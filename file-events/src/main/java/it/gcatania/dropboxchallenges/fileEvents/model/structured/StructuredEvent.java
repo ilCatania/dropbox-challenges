@@ -11,6 +11,7 @@ import java.util.Date;
 
 
 /**
+ * Base class in the hierarchy of structured events.
  * @author gcatania
  */
 public abstract class StructuredEvent

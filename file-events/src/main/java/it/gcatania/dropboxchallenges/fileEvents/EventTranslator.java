@@ -15,11 +15,17 @@ import java.util.ListIterator;
 
 
 /**
+ * main engine class for event translation.
  * @author gcatania
  */
 public class EventTranslator
 {
 
+    /**
+     * translates a list of raw events into structured ones.
+     * @param events the raw events
+     * @return the structured ones
+     */
     public List<StructuredEvent> translate(List<RawEvent> events)
     {
 

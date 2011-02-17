@@ -4,17 +4,30 @@ import java.io.File;
 
 
 /**
+ * abstract wrapper class for file system paths.
  * @author gcatania
  */
 public abstract class FileSystemData
 {
 
+    /**
+     * file system separator.
+     */
     public static final String SEPARATOR = File.separator;
 
+    /**
+     * the full path of the filesystem object.
+     */
     public final String fullPath;
 
+    /**
+     * the name of the filesystem object.
+     */
     public final String name;
 
+    /**
+     * the full path of the filesistem object up to the parent folder.
+     */
     public final String parentFolder;
 
     public FileSystemData(String path)
