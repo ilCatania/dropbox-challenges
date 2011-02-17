@@ -11,7 +11,6 @@ import it.gcatania.dropboxchallenges.fileEvents.model.structured.StructuredEvent
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 
 /**
@@ -28,75 +27,12 @@ public class EventTranslator
      */
     public List<StructuredEvent> translate(List<RawEvent> events)
     {
-
         List<StructuredEvent> output = new ArrayList<StructuredEvent>();
-
-        ListIterator<RawEvent> eventIter = events.listIterator();
         StructuredEvent lastEv = null;
 
-        while (eventIter.hasNext())
+        for (RawEvent ev : events)
         {
-            RawEvent ev = eventIter.next();
-            if (ev.isDel)
-            {
-                if (lastEv instanceof CascadingDirectoryEvent)
-                {
-                    CascadingDirectoryEvent cEv = (CascadingDirectoryEvent) lastEv;
-                    if (cEv.addDeletion(ev))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        output.addAll(cEv.getEvents());
-                        lastEv = null;
-                    }
-                }
-                if (lastEv != null)
-                {
-                    output.add(lastEv);
-                }
-                lastEv = ev.isDirectory ? new CascadingDirectoryEvent(ev) : new FileDeletionEvent(ev);
-            }
-            else
-            {
-                if (lastEv instanceof CascadingDirectoryEvent)
-                {
-                    CascadingDirectoryEvent cEv = (CascadingDirectoryEvent) lastEv;
-                    if (cEv.addCreation(ev))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        output.addAll(cEv.getEvents());
-                        lastEv = null;
-                    }
-                }
-                else if (lastEv instanceof FileDeletionEvent)
-                {
-                    FileDeletionEvent delEv = (FileDeletionEvent) lastEv;
-                    if (ev.hash.equals(delEv.deletedData.hash))
-                    {
-                        if (delEv.deletedData.sameName(ev.path))
-                        {
-                            lastEv = new FileMoveEvent(ev.timeStamp, delEv.deletedData.fullPath, ev.path, ev.hash);
-                            continue;
-                        }
-                    }
-                    else if (ev.path.equals(delEv.deletedData.fullPath))
-                    {
-                        lastEv = new FileContentChangeEvent(ev);
-                        continue;
-                    }
-
-                }
-                if (lastEv != null)
-                {
-                    output.add(lastEv);
-                }
-                lastEv = ev.isDirectory ? new DirectoryCreationEvent(ev) : new FileCreationEvent(ev);
-            }
+            lastEv = ev.isDel ? handleDel(ev, lastEv, output) : handleAdd(ev, lastEv, output);
         }
 
         if (lastEv instanceof CascadingDirectoryEvent)
@@ -110,4 +46,80 @@ public class EventTranslator
         }
         return output;
     }
+
+    /**
+     * handles a raw deletion event
+     * @param delEv the deletion event
+     * @param lastEv the last structured event created
+     * @param output the structured event output
+     * @return a created structured event to replace the last one
+     */
+    private StructuredEvent handleDel(RawEvent delEv, StructuredEvent lastEv, List<StructuredEvent> output)
+    {
+        if (lastEv instanceof CascadingDirectoryEvent)
+        {
+            CascadingDirectoryEvent cEv = (CascadingDirectoryEvent) lastEv;
+            if (cEv.addDeletion(delEv))
+            {
+                return lastEv;
+            }
+            else
+            {
+                output.addAll(cEv.getEvents());
+                lastEv = null;
+            }
+        }
+        if (lastEv != null)
+        {
+            output.add(lastEv);
+        }
+        return delEv.isDirectory ? new CascadingDirectoryEvent(delEv) : new FileDeletionEvent(delEv);
+    }
+
+    /**
+     * handles a raw creation event
+     * @param delEv the deletion event
+     * @param lastEv the last structured event created
+     * @param output the structured event output
+     * @return a created structured event to replace the last one
+     */
+    private StructuredEvent handleAdd(RawEvent addEv, StructuredEvent lastEv, List<StructuredEvent> output)
+    {
+        if (lastEv instanceof CascadingDirectoryEvent)
+        {
+            CascadingDirectoryEvent cEv = (CascadingDirectoryEvent) lastEv;
+            if (cEv.addCreation(addEv))
+            {
+                return lastEv;
+            }
+            else
+            {
+                output.addAll(cEv.getEvents());
+                lastEv = null;
+            }
+        }
+        else if (lastEv instanceof FileDeletionEvent)
+        {
+            FileDeletionEvent fileDelEv = (FileDeletionEvent) lastEv;
+            if (addEv.hash.equals(fileDelEv.deletedData.hash))
+            {
+                if (fileDelEv.deletedData.sameName(addEv.path))
+                {
+                    return new FileMoveEvent(addEv.timeStamp, fileDelEv.deletedData.fullPath, addEv.path, addEv.hash);
+                }
+            }
+            else if (addEv.path.equals(fileDelEv.deletedData.fullPath))
+            {
+                return new FileContentChangeEvent(addEv);
+            }
+
+        }
+
+        if (lastEv != null)
+        {
+            output.add(lastEv);
+        }
+        return addEv.isDirectory ? new DirectoryCreationEvent(addEv) : new FileCreationEvent(addEv);
+    }
+
 }
