@@ -11,6 +11,7 @@
     <module>common</module>
     <module>packing-your-dropbox</module>
     <module>file-events</module>
+    <module>the-dropbox-diet</module>
   </modules>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
