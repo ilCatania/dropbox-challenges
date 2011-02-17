@@ -9,7 +9,7 @@ import java.text.MessageFormat;
 /**
  * @author gcatania
  */
-public class DirectoryMoveEvent extends MoveEvent implements DirectoryEvent
+public class DirectoryMoveEvent extends MoveEvent
 {
 
     // warning: not thread safe

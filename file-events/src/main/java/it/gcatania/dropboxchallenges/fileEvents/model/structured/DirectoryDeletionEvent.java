@@ -9,7 +9,7 @@ import java.text.MessageFormat;
 /**
  * @author gcatania
  */
-public class DirectoryDeletionEvent extends DeletionEvent implements DirectoryEvent
+public class DirectoryDeletionEvent extends StructuredEvent
 {
 
     // warning: not thread safe

@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * event type yet.
  * @author gcatania
  */
-public class CascadingDirectoryEvent extends StructuredEvent implements DirectoryEvent
+public class CascadingDirectoryEvent extends StructuredEvent
 {
 
     /**

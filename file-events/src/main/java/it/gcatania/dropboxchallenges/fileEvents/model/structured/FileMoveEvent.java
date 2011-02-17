@@ -10,7 +10,7 @@ import java.text.MessageFormat;
 /**
  * @author gcatania
  */
-public class FileMoveEvent extends MoveEvent implements FileEvent
+public class FileMoveEvent extends MoveEvent
 {
 
     // warning: not thread safe

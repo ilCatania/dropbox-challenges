@@ -10,7 +10,7 @@ import java.text.MessageFormat;
 /**
  * @author gcatania
  */
-public class FileDeletionEvent extends DeletionEvent implements FileEvent
+public class FileDeletionEvent extends StructuredEvent
 {
 
     // warning: not thread safe

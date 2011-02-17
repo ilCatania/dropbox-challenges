@@ -10,7 +10,7 @@ import java.text.MessageFormat;
 /**
  * @author gcatania
  */
-public class DirectoryCreationEvent extends CreationEvent
+public class DirectoryCreationEvent extends StructuredEvent
 {
 
     // warning: not thread safe

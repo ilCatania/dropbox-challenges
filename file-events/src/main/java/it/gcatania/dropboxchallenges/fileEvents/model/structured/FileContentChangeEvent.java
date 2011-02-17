@@ -10,7 +10,7 @@ import java.text.MessageFormat;
 /**
  * @author gcatania
  */
-public class FileContentChangeEvent extends StructuredEvent implements FileEvent
+public class FileContentChangeEvent extends StructuredEvent
 {
 
     // warning: not thread safe
