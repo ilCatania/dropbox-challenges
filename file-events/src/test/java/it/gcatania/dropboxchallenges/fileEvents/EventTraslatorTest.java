@@ -81,7 +81,7 @@ public class EventTraslatorTest
             new RawEvent(ADD, 2, "/A/B"),
             new RawEvent(ADD, 3, "/C"),
             new RawEvent(ADD, 4, "/X.txt", "0"),
-            new RawEvent(ADD, 5, "/A/Y.txt"),
+            new RawEvent(ADD, 5, "/A/Y.txt", "0"),
             new RawEvent(ADD, 6, "/A/Z.txt", "0"),
             new RawEvent(ADD, 7, "/W.txt", "0"),
             new RawEvent(DEL, 8, "/A"),
