@@ -75,4 +75,5 @@ public abstract class StructuredEvent
     {
         return df.format(new Date(timeStamp));
     }
+
 }

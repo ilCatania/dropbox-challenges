@@ -104,17 +104,12 @@ public class CascadingDirectoryEvent extends StructuredEvent implements Director
                 numMaxFiles,
                 numMaxDirs));
         }
-        DirectoryDeletionEvent deletionEvent = new DirectoryDeletionEvent(
-            timeStamp,
-            data.fullPath,
-            numMaxFiles,
-            numMaxDirs);
-        if (childCreateEvents.isEmpty())
+        List<StructuredEvent> output = new ArrayList<StructuredEvent>(2 + childCreateEvents.size());
+        output.add(new DirectoryDeletionEvent(timeStamp, data.fullPath, numMaxFiles, numMaxDirs));
+        if (adding)
         {
-            return Collections.<StructuredEvent> singletonList(deletionEvent);
+            output.add(new DirectoryCreationEvent(timeStamp, pathTo));
         }
-        List<StructuredEvent> output = new ArrayList<StructuredEvent>(1 + childCreateEvents.size());
-        output.add(deletionEvent);
         for (RawEvent ev : childCreateEvents)
         {
             output.add(ev.isDirectory ? new DirectoryCreationEvent(ev) : new FileCreationEvent(ev));

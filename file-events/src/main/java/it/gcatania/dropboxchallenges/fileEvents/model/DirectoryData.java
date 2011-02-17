@@ -35,4 +35,14 @@ public class DirectoryData extends FileSystemData
     {
         return contains(other.fullPath);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return new StringBuilder().append("DirectoryData [fullPath=").append(fullPath).append("]").toString();
+    }
+
 }

@@ -67,4 +67,13 @@ public abstract class FileSystemData
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return fullPath;
+    }
+
 }
