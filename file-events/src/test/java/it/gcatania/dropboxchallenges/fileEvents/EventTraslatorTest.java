@@ -159,6 +159,35 @@ public class EventTraslatorTest
             new FileDeletionEvent(14, "/X.txt", "0"));
     }
 
+    @Test
+    public void testDirectoryNotMove()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(ADD, 7, "/W.txt", "0"),
+            new RawEvent(DEL, 8, "/A/B/C/D"),
+            new RawEvent(DEL, 8, "/A/B/C/D/E"),
+            new RawEvent(DEL, 8, "/A/B/C/D/E/f1.txt", "f1hash"),
+            new RawEvent(DEL, 8, "/A/B/C/D/f2.txt", "f2hash"),
+            new RawEvent(ADD, 8, "/A/D"),
+            new RawEvent(ADD, 8, "/A/D/E"),
+            new RawEvent(ADD, 8, "/A/D/E/f1.txt", "f1hashNew"),
+            new RawEvent(ADD, 8, "/A/D/f2.txt", "f2hash"),
+            new RawEvent(ADD, 9, "/A/D/f3.txt", "f3hash"),
+            new RawEvent(DEL, 10, "/A/B/C/D/f3.txt", "f3hashNew"),
+            new RawEvent(DEL, 14, "/X.txt", "0"));
+        List<StructuredEvent> result = translator.translate(raw);
+        check(result,//
+            new FileCreationEvent(7, "/W.txt", "0"),
+            new DirectoryDeletionEvent(8, "/A/B/C/D", 2, 1),
+            new DirectoryCreationEvent(8, "/A/D"),
+            new DirectoryCreationEvent(8, "/A/D/E"),
+            new FileCreationEvent(8, "/A/D/f1.txt", "f1hashNew"),
+            new FileCreationEvent(8, "/A/D/f2.txt", "f2hash"),
+            new FileCreationEvent(9, "/A/D/f3.txt", "f3hash"),
+            new FileDeletionEvent(10, "/A/B/C/D/f3.txt", "f3hashNew"),
+            new FileDeletionEvent(14, "/X.txt", "0"));
+    }
+
     private static List<RawEvent> make(RawEvent... events)
     {
         return Arrays.asList(events);
