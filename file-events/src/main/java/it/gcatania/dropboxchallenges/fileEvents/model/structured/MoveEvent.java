@@ -1,6 +1,5 @@
 package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 
-import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
 
 /**
@@ -12,13 +11,6 @@ public abstract class MoveEvent extends StructuredEvent
     public final String fullPathFrom;
 
     public final String fullPathTo;
-
-    public MoveEvent(RawEvent delEvent, RawEvent addEvent)
-    {
-        super(addEvent.timeStamp);
-        fullPathFrom = delEvent.path;
-        fullPathTo = addEvent.path;
-    }
 
     public MoveEvent(long timeStamp, String pathFrom, String pathTo)
     {

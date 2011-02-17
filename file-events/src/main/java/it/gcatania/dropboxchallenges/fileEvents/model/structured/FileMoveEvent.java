@@ -1,7 +1,6 @@
 package it.gcatania.dropboxchallenges.fileEvents.model.structured;
 
 import it.gcatania.dropboxchallenges.fileEvents.model.FileData;
-import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
@@ -25,11 +24,6 @@ public class FileMoveEvent extends MoveEvent
         super(timeStamp, pathFrom, pathTo);
         fromData = new FileData(pathFrom, hash);
         toData = new FileData(pathTo, hash);
-    }
-
-    public FileMoveEvent(RawEvent delEvent, RawEvent addEvent)
-    {
-        this(addEvent.timeStamp, delEvent.path, addEvent.path, addEvent.hash);
     }
 
     /**
