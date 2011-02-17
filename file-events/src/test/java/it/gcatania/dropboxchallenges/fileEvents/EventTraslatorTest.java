@@ -181,7 +181,7 @@ public class EventTraslatorTest
             new DirectoryDeletionEvent(8, "/A/B/C/D", 2, 1),
             new DirectoryCreationEvent(8, "/A/D"),
             new DirectoryCreationEvent(8, "/A/D/E"),
-            new FileCreationEvent(8, "/A/D/f1.txt", "f1hashNew"),
+            new FileCreationEvent(8, "/A/D/E/f1.txt", "f1hashNew"),
             new FileCreationEvent(8, "/A/D/f2.txt", "f2hash"),
             new FileCreationEvent(9, "/A/D/f3.txt", "f3hash"),
             new FileDeletionEvent(10, "/A/B/C/D/f3.txt", "f3hashNew"),
