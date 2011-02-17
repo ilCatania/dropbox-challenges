@@ -32,11 +32,6 @@ public class DirectoryData extends FileSystemData
         return false;
     }
 
-    public boolean contains(FileSystemData other)
-    {
-        return contains(other.fullPath);
-    }
-
     /**
      * {@inheritDoc}
      */

@@ -68,6 +68,11 @@ public class CascadingDirectoryEvent extends StructuredEvent
         adding = false;
     }
 
+    /**
+     * attempts to add a raw deletion event to this event.
+     * @param delEv the raw deletion event to add
+     * @return true if the event was successfully added, false otherwise
+     */
     public boolean addDeletion(RawEvent delEv)
     {
         if (adding || !parentDelData.contains(delEv.path))
@@ -86,6 +91,11 @@ public class CascadingDirectoryEvent extends StructuredEvent
         return true;
     }
 
+    /**
+     * attempts to add a raw creation event to this event.
+     * @param delEv the raw creation event to add
+     * @return true if the event was successfully added, false otherwise
+     */
     public boolean addCreation(RawEvent addEv)
     {
         if (!adding)
@@ -93,12 +103,15 @@ public class CascadingDirectoryEvent extends StructuredEvent
             adding = true;
             pathFrom = parentDelData.fullPath;
             pathTo = addEv.path;
-            // TODO throw an exception if pathTo contains pathFrom
+            if (parentDelData.contains(pathTo))// FE11
+            {
+                throw new IllegalArgumentException("Cannot move directory " + pathFrom + " into subdirectory " + pathTo);
+            }
             fromPattern = Pattern.compile(pathFrom, Pattern.LITERAL);
             return true;
         }
 
-        RawEvent delEv = childDeleteEvents.poll();
+        RawEvent delEv = childDeleteEvents.poll(); // FE7
         boolean previouslyDeleted = delEv != null && movePathsMatch(delEv, addEv) && delEv.hash.equals(addEv.hash);
         if (previouslyDeleted)
         {
@@ -118,7 +131,7 @@ public class CascadingDirectoryEvent extends StructuredEvent
 
     public List<StructuredEvent> getEvents()
     {
-        if (adding && childCreateEvents.size() == (numMaxFiles + numMaxDirs))
+        if (adding && childCreateEvents.size() == (numMaxFiles + numMaxDirs)) // FE12
         {
             return Collections.<StructuredEvent> singletonList(new DirectoryMoveEvent(
                 timeStamp,

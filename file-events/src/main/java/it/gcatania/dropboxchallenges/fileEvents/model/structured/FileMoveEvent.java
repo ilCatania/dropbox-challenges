@@ -13,7 +13,10 @@ public class FileMoveEvent extends MoveEvent
 {
 
     // warning: not thread safe
-    private static final MessageFormat FMT = new MessageFormat("{0}: file {0} moved from {1} to {2}.");
+    private static final MessageFormat RENAME_FMT = new MessageFormat("{0}: file {0} in {1} renamed to {2}.");
+
+    // warning: not thread safe
+    private static final MessageFormat MOVE_FMT = new MessageFormat("{0}: file {0} moved from {1} to {2}.");
 
     public final FileData fromData;
 
@@ -32,7 +35,15 @@ public class FileMoveEvent extends MoveEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), toData.name, fromData.parentFolder, toData.parentFolder);
+        // FE3
+        if (fromData.parentFolder.equals(toData.parentFolder))
+        {
+            return fmt(RENAME_FMT, tsFmt(df), fromData.name, fromData.parentFolder, toData.name);
+        }
+        else
+        {
+            return fmt(MOVE_FMT, tsFmt(df), toData.name, fromData.parentFolder, toData.parentFolder);
+        }
     }
 
     /**

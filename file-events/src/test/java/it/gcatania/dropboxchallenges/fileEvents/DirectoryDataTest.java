@@ -16,7 +16,7 @@ public class DirectoryDataTest
     public void testContains()
     {
         DirectoryData d = new DirectoryData("/parent/child");
-        Assert.assertTrue(d.contains(new DirectoryData("/parent/child/nephew")));
-        Assert.assertFalse(d.contains(new DirectoryData("/parent/child2")));
+        Assert.assertTrue(d.contains("/parent/child/nephew"));
+        Assert.assertFalse(d.contains("/parent/child2"));
     }
 }

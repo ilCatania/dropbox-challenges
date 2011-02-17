@@ -34,7 +34,15 @@ public abstract class FileSystemData
     {
         fullPath = path;
         int lastSeparatorPos = path.lastIndexOf(SEPARATOR);
-        parentFolder = path.substring(0, lastSeparatorPos);
+        if (lastSeparatorPos <= 0)
+        {
+            // handle case "parent = root"
+            parentFolder = SEPARATOR;
+        }
+        else
+        {
+            parentFolder = path.substring(0, lastSeparatorPos);
+        }
         name = path.substring(lastSeparatorPos + 1);
     }
 

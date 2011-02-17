@@ -13,8 +13,8 @@ public class DirectoryMoveEvent extends MoveEvent
 {
 
     // warning: not thread safe
-    private static final MessageFormat FMT = new MessageFormat(
-        "{0}: directory {1} moved from {2} to {3} (with {4} contained files and {5} contained directories).");
+    private static final MessageFormat MOVE_FMT = new MessageFormat(
+        "{0}: directory {1} moved to {2} (with {3} contained files and {4} contained directories).");
 
     public final DirectoryData fromData;
 
@@ -44,14 +44,7 @@ public class DirectoryMoveEvent extends MoveEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(
-            FMT,
-            tsFmt(df),
-            toData.name,
-            fromData.parentFolder,
-            toData.parentFolder,
-            movedChildFiles,
-            movedChildDirectories);
+        return fmt(MOVE_FMT, tsFmt(df), fromData.fullPath, toData.fullPath, movedChildFiles, movedChildDirectories);
     }
 
     /**

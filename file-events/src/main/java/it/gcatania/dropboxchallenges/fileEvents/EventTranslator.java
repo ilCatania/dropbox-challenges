@@ -58,10 +58,11 @@ public class EventTranslator
     {
         if (lastEv instanceof CascadingDirectoryEvent)
         {
+            // if there is a directory move/delete pending, check if this add fits in
             CascadingDirectoryEvent cEv = (CascadingDirectoryEvent) lastEv;
             if (cEv.addDeletion(delEv))
             {
-                return lastEv;
+                return lastEv; // last event may not be competed yet
             }
             else
             {
@@ -69,6 +70,8 @@ public class EventTranslator
                 lastEv = null;
             }
         }
+
+        // if we made it here, the last event is completed
         if (lastEv != null)
         {
             output.add(lastEv);
@@ -87,10 +90,11 @@ public class EventTranslator
     {
         if (lastEv instanceof CascadingDirectoryEvent)
         {
+            // if there is a directory move pending, check if this add fits in
             CascadingDirectoryEvent cEv = (CascadingDirectoryEvent) lastEv;
             if (cEv.addCreation(addEv))
             {
-                return lastEv;
+                return lastEv; // last event may not be competed yet
             }
             else
             {
@@ -100,21 +104,22 @@ public class EventTranslator
         }
         else if (lastEv instanceof FileDeletionEvent)
         {
+            // if there is a file move/rename/edit pending, check if this add fits in and completes it
             FileDeletionEvent fileDelEv = (FileDeletionEvent) lastEv;
-            if (addEv.hash.equals(fileDelEv.deletedData.hash))
+            if (addEv.hash.equals(fileDelEv.deletedData.hash)) // FE3
             {
-                if (fileDelEv.deletedData.sameName(addEv.path))
+                if (fileDelEv.deletedData.sameName(addEv.path)) // FE3
                 {
                     return new FileMoveEvent(addEv.timeStamp, fileDelEv.deletedData.fullPath, addEv.path, addEv.hash);
                 }
             }
-            else if (addEv.path.equals(fileDelEv.deletedData.fullPath))
+            else if (addEv.path.equals(fileDelEv.deletedData.fullPath)) // FE2
             {
                 return new FileContentChangeEvent(addEv);
             }
-
         }
 
+        // if we made it here, the last event is completed
         if (lastEv != null)
         {
             output.add(lastEv);
