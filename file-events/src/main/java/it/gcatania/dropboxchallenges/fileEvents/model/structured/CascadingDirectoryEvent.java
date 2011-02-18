@@ -131,6 +131,7 @@ public class CascadingDirectoryEvent extends StructuredEvent
 
     public List<StructuredEvent> getEvents()
     {
+        // if all the child paths being deleted have also been readded, it's a directory move
         if (adding && childCreateEvents.size() == (numMaxFiles + numMaxDirs)) // FE12
         {
             return Collections.<StructuredEvent> singletonList(new DirectoryMoveEvent(
@@ -140,6 +141,8 @@ public class CascadingDirectoryEvent extends StructuredEvent
                 numMaxFiles,
                 numMaxDirs));
         }
+
+        // otherwise it's a directory deletion followed by (potentially) multiple atomic creations
         List<StructuredEvent> output = new ArrayList<StructuredEvent>(2 + childCreateEvents.size());
         output.add(new DirectoryDeletionEvent(timeStamp, parentDelData.fullPath, numMaxFiles, numMaxDirs));
         if (adding)
