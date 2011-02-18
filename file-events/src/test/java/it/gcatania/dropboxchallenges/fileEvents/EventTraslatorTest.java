@@ -6,10 +6,12 @@ import it.gcatania.dropboxchallenges.fileEvents.model.RawEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryCreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryDeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryMoveEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.DirectoryRenameEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileContentChangeEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileCreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileDeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileMoveEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileRenameEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.StructuredEvent;
 
 import java.util.Arrays;
@@ -208,7 +210,7 @@ public class EventTraslatorTest
         List<StructuredEvent> result = translator.translate(raw);
         check(result,//
             new FileCreationEvent(7, "/W.txt", "0"),
-            new FileMoveEvent(9, "/D/E/file.txt", "/D/E/fileNew.txt", "33"),
+            new FileRenameEvent(9, "/D/E/file.txt", "/D/E/fileNew.txt", "33"),
             new FileDeletionEvent(14, "/X.txt", "0"));
     }
 
@@ -309,6 +311,31 @@ public class EventTraslatorTest
             new FileCreationEvent(8, "/A/D/E/f1.txt", "f1hash"),
             new FileCreationEvent(9, "/A/D/f3.txt", "f3hash"),
             new FileDeletionEvent(10, "/A/B/C/D/f3.txt", "f3hashNew"),
+            new FileDeletionEvent(14, "/X.txt", "0"));
+    }
+
+    @Test
+    public void testDirectoryRename()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(ADD, 7, "/W.txt", "0"),
+            new RawEvent(DEL, 8, "/A/B/C/D"),
+            new RawEvent(DEL, 8, "/A/B/C/D/E"),
+            new RawEvent(DEL, 8, "/A/B/C/D/E/f1.txt", "f1hash"),
+            new RawEvent(DEL, 8, "/A/B/C/D/f2.txt", "f2hash"),
+            new RawEvent(ADD, 8, "/A/B/C/Dnew"),
+            new RawEvent(ADD, 8, "/A/B/C/Dnew/E"),
+            new RawEvent(ADD, 8, "/A/B/C/Dnew/E/f1.txt", "f1hash"),
+            new RawEvent(ADD, 8, "/A/B/C/Dnew/f2.txt", "f2hash"),
+            new RawEvent(ADD, 9, "/A/B/C/Dnew/f3.txt", "f3hash"),
+            new RawEvent(DEL, 10, "/A/B/C/Dnew/f3.txt", "f3hashNew"),
+            new RawEvent(DEL, 14, "/X.txt", "0"));
+        List<StructuredEvent> result = translator.translate(raw);
+        check(result,//
+            new FileCreationEvent(7, "/W.txt", "0"),
+            new DirectoryRenameEvent(8, "/A/B/C/D", "/A/B/C/Dnew"),
+            new FileCreationEvent(9, "/A/B/C/Dnew/f3.txt", "f3hash"),
+            new FileDeletionEvent(10, "/A/B/C/Dnew/f3.txt", "f3hashNew"),
             new FileDeletionEvent(14, "/X.txt", "0"));
     }
 

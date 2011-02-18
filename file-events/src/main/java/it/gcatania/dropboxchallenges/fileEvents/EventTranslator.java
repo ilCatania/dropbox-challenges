@@ -7,6 +7,7 @@ import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileContentChan
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileCreationEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileDeletionEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileMoveEvent;
+import it.gcatania.dropboxchallenges.fileEvents.model.structured.FileRenameEvent;
 import it.gcatania.dropboxchallenges.fileEvents.model.structured.StructuredEvent;
 
 import java.util.ArrayList;
@@ -104,19 +105,18 @@ public class EventTranslator
         }
         else if (lastEv instanceof FileDeletionEvent)
         {
-            // if there is a file move/rename/edit pending, check if this add fits in and completes it
+            // if there is a file move/rename/edit pending, check if this add completes it
             FileDeletionEvent fileDelEv = (FileDeletionEvent) lastEv;
             if (addEv.hash.equals(fileDelEv.deletedData.hash)) // FE3
             {
-                if (fileDelEv.deletedData.sameName(addEv.path)) // file moved
+                if (fileDelEv.deletedData.sameName(addEv.path))
                 {
                     return new FileMoveEvent(addEv.timeStamp, fileDelEv.deletedData.fullPath, addEv.path, addEv.hash);
                 }
-                if (fileDelEv.deletedData.sameParentPath(addEv.path)) // file renamed
+                else if (fileDelEv.deletedData.sameParentPath(addEv.path))
                 {
-                    return new FileMoveEvent(addEv.timeStamp, fileDelEv.deletedData.fullPath, addEv.path, addEv.hash);
+                    return new FileRenameEvent(addEv.timeStamp, fileDelEv.deletedData.fullPath, addEv.path, addEv.hash);
                 }
-
             }
             else if (addEv.path.equals(fileDelEv.deletedData.fullPath)) // FE2
             {

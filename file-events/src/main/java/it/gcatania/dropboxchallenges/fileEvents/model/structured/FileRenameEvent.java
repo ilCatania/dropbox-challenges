@@ -9,17 +9,17 @@ import java.text.MessageFormat;
 /**
  * @author gcatania
  */
-public class FileMoveEvent extends MoveEvent
+public class FileRenameEvent extends MoveEvent
 {
 
     // warning: not thread safe
-    private static final MessageFormat MOVE_FMT = new MessageFormat("{0}: file {0} moved from {1} to {2}.");
+    private static final MessageFormat RENAME_FMT = new MessageFormat("{0}: file {0} in {1} renamed to {2}.");
 
     public final FileData fromData;
 
     public final FileData toData;
 
-    public FileMoveEvent(long timeStamp, String pathFrom, String pathTo, String hash)
+    public FileRenameEvent(long timeStamp, String pathFrom, String pathTo, String hash)
     {
         super(timeStamp, pathFrom, pathTo);
         fromData = new FileData(pathFrom, hash);
@@ -32,7 +32,7 @@ public class FileMoveEvent extends MoveEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(MOVE_FMT, tsFmt(df), toData.name, fromData.parentPath, toData.parentPath);
+        return fmt(RENAME_FMT, tsFmt(df), fromData.name, fromData.parentPath, toData.name);
     }
 
     /**
@@ -41,9 +41,9 @@ public class FileMoveEvent extends MoveEvent
     @Override
     public boolean equals(Object obj)
     {
-        if (obj instanceof FileMoveEvent && super.equals(obj))
+        if (obj instanceof FileRenameEvent && super.equals(obj))
         {
-            FileMoveEvent other = (FileMoveEvent) obj;
+            FileRenameEvent other = (FileRenameEvent) obj;
             return other.toData.hash.equals(toData.hash);
         }
         return false;
@@ -56,7 +56,7 @@ public class FileMoveEvent extends MoveEvent
     public String toString()
     {
         return new StringBuilder()
-            .append("FileMoveEvent [fromData=")
+            .append("FileRenameEvent [fromData=")
             .append(fromData)
             .append(", toData=")
             .append(toData)

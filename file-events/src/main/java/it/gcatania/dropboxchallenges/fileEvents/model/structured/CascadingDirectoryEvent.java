@@ -23,7 +23,7 @@ public class CascadingDirectoryEvent extends StructuredEvent
     /**
      * the data this event is initialized with upon first deletion
      */
-    public final DirectoryData parentDelData;
+    public final DirectoryData firstDelData;
 
     private final Queue<RawEvent> childDeleteEvents;
 
@@ -62,7 +62,7 @@ public class CascadingDirectoryEvent extends StructuredEvent
     public CascadingDirectoryEvent(RawEvent ev)
     {
         super(ev.timeStamp);
-        parentDelData = new DirectoryData(ev.path);
+        firstDelData = new DirectoryData(ev.path);
         childDeleteEvents = new LinkedList<RawEvent>();
         childCreateEvents = new LinkedList<RawEvent>();
         adding = false;
@@ -75,7 +75,7 @@ public class CascadingDirectoryEvent extends StructuredEvent
      */
     public boolean addDeletion(RawEvent delEv)
     {
-        if (adding || !parentDelData.contains(delEv.path))
+        if (adding || !firstDelData.contains(delEv.path))
         {
             return false;
         }
@@ -101,9 +101,9 @@ public class CascadingDirectoryEvent extends StructuredEvent
         if (!adding)
         {
             adding = true;
-            pathFrom = parentDelData.fullPath;
+            pathFrom = firstDelData.fullPath;
             pathTo = addEv.path;
-            if (parentDelData.contains(pathTo))// FE11
+            if (firstDelData.contains(pathTo))// FE11
             {
                 throw new IllegalArgumentException("Cannot move directory " + pathFrom + " into subdirectory " + pathTo);
             }
@@ -131,20 +131,24 @@ public class CascadingDirectoryEvent extends StructuredEvent
 
     public List<StructuredEvent> getEvents()
     {
-        // if all the child paths being deleted have also been readded, it's a directory move
+        // if all the child paths being deleted have also been readded, it's a directory move/rename
         if (adding && childCreateEvents.size() == (numMaxFiles + numMaxDirs)) // FE12
         {
-            return Collections.<StructuredEvent> singletonList(new DirectoryMoveEvent(
-                timeStamp,
-                pathFrom,
-                pathTo,
-                numMaxFiles,
-                numMaxDirs));
+            StructuredEvent ev;
+            if (firstDelData.sameParentPath(pathTo))
+            {
+                ev = new DirectoryRenameEvent(timeStamp, pathFrom, pathTo);
+            }
+            else
+            {
+                ev = new DirectoryMoveEvent(timeStamp, pathFrom, pathTo, numMaxFiles, numMaxDirs);
+            }
+            return Collections.singletonList(ev);
         }
 
         // otherwise it's a directory deletion followed by (potentially) multiple atomic creations
         List<StructuredEvent> output = new ArrayList<StructuredEvent>(2 + childCreateEvents.size());
-        output.add(new DirectoryDeletionEvent(timeStamp, parentDelData.fullPath, numMaxFiles, numMaxDirs));
+        output.add(new DirectoryDeletionEvent(timeStamp, firstDelData.fullPath, numMaxFiles, numMaxDirs));
         if (adding)
         {
             output.add(new DirectoryCreationEvent(timeStamp, pathTo));

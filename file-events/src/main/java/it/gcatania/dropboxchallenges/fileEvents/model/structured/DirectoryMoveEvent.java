@@ -13,9 +13,6 @@ public class DirectoryMoveEvent extends MoveEvent
 {
 
     // warning: not thread safe
-    private static final MessageFormat RENAME_FMT = new MessageFormat("{0}: directory {1} in {2} renamed to {3}.");
-
-    // warning: not thread safe
     private static final MessageFormat MOVE_FMT = new MessageFormat(
         "{0}: directory {1} moved to {2} (with {3} contained files and {4} contained directories).");
 
@@ -47,15 +44,7 @@ public class DirectoryMoveEvent extends MoveEvent
     @Override
     public String display(DateFormat df)
     {
-        if (fromData.parentPath.equals(toData.parentPath))
-        {
-
-            return fmt(RENAME_FMT, tsFmt(df), fromData.name, fromData.parentPath, toData.name);
-        }
-        else
-        {
-            return fmt(MOVE_FMT, tsFmt(df), fromData.fullPath, toData.fullPath, movedChildFiles, movedChildDirectories);
-        }
+        return fmt(MOVE_FMT, tsFmt(df), fromData.fullPath, toData.fullPath, movedChildFiles, movedChildDirectories);
     }
 
     /**
