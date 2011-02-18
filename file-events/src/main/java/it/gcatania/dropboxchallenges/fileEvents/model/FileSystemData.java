@@ -69,9 +69,26 @@ public abstract class FileSystemData
         return fullPath.equals(other.fullPath);
     }
 
+    /**
+     * @param path the path to check
+     * @return true if the element identified by the input path has the same name as this file system data, false
+     * otherwise
+     */
     public boolean sameName(String path)
     {
         return path.endsWith(SEPARATOR + name);
+    }
+
+    /**
+     * @param path the path to check
+     * @return true if the element identified by the input path has the same parent path as this file system data, false
+     * otherwise
+     */
+    public boolean sameParentPath(String path)
+    {
+        return path.startsWith(parentPath)
+            && path.length() > parentPath.length() + 1
+            && !path.substring(parentPath.length() + 1).contains(SEPARATOR);
     }
 
     /**
