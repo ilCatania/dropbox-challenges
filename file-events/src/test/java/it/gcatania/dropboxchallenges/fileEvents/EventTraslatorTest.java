@@ -105,7 +105,7 @@ public class EventTraslatorTest
     }
 
     @Test
-    public void testChangeFileContent()
+    public void testFileContentChange()
     {
         List<RawEvent> raw = make(//
             new RawEvent(ADD, 7, "/W.txt", "0"),
@@ -116,6 +116,22 @@ public class EventTraslatorTest
         check(result,//
             new FileCreationEvent(7, "/W.txt", "0"),
             new FileContentChangeEvent(9, "/D/E/file.txt", "1"),
+            new FileDeletionEvent(14, "/X.txt", "0"));
+    }
+
+    @Test
+    public void testNoFileContentChange()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(ADD, 7, "/W.txt", "0"),
+            new RawEvent(DEL, 8, "/D/E/file.txt", "0"),
+            new RawEvent(ADD, 9, "/D/E/file2.txt", "1"),
+            new RawEvent(DEL, 14, "/X.txt", "0"));
+        List<StructuredEvent> result = translator.translate(raw);
+        check(result,//
+            new FileCreationEvent(7, "/W.txt", "0"),
+            new FileDeletionEvent(8, "/D/E/file.txt", "0"),
+            new FileCreationEvent(9, "/D/E/file2.txt", "1"),
             new FileDeletionEvent(14, "/X.txt", "0"));
     }
 
