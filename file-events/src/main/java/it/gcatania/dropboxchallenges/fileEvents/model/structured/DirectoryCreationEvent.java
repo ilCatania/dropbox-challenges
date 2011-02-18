@@ -49,8 +49,7 @@ public class DirectoryCreationEvent extends StructuredEvent
             DirectoryCreationEvent other = (DirectoryCreationEvent) obj;
             return other.createdData.equals(createdData);
         }
-        // TODO Auto-generated method stub
-        return super.equals(obj);
+        return false;
     }
 
 }
