@@ -12,7 +12,8 @@ import java.util.List;
  */
 public class DietBuilder
 {
-    private static final boolean RETURN_FIRST_RESULT = false;
+
+    private static final boolean RETURN_FIRST_RESULT = true;
 
     /**
      * @param items
