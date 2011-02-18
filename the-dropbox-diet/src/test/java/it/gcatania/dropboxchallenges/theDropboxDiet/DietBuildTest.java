@@ -1,3 +1,5 @@
+package it.gcatania.dropboxchallenges.theDropboxDiet;
+
 import it.gcatania.dropboxchallenges.theDropboxDiet.DietBuild;
 
 import org.testng.annotations.Test;
