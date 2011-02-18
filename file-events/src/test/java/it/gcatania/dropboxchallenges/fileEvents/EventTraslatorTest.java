@@ -74,7 +74,7 @@ public class EventTraslatorTest
     }
 
     @Test
-    public void testDeleteFolder()
+    public void testDirectoryDelete()
     {
         List<RawEvent> raw = make(//
             new RawEvent(ADD, 1, "/A"),
