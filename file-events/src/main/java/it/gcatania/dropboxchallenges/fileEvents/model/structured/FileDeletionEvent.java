@@ -52,4 +52,19 @@ public class FileDeletionEvent extends StructuredEvent
         }
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append("FileDeletionEvent [deletedData=")
+            .append(deletedData)
+            .append(", timeStamp=")
+            .append(timeStamp)
+            .append("]")
+            .toString();
+    }
 }

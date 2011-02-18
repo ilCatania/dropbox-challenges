@@ -72,4 +72,25 @@ public class DirectoryMoveEvent extends MoveEvent
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append("DirectoryMoveEvent [fromData=")
+            .append(fromData)
+            .append(", toData=")
+            .append(toData)
+            .append(", movedChildFiles=")
+            .append(movedChildFiles)
+            .append(", movedChildDirectories=")
+            .append(movedChildDirectories)
+            .append(", timeStamp=")
+            .append(timeStamp)
+            .append("]")
+            .toString();
+    }
+
 }

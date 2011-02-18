@@ -54,4 +54,24 @@ public class DirectoryDeletionEvent extends StructuredEvent
         }
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append("DirectoryDeletionEvent [deletedChildFiles=")
+            .append(deletedChildFiles)
+            .append(", deletedChildDirectories=")
+            .append(deletedChildDirectories)
+            .append(", deletedData=")
+            .append(deletedData)
+            .append(", timeStamp=")
+            .append(timeStamp)
+            .append("]")
+            .toString();
+    }
+
 }

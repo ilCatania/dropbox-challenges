@@ -59,4 +59,21 @@ public class FileMoveEvent extends MoveEvent
         }
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append("FileMoveEvent [fromData=")
+            .append(fromData)
+            .append(", toData=")
+            .append(toData)
+            .append(", timeStamp=")
+            .append(timeStamp)
+            .append("]")
+            .toString();
+    }
 }

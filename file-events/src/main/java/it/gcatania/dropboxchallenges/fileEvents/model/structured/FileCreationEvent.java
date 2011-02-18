@@ -51,4 +51,19 @@ public class FileCreationEvent extends StructuredEvent
         }
         return false;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append("FileCreationEvent [data=")
+            .append(data)
+            .append(", timeStamp=")
+            .append(timeStamp)
+            .append("]")
+            .toString();
+    }
 }

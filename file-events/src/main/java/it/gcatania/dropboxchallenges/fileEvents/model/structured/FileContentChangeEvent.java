@@ -52,4 +52,19 @@ public class FileContentChangeEvent extends StructuredEvent
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append("FileContentChangeEvent [modifiedData=")
+            .append(modifiedData)
+            .append(", timeStamp=")
+            .append(timeStamp)
+            .append("]")
+            .toString();
+    }
+
 }

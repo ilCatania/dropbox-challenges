@@ -52,4 +52,19 @@ public class DirectoryCreationEvent extends StructuredEvent
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return new StringBuilder()
+            .append("DirectoryCreationEvent [createdData=")
+            .append(createdData)
+            .append(", timeStamp=")
+            .append(timeStamp)
+            .append("]")
+            .toString();
+    }
+
 }
