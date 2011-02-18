@@ -35,7 +35,7 @@ public class DirectoryCreationEvent extends StructuredEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), createdData.name, createdData.parentFolder);
+        return fmt(FMT, tsFmt(df), createdData.name, createdData.parentPath);
     }
 
     /**

@@ -26,9 +26,9 @@ public abstract class FileSystemData
     public final String name;
 
     /**
-     * the full path of the filesistem object up to the parent folder.
+     * the full path of the filesistem object up to the parent directory.
      */
-    public final String parentFolder;
+    public final String parentPath;
 
     public FileSystemData(String path)
     {
@@ -37,11 +37,11 @@ public abstract class FileSystemData
         if (lastSeparatorPos <= 0)
         {
             // handle case "parent = root"
-            parentFolder = SEPARATOR;
+            parentPath = SEPARATOR;
         }
         else
         {
-            parentFolder = path.substring(0, lastSeparatorPos);
+            parentPath = path.substring(0, lastSeparatorPos);
         }
         name = path.substring(lastSeparatorPos + 1);
     }

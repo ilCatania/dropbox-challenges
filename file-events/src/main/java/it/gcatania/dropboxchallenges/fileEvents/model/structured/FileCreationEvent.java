@@ -35,7 +35,7 @@ public class FileCreationEvent extends StructuredEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), data.name, data.parentFolder);
+        return fmt(FMT, tsFmt(df), data.name, data.parentPath);
     }
 
     /**

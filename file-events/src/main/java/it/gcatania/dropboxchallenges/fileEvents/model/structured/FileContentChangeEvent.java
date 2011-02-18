@@ -35,7 +35,7 @@ public class FileContentChangeEvent extends StructuredEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), modifiedData.name, modifiedData.parentFolder);
+        return fmt(FMT, tsFmt(df), modifiedData.name, modifiedData.parentPath);
     }
 
     /**

@@ -36,7 +36,7 @@ public class DirectoryDeletionEvent extends StructuredEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), data.name, data.parentFolder, deletedChildFiles, deletedChildDirectories);
+        return fmt(FMT, tsFmt(df), data.name, data.parentPath, deletedChildFiles, deletedChildDirectories);
     }
 
     /**

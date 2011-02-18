@@ -36,13 +36,13 @@ public class FileMoveEvent extends MoveEvent
     public String display(DateFormat df)
     {
         // FE3
-        if (fromData.parentFolder.equals(toData.parentFolder))
+        if (fromData.parentPath.equals(toData.parentPath))
         {
-            return fmt(RENAME_FMT, tsFmt(df), fromData.name, fromData.parentFolder, toData.name);
+            return fmt(RENAME_FMT, tsFmt(df), fromData.name, fromData.parentPath, toData.name);
         }
         else
         {
-            return fmt(MOVE_FMT, tsFmt(df), toData.name, fromData.parentFolder, toData.parentFolder);
+            return fmt(MOVE_FMT, tsFmt(df), toData.name, fromData.parentPath, toData.parentPath);
         }
     }
 

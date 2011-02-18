@@ -35,7 +35,7 @@ public class FileDeletionEvent extends StructuredEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), deletedData.name, deletedData.parentFolder);
+        return fmt(FMT, tsFmt(df), deletedData.name, deletedData.parentPath);
     }
 
     /**
