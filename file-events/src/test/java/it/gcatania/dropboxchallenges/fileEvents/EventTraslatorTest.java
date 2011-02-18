@@ -136,7 +136,7 @@ public class EventTraslatorTest
     }
 
     @Test
-    public void testFileMove()
+    public void testFileMove1()
     {
         List<RawEvent> raw = make(//
             new RawEvent(ADD, 7, "/W.txt", "0"),
@@ -147,6 +147,84 @@ public class EventTraslatorTest
         check(result,//
             new FileCreationEvent(7, "/W.txt", "0"),
             new FileMoveEvent(9, "/D/E/file.txt", "/file.txt", "33"),
+            new FileDeletionEvent(14, "/X.txt", "0"));
+    }
+
+    @Test
+    public void testFileMove2()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(ADD, 7, "/W.txt", "0"),
+            new RawEvent(DEL, 8, "/file.txt", "33"),
+            new RawEvent(ADD, 9, "/D/E/file.txt", "33"),
+            new RawEvent(DEL, 14, "/X.txt", "0"));
+        List<StructuredEvent> result = translator.translate(raw);
+        check(result,//
+            new FileCreationEvent(7, "/W.txt", "0"),
+            new FileMoveEvent(9, "/file.txt", "/D/E/file.txt", "33"),
+            new FileDeletionEvent(14, "/X.txt", "0"));
+    }
+
+    @Test
+    public void testFileNotMove1()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(ADD, 7, "/W.txt", "0"),
+            new RawEvent(DEL, 8, "/D/E/file.txt", "33"),
+            new RawEvent(ADD, 9, "/file.txt", "35"), // different hash
+            new RawEvent(DEL, 14, "/X.txt", "0"));
+        List<StructuredEvent> result = translator.translate(raw);
+        check(result,//
+            new FileCreationEvent(7, "/W.txt", "0"),
+            new FileDeletionEvent(8, "/D/E/file.txt", "33"),
+            new FileCreationEvent(9, "/file.txt", "35"),
+            new FileDeletionEvent(14, "/X.txt", "0"));
+    }
+
+    @Test
+    public void testFileNotMove2()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(ADD, 7, "/W.txt", "0"),
+            new RawEvent(DEL, 8, "/D/E/file.txt", "33"),
+            new RawEvent(ADD, 9, "/fileNew.txt", "33"), // different name
+            new RawEvent(DEL, 14, "/X.txt", "0"));
+        List<StructuredEvent> result = translator.translate(raw);
+        check(result,//
+            new FileCreationEvent(7, "/W.txt", "0"),
+            new FileDeletionEvent(8, "/D/E/file.txt", "33"),
+            new FileCreationEvent(9, "/fileNew.txt", "33"),
+            new FileDeletionEvent(14, "/X.txt", "0"));
+    }
+
+    @Test
+    public void testFileRename()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(ADD, 7, "/W.txt", "0"),
+            new RawEvent(DEL, 8, "/D/E/file.txt", "33"),
+            new RawEvent(ADD, 9, "/D/E/fileNew.txt", "33"),
+            new RawEvent(DEL, 14, "/X.txt", "0"));
+        List<StructuredEvent> result = translator.translate(raw);
+        check(result,//
+            new FileCreationEvent(7, "/W.txt", "0"),
+            new FileMoveEvent(9, "/D/E/file.txt", "/D/E/fileNew.txt", "33"),
+            new FileDeletionEvent(14, "/X.txt", "0"));
+    }
+
+    @Test
+    public void testFileNotRename()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(ADD, 7, "/W.txt", "0"),
+            new RawEvent(DEL, 8, "/D/E/file.txt", "33"),
+            new RawEvent(ADD, 9, "/D/E/fileNew.txt", "35"), // different hash
+            new RawEvent(DEL, 14, "/X.txt", "0"));
+        List<StructuredEvent> result = translator.translate(raw);
+        check(result,//
+            new FileCreationEvent(7, "/W.txt", "0"),
+            new FileDeletionEvent(8, "/D/E/file.txt", "33"),
+            new FileCreationEvent(9, "/D/E/fileNew.txt", "35"),
             new FileDeletionEvent(14, "/X.txt", "0"));
     }
 
