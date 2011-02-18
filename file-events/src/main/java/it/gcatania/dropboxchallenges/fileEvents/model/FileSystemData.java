@@ -72,9 +72,18 @@ public abstract class FileSystemData
      */
     public boolean sameParentPath(String path)
     {
-        return path.startsWith(parentPath)
-            && path.length() > parentPath.length() + 1
-            && !path.substring(parentPath.length() + 1).contains(SEPARATOR);
+        if (path.startsWith(parentPath))
+        {
+            if (path.length() > parentPath.length() + SEPARATOR.length())
+            {
+                return !path.substring(parentPath.length() + SEPARATOR.length()).contains(SEPARATOR);
+            }
+            else
+            {
+                return path.equals(fullPath); // root case
+            }
+        }
+        return false;
     }
 
     /**
