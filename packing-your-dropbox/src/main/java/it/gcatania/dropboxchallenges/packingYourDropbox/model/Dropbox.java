@@ -134,7 +134,17 @@ public class Dropbox
     }
 
     private static enum PointType {
-        ANGLE, HORIZONTAL, VERTICAL, SPACE;
+        ANGLE('+'), HORIZONTAL('-'), VERTICAL('|'), SPACE(' ');
+
+        /**
+         * character representation of the point type
+         */
+        private final char rep;
+
+        private PointType(char rep)
+        {
+            this.rep = rep;
+        }
     }
 
     /**
@@ -159,14 +169,7 @@ public class Dropbox
                 Coordinates nextInBoth = new Coordinates(column + 1, row + 1);
                 for (CartesianRectangle cr : addedRectangles)
                 {
-                    if (!cr.contains(current)
-                        || !cr.contains(nextInRow)
-                        || !cr.contains(nextInColumn)
-                        || !cr.contains(nextInBoth))
-                    {
-                        continue;
-                    }
-                    else if (cr.getLowerLeft().equals(current)
+                    if (cr.getLowerLeft().equals(current)
                         || cr.getLowerRight().equals(nextInColumn)
                         || cr.getUpperRight().equals(nextInBoth)
                         || cr.getUpperLeft().equals(nextInRow))
@@ -174,33 +177,19 @@ public class Dropbox
                         pt = PointType.ANGLE;
                         break;
                     }
-                    else if (cr.isHorizontalPerimeter(current) || cr.isHorizontalPerimeter(nextInRow))
+                    else if (cr.contains(nextInRow) && cr.contains(nextInColumn))
                     {
-                        pt = PointType.HORIZONTAL;
-                    }
-                    else if (cr.isVerticalPerimeter(current) || cr.isVerticalPerimeter(nextInColumn))
-                    {
-                        pt = PointType.VERTICAL;
+                        if (cr.isHorizontalPerimeter(current) || cr.isHorizontalPerimeter(nextInRow))
+                        {
+                            pt = PointType.HORIZONTAL;
+                        }
+                        else if (cr.isVerticalPerimeter(current) || cr.isVerticalPerimeter(nextInColumn))
+                        {
+                            pt = PointType.VERTICAL;
+                        }
                     }
                 }
-                char ch;
-                switch (pt)
-                {
-                    case ANGLE :
-                        ch = '+';
-                        break;
-                    case HORIZONTAL :
-                        ch = '-';
-                        break;
-                    case VERTICAL :
-                        ch = '|';
-                        break;
-                    case SPACE :
-                    default :
-                        ch = ' ';
-                        break;
-                }
-                sb.append(ch);
+                sb.append(pt.rep);
             }
             sb.append('\n');
         }
