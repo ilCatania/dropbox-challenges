@@ -55,11 +55,6 @@ public abstract class FileSystemData
         return fullPath.hashCode();
     }
 
-    public boolean samePath(FileSystemData other)
-    {
-        return fullPath.equals(other.fullPath);
-    }
-
     /**
      * @param path the path to check
      * @return true if the element identified by the input path has the same name as this file system data, false
