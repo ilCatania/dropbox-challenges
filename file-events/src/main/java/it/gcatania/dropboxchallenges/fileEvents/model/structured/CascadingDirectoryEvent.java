@@ -148,10 +148,10 @@ public class CascadingDirectoryEvent extends StructuredEvent
         if (adding)
         {
             output.add(new DirectoryCreationEvent(timeStamp, pathTo));
-        }
-        for (RawEvent ev : childCreateEvents)
-        {
-            output.add(ev.isDirectory ? new DirectoryCreationEvent(ev) : new FileCreationEvent(ev));
+            for (RawEvent ev : childCreateEvents)
+            {
+                output.add(ev.isDirectory ? new DirectoryCreationEvent(ev) : new FileCreationEvent(ev));
+            }
         }
         return output;
     }
