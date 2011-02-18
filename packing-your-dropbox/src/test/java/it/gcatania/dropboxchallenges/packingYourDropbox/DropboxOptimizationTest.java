@@ -200,7 +200,7 @@ public class DropboxOptimizationTest
             long totalAreaPerc = 100 * score.totalArea / minArea;
             long freeSpacePerc = 100 * score.totalFreeSpace / minFreeSpace;
             long timePerc = 100 * score.watch.getTime() / minTime;
-            long areaOverheadPerc = 100 * score.totalAreaOverhead / minAreaOverhead;
+            long areaOverheadPerc = minAreaOverhead > 0 ? 100 * score.totalAreaOverhead / minAreaOverhead : 0;
             w.write(new StringBuilder(setup.comparator.getClass().getSimpleName())
                 .append(';')
                 .append(setup.calculator.getClass().getSimpleName())
