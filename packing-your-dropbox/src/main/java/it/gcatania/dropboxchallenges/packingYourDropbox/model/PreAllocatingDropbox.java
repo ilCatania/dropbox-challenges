@@ -22,7 +22,7 @@ public class PreAllocatingDropbox extends Dropbox
     @Override
     public long getWidthWith(CartesianRectangle rect)
     {
-        return Math.min(super.getWidthWith(rect), preAllocatedWidth);
+        return Math.max(super.getWidthWith(rect), preAllocatedWidth);
     }
 
     /**
@@ -31,7 +31,7 @@ public class PreAllocatingDropbox extends Dropbox
     @Override
     public long getHeightWith(CartesianRectangle rect)
     {
-        return Math.min(super.getHeightWith(rect), preAllocatedHeight);
+        return Math.max(super.getHeightWith(rect), preAllocatedHeight);
     }
 
 }
