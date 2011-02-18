@@ -1,6 +1,6 @@
 package it.gcatania.dropboxchallenges.packingYourDropbox.model;
 
-import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.DistanceFromOriginComparator;
+import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.CoordinateCompositeComparator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class Dropbox
     public Dropbox()
     {
         addedRectangles = new ArrayList<CartesianRectangle>();
-        availableStartingPoints = new TreeSet<Coordinates>(new DistanceFromOriginComparator());
+        availableStartingPoints = new TreeSet<Coordinates>(new CoordinateCompositeComparator());
         availableStartingPoints.add(Coordinates.ORIGIN);
         containedRectanglesArea = 0;
     }
@@ -143,7 +143,8 @@ public class Dropbox
         return getArea() - getContainedRectanglesArea();
     }
 
-    private static enum PointType {
+    private static enum PointType
+    {
         ANGLE('+'), HORIZONTAL('-'), VERTICAL('|'), SPACE(' ');
 
         /**

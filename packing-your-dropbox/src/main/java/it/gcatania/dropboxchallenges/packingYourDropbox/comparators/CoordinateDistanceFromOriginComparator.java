@@ -8,7 +8,7 @@ import java.util.Comparator;
 /**
  * @author gcatania
  */
-public class DistanceFromOriginComparator implements Comparator<Coordinates>
+public class CoordinateDistanceFromOriginComparator implements Comparator<Coordinates>
 {
 
     /**
