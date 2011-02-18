@@ -37,6 +37,11 @@ public class Diet implements Cloneable
         currentCals += item.cals;
     }
 
+    public List<DietItem> getItems()
+    {
+        return items;
+    }
+
     public int getCurrentCals()
     {
         return currentCals;
