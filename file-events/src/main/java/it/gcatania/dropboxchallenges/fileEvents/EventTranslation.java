@@ -14,7 +14,8 @@ public class EventTranslation
 {
 
     /**
-     * @param args the first argument, if any, will be parsed for raw events
+     * @param args the first argument, if any, will be treated as a file to be parsed for raw events. Otherwise,
+     * standard input will be prompted
      */
     public static void main(String[] args)
     {

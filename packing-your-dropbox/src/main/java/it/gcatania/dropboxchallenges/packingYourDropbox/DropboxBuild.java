@@ -30,6 +30,10 @@ public final class DropboxBuild
     {
     }
 
+    /**
+     * @param args the first argument, if any, will be treated as a file to be parsed for rectangles. Otherwise,
+     * standard input will be prompted
+     */
     public static void main(String[] args)
     {
         Comparator<Rectangle> rectangleComparator = getComparator(args);

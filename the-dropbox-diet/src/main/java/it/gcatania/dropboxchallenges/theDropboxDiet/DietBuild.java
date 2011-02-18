@@ -7,12 +7,15 @@ import java.util.List;
 
 
 /**
+ * command line entry point.
  * @author gcatania
  */
 public class DietBuild
 {
+
     /**
-     * @param args the first argument, if any, will be parsed for diet items
+     * @param args the first argument, if any, will be treated as a file to be parsed for diet items. Otherwise,
+     * standard input will be prompted
      */
     public static void main(String[] args)
     {
