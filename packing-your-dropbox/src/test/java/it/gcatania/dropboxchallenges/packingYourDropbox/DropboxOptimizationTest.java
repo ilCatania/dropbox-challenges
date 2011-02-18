@@ -89,6 +89,8 @@ public class DropboxOptimizationTest
 
         private int firstPlaces = 0;
 
+        private int winningPreAllocations = 0;
+
         private long totalArea = 0;
 
         private long totalFreeSpace = 0;
@@ -224,6 +226,7 @@ public class DropboxOptimizationTest
                 .append(areaOverheadPerc)
                 .append('\n')
                 .toString());
+            System.out.println(score.winningPreAllocations);
         }
         w.close();
         // System.out.println(samples.toString());
@@ -255,7 +258,15 @@ public class DropboxOptimizationTest
 
                 DropboxBuilder builder = new DropboxBuilder(comp, o);
                 Dropbox dropbox = builder.build(rectangles);
+                Dropbox dropbox2 = builder.buildWithPreAllocation(rectangles);
                 score.watch.suspend();
+
+                if (dropbox2.getArea() < dropbox.getArea())
+                {
+                    dropbox = dropbox2;
+                    score.winningPreAllocations++;
+                }
+
                 long currentArea = dropbox.getArea();
                 score.totalArea += currentArea;
                 score.totalFreeSpace += dropbox.getFreeSpace();

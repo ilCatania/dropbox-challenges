@@ -4,6 +4,7 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.ReverseCompa
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.CartesianRectangle;
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Coordinates;
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Dropbox;
+import it.gcatania.dropboxchallenges.packingYourDropbox.model.PreAllocatingDropbox;
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Rectangle;
 import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.OverheadCalculator;
 
@@ -31,9 +32,27 @@ public class DropboxBuilder
 
     public Dropbox build(List<Rectangle> rectangles)
     {
-        Collections.sort(rectangles, new ReverseComparator<Rectangle>(rectangleComparator));
-        Dropbox dropbox = new Dropbox();
+        return internalBuild(rectangles, new Dropbox());
+    }
 
+    public Dropbox buildWithPreAllocation(List<Rectangle> rectangles)
+    {
+        PreAllocatingDropbox dropbox = new PreAllocatingDropbox();
+
+        long totalRectangleArea = 0;
+        for (Rectangle rect : rectangles)
+        {
+            totalRectangleArea += rect.getArea();
+        }
+        long preAllocation = (long) Math.sqrt(totalRectangleArea);
+        dropbox.preAllocate(preAllocation, preAllocation);
+
+        return internalBuild(rectangles, dropbox);
+    }
+
+    private Dropbox internalBuild(List<Rectangle> rectangles, Dropbox dropbox)
+    {
+        Collections.sort(rectangles, new ReverseComparator<Rectangle>(rectangleComparator));
         for (Rectangle rect : rectangles)
         {
             Set<Coordinates> availableStartingPoints = dropbox.getAvailableStartingPoints();

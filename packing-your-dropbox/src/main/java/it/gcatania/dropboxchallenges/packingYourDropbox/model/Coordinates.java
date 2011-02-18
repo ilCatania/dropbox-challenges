@@ -40,7 +40,7 @@ public class Coordinates
     @Override
     public int hashCode()
     {
-        return (int) ((1 + x) << y);
+        return 1 + new Long(x).hashCode() * 7 + new Long(y).hashCode() * 991;
     }
 
     /**

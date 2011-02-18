@@ -18,9 +18,9 @@ public class Dropbox
 
     private final Set<Coordinates> availableStartingPoints;
 
-    private long height;
-
     private long width;
+
+    private long height;
 
     private long containedRectanglesArea;
 
@@ -91,6 +91,16 @@ public class Dropbox
     public long getAreaWith(CartesianRectangle rect)
     {
         return getWidthWith(rect) * getHeightWith(rect);
+    }
+
+    /**
+     * @param rect a cartesian rectangle
+     * @return the free space that the dropbox would have after adding the input rectangle (the rectangle is not
+     * actually added)
+     */
+    public long getFreeSpaceWith(CartesianRectangle rect)
+    {
+        return getAreaWith(rect) - (getContainedRectanglesArea() + rect.getArea());
     }
 
     /**
