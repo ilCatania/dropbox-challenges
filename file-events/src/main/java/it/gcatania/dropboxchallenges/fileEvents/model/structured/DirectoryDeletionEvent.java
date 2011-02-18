@@ -20,12 +20,12 @@ public class DirectoryDeletionEvent extends StructuredEvent
 
     private final int deletedChildDirectories;
 
-    public final DirectoryData data;
+    public final DirectoryData deletedData;
 
     public DirectoryDeletionEvent(long timeStamp, String path, int deletedChildFiles, int deletedChildDirectories)
     {
         super(timeStamp);
-        data = new DirectoryData(path);
+        deletedData = new DirectoryData(path);
         this.deletedChildFiles = deletedChildFiles;
         this.deletedChildDirectories = deletedChildDirectories;
     }
@@ -36,7 +36,7 @@ public class DirectoryDeletionEvent extends StructuredEvent
     @Override
     public String display(DateFormat df)
     {
-        return fmt(FMT, tsFmt(df), data.name, data.parentPath, deletedChildFiles, deletedChildDirectories);
+        return fmt(FMT, tsFmt(df), deletedData.name, deletedData.parentPath, deletedChildFiles, deletedChildDirectories);
     }
 
     /**
@@ -48,7 +48,7 @@ public class DirectoryDeletionEvent extends StructuredEvent
         if (obj instanceof DirectoryDeletionEvent && super.equals(obj))
         {
             DirectoryDeletionEvent other = (DirectoryDeletionEvent) obj;
-            return other.data.equals(data)
+            return other.deletedData.equals(deletedData)
                 && other.deletedChildFiles == deletedChildFiles
                 && other.deletedChildDirectories == deletedChildDirectories;
         }
