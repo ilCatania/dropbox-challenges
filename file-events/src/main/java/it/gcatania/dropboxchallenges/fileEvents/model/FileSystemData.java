@@ -47,15 +47,6 @@ public abstract class FileSystemData
     }
 
     /**
-     * @param path the path to check
-     * @return true if this file system data is contained in the input path, false otherwise
-     */
-    public boolean isContainedIn(String path)
-    {
-        return fullPath.startsWith(path);
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
