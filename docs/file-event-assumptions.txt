@@ -13,6 +13,7 @@ FE9. all file paths start with a single slash and cannot contain two consecutive
 FE10. when a folder is created with the same name of a folder currently being deleted, it is considered as being moved
 FE11. a folder cannot be moved inside one of its subfolders
 FE12. all events related to a single structured action must be available at the time of processing
+FE13. folder renames count as folder moves (on the contrary, file renames are handled differently)
 
 Possible structured event types:
 file/folder creation

@@ -108,11 +108,11 @@ public class EventTranslator
             FileDeletionEvent fileDelEv = (FileDeletionEvent) lastEv;
             if (addEv.hash.equals(fileDelEv.deletedData.hash)) // FE3
             {
-                if (fileDelEv.deletedData.sameName(addEv.path))
+                if (fileDelEv.deletedData.sameName(addEv.path)) // file moved
                 {
                     return new FileMoveEvent(addEv.timeStamp, fileDelEv.deletedData.fullPath, addEv.path, addEv.hash);
                 }
-                if (fileDelEv.deletedData.sameParentPath(addEv.path))
+                if (fileDelEv.deletedData.sameParentPath(addEv.path)) // file renamed
                 {
                     return new FileMoveEvent(addEv.timeStamp, fileDelEv.deletedData.fullPath, addEv.path, addEv.hash);
                 }
