@@ -5,18 +5,19 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.CoordinateCo
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 
 /**
  * @author gcatania
  */
-public class Dropbox
+public class Dropbox implements Cloneable
 {
 
     private final List<CartesianRectangle> addedRectangles;
 
-    private final Set<Coordinates> availableStartingPoints;
+    private final SortedSet<Coordinates> availableStartingPoints;
 
     private long width;
 
@@ -29,7 +30,18 @@ public class Dropbox
         addedRectangles = new ArrayList<CartesianRectangle>();
         availableStartingPoints = new TreeSet<Coordinates>(new CoordinateCompositeComparator());
         availableStartingPoints.add(Coordinates.ORIGIN);
+        width = 0;
+        height = 0;
         containedRectanglesArea = 0;
+    }
+
+    protected Dropbox(Dropbox other)
+    {
+        addedRectangles = new ArrayList<CartesianRectangle>(other.addedRectangles);
+        availableStartingPoints = new TreeSet<Coordinates>(other.availableStartingPoints);
+        containedRectanglesArea = other.containedRectanglesArea;
+        width = other.width;
+        height = other.height;
     }
 
     public void put(CartesianRectangle rectangle)
@@ -229,5 +241,11 @@ public class Dropbox
             return addedRectangles.equals(other.addedRectangles);
         }
         return false;
+    }
+
+    @Override
+    public Dropbox clone()
+    {
+        return new Dropbox(this);
     }
 }
