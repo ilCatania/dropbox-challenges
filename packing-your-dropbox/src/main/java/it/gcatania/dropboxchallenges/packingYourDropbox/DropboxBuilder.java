@@ -62,13 +62,13 @@ public class DropboxBuilder
                 continue;
             }
 
-            long minOverhead = Long.MAX_VALUE;
+            Comparable minOverhead = null;
             CartesianRectangle minOverheadRect = null;
             for (Coordinates coords : availableStartingPoints)
             {
                 CartesianRectangle cRect = new CartesianRectangle(coords, rect);
-                long currOverhead = overheadCalculator.getOverhead(dropbox, cRect);
-                if (currOverhead < minOverhead && !dropbox.overlaps(cRect))
+                Comparable currOverhead = overheadCalculator.getOverhead(dropbox, cRect);
+                if ((minOverhead == null || currOverhead.compareTo(minOverhead) < 0) && !dropbox.overlaps(cRect))
                 {
                     minOverhead = currOverhead;
                     minOverheadRect = cRect;
@@ -80,7 +80,7 @@ public class DropboxBuilder
                 }
                 cRect = new CartesianRectangle(coords, rect.rotate());
                 currOverhead = overheadCalculator.getOverhead(dropbox, cRect);
-                if (currOverhead < minOverhead && !dropbox.overlaps(cRect))
+                if ((minOverhead == null || currOverhead.compareTo(minOverhead) < 0) && !dropbox.overlaps(cRect))
                 {
                     minOverhead = currOverhead;
                     minOverheadRect = cRect;

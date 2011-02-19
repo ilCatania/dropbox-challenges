@@ -9,6 +9,7 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.RectangleUlt
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Dropbox;
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Rectangle;
 import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.DropboxAreaOverheadCalculator;
+import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.DropboxMagicOverheadCalculator;
 import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.OverheadCalculator;
 
 import java.io.BufferedWriter;
@@ -32,13 +33,13 @@ import org.apache.commons.lang.time.StopWatch;
 public class DropboxOptimizationTest
 {
 
-    private static final int NUM_ITERATIONS = 10;
+    private static final int NUM_ITERATIONS = 100;
 
-    private static final int NUM_RECTANGLES = 20;
+    private static final int NUM_RECTANGLES = 50;
 
-    private static final int MIN_SIDE_LENGTH = 4;
+    private static final int MIN_SIDE_LENGTH = 3;
 
-    private static final int MAX_SIDE_LENGTH = 8;
+    private static final int MAX_SIDE_LENGTH = 12;
 
     private Map<Setup, Score> optimizationData;
 
@@ -49,9 +50,9 @@ public class DropboxOptimizationTest
 
         private final Comparator<Rectangle> comparator;
 
-        private final OverheadCalculator calculator;
+        private final OverheadCalculator< ? > calculator;
 
-        private Setup(Comparator<Rectangle> comparator, OverheadCalculator calculator)
+        private Setup(Comparator<Rectangle> comparator, OverheadCalculator< ? > calculator)
         {
             this.calculator = calculator;
             this.comparator = comparator;
@@ -125,12 +126,13 @@ public class DropboxOptimizationTest
             new RectangleMaxSideComparator(),
             new RectangleSideRatioComparator(),
             new RectanglePerimeterComparator());
-        List<OverheadCalculator> overheadCalculators = Arrays.<OverheadCalculator> asList(
+        List<OverheadCalculator< ? >> overheadCalculators = Arrays.<OverheadCalculator< ? >> asList(
         // new AreaOverheadCalculator(), // not optimal
         // new DistanceFromOriginOverheadCalculator(), // not optimal
-            new DropboxAreaOverheadCalculator()
-            // new FreeSpaceOverheadCalculator(), // same as DropBoxAreaOverheadCalculator
-            // new DropBoxOverheadCalculator() // not optimal
+            new DropboxAreaOverheadCalculator(),
+            new DropboxMagicOverheadCalculator()
+        // new FreeSpaceOverheadCalculator(), // same as DropBoxAreaOverheadCalculator
+        // new DropBoxOverheadCalculator() // not optimal
             );
 
         for (int i = 0; i < NUM_ITERATIONS; i++)
@@ -191,7 +193,8 @@ public class DropboxOptimizationTest
 
         BufferedWriter w = new BufferedWriter(new FileWriter("target/results.csv", false));
         w
-            .write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc;TimeMillis;TimeMillisPerc;AreaOverhead;AreaOverheadPerc\n");
+            .write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;"
+                + "FreeSpace;FreeSpacePerc;TimeMillis;TimeMillisPerc;AreaOverhead;AreaOverheadPerc;WinningPreAllocations\n");
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Setup setup = e.getKey();
@@ -224,16 +227,17 @@ public class DropboxOptimizationTest
                 .append(score.totalAreaOverhead)
                 .append(';')
                 .append(areaOverheadPerc)
+                .append(';')
+                .append(score.winningPreAllocations)
                 .append('\n')
                 .toString());
-            System.out.println(score.winningPreAllocations);
         }
         w.close();
         // System.out.println(samples.toString());
     }
 
     private void singlePass(Random random, List<Comparator<Rectangle>> comparators,
-        List<OverheadCalculator> overheadCalculators)
+        List<OverheadCalculator< ? >> overheadCalculators)
     {
 
         List<Rectangle> rectangles = createRandomRectangles(random);
@@ -241,7 +245,7 @@ public class DropboxOptimizationTest
         long minArea = Long.MAX_VALUE;
         for (Comparator<Rectangle> comp : comparators)
         {
-            for (OverheadCalculator o : overheadCalculators)
+            for (OverheadCalculator< ? > o : overheadCalculators)
             {
                 Setup setup = new Setup(comp, o);
                 Score score = optimizationData.get(setup);
@@ -275,7 +279,7 @@ public class DropboxOptimizationTest
                 {
                     minArea = currentArea;
                 }
-                System.out.println(dropbox.draw());
+                // System.out.println(dropbox.draw());
             }
         }
 
