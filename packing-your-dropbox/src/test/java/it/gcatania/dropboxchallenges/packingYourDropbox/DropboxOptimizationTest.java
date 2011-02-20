@@ -38,7 +38,7 @@ public class DropboxOptimizationTest
 
     private static final int NUM_ITERATIONS = 100;
 
-    private static final int NUM_RECTANGLES = 200;
+    private static final int NUM_RECTANGLES = 20;
 
     private static final int MIN_SIDE_LENGTH = 1;
 
