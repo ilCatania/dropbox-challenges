@@ -1,18 +1,26 @@
+/**
+ * 
+ */
 package it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators;
 
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.CartesianRectangle;
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Dropbox;
+import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.CompositeOverheadCalculator.ListComparable;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
  * @author gcatania
  */
-public class CompositeOverheadCalculator implements OverheadCalculator
+public class CompositeOverheadCalculator<T extends Comparable<T>> implements OverheadCalculator<ListComparable<T>>
 {
 
-    private final OverheadCalculator[] calculators;
+    private final OverheadCalculator<T>[] calculators;
 
-    public CompositeOverheadCalculator(OverheadCalculator... calculators)
+    public CompositeOverheadCalculator(OverheadCalculator<T>... calculators)
     {
         this.calculators = calculators;
     }
@@ -21,14 +29,44 @@ public class CompositeOverheadCalculator implements OverheadCalculator
      * {@inheritDoc}
      */
     @Override
-    public long getOverhead(Dropbox dropbox, CartesianRectangle rect)
+    public ListComparable<T> getOverhead(Dropbox dropbox, CartesianRectangle rect)
     {
-        long overhead = 0;
-        for (OverheadCalculator c : calculators)
+        List<T> output = new ArrayList<T>(calculators.length);
+        for (OverheadCalculator<T> c : calculators)
         {
-            overhead += c.getOverhead(dropbox, rect);
+            output.add(c.getOverhead(dropbox, rect));
         }
-        return overhead;
+        return new ListComparable<T>(output);
+    }
+
+    public static class ListComparable<T extends Comparable<T>> implements Comparable<ListComparable<T>>
+    {
+        private final List<T> l;
+
+        private ListComparable(List<T> l)
+        {
+            this.l = l;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int compareTo(ListComparable<T> o)
+        {
+            Iterator<T> thisIter = l.iterator();
+            Iterator<T> otherIter = o.l.iterator();
+            while (thisIter.hasNext()) // only handles same length lists now
+            {
+                int itemCompare = thisIter.next().compareTo(otherIter.next());
+                if (itemCompare != 0)
+                {
+                    return itemCompare;
+                }
+            }
+            return 0;
+        }
+
     }
 
 }

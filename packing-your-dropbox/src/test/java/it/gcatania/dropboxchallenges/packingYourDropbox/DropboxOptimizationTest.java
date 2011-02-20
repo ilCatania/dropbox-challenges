@@ -56,9 +56,9 @@ public class DropboxOptimizationTest
 
         private final Comparator<Rectangle> comparator;
 
-        private final OverheadCalculator calculator;
+        private final OverheadCalculator< ? > calculator;
 
-        private Setup(Comparator<Rectangle> comparator, OverheadCalculator calculator)
+        private Setup(Comparator<Rectangle> comparator, OverheadCalculator< ? > calculator)
         {
             this.calculator = calculator;
             this.comparator = comparator;
@@ -156,7 +156,7 @@ public class DropboxOptimizationTest
             new RectangleMaxSideComparator(),
             new RectangleSideRatioComparator(),
             new RectanglePerimeterComparator());
-        List<OverheadCalculator> overheadCalculators = Arrays.<OverheadCalculator> asList(
+        List<OverheadCalculator< ? >> overheadCalculators = Arrays.<OverheadCalculator< ? >> asList(
         // new AreaOverheadCalculator(), // not optimal
         // new DistanceFromOriginOverheadCalculator(), // not optimal
             new DropboxAreaOverheadCalculator()
@@ -270,14 +270,14 @@ public class DropboxOptimizationTest
         w.close();
     }
 
-    private void singlePass(List<Comparator<Rectangle>> comparators, List<OverheadCalculator> overheadCalculators)
+    private void singlePass(List<Comparator<Rectangle>> comparators, List<OverheadCalculator< ? >> overheadCalculators)
     {
         List<Rectangle> rectangles = createRandomRectangles();
 
         long minArea = Long.MAX_VALUE;
         for (Comparator<Rectangle> comp : comparators)
         {
-            for (OverheadCalculator o : overheadCalculators)
+            for (OverheadCalculator< ? > o : overheadCalculators)
             {
                 Setup setup = new Setup(comp, o);
                 Score score = optimizationData.get(setup);

@@ -8,14 +8,14 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.model.Dropbox;
 /**
  * @author gcatania
  */
-public class DistanceFromOriginOverheadCalculator implements OverheadCalculator
+public class DistanceFromOriginOverheadCalculator implements OverheadCalculator<Long>
 {
 
     /**
      * calculates the overhead as the distance between the upper right corner of the rectangle and the diagonal
      */
     @Override
-    public long getOverhead(Dropbox dropbox, CartesianRectangle rect)
+    public Long getOverhead(Dropbox dropbox, CartesianRectangle rect)
     {
         Coordinates upperRight = rect.getUpperRight();
         long x = upperRight.getX();

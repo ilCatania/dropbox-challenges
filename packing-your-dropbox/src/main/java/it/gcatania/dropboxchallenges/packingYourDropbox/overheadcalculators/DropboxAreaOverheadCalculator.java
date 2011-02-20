@@ -7,14 +7,14 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.model.Dropbox;
 /**
  * @author gcatania
  */
-public class DropboxAreaOverheadCalculator implements OverheadCalculator
+public class DropboxAreaOverheadCalculator implements OverheadCalculator<Long>
 {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public long getOverhead(Dropbox dropbox, CartesianRectangle rect)
+    public Long getOverhead(Dropbox dropbox, CartesianRectangle rect)
     {
         return dropbox.getAreaWith(rect) - dropbox.getArea();
     }

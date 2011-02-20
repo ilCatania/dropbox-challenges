@@ -44,24 +44,24 @@ public class Dropbox implements Cloneable
         height = other.height;
     }
 
-    public void put(CartesianRectangle rectangle)
+    public void put(CartesianRectangle rect)
     {
-        Coordinates coordinates = rectangle.getLowerLeft();
+        Coordinates coordinates = rect.getLowerLeft();
         boolean removed = availableStartingPoints.remove(coordinates);
         if (!removed)
         {
-            throw new IllegalArgumentException("Cannot add " + rectangle);
+            throw new IllegalArgumentException("Cannot add " + rect);
         }
-        addedRectangles.add(rectangle);
+        addedRectangles.add(rect);
 
         // upper right is not a starting point unless funny things with adjacent rectangles happen, in which case they
         // will add it (so we can skip it now)
-        availableStartingPoints.add(rectangle.getLowerRight());
-        availableStartingPoints.add(rectangle.getUpperLeft());
+        availableStartingPoints.add(rect.getLowerRight());
+        availableStartingPoints.add(rect.getUpperLeft());
 
-        width = getWidthWith(rectangle);
-        height = getHeightWith(rectangle);
-        containedRectanglesArea += rectangle.getArea();
+        width = Math.max(width, rect.getUpperRight().getX());
+        height = Math.max(height, rect.getUpperRight().getY());
+        containedRectanglesArea += rect.getArea();
     }
 
     public boolean overlaps(CartesianRectangle rect)
@@ -86,7 +86,6 @@ public class Dropbox implements Cloneable
 
     public long getWidthWith(CartesianRectangle rect)
     {
-
         return Math.max(width, rect.getUpperRight().getX());
     }
 
