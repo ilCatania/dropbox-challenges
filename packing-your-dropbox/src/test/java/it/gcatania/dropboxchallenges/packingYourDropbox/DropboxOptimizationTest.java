@@ -42,8 +42,6 @@ public class DropboxOptimizationTest
 
     private Map<Setup, Score> optimizationData;
 
-    // private StringBuilder samples;
-
     private static final class Setup
     {
 
@@ -115,7 +113,6 @@ public class DropboxOptimizationTest
         random.setSeed(133l);
 
         optimizationData = new HashMap<Setup, Score>();
-        // samples = new StringBuilder();
 
         @SuppressWarnings("unchecked")
         List<Comparator<Rectangle>> comparators = Arrays.asList(new FakeComparator<Rectangle>(),
@@ -229,7 +226,6 @@ public class DropboxOptimizationTest
             System.out.println(score.winningPreAllocations);
         }
         w.close();
-        // System.out.println(samples.toString());
     }
 
     private void singlePass(Random random, List<Comparator<Rectangle>> comparators,
@@ -292,27 +288,6 @@ public class DropboxOptimizationTest
                 score.totalAreaOverhead += areaOverhead;
             }
         }
-        // boolean zeroFirstPlaces = false;
-        // while (iSetups.hasNext())
-        // {
-        // Setup setup = iSetups.next();
-        // Score score = iScores.next();
-        // DropBox box = iBoxes.next();
-        // if (score.firstPlaces == 0)
-        // {
-        // zeroFirstPlaces = true;
-        // samples
-        // .append(setup.comparator.getClass().getSimpleName())
-        // .append('-')
-        // .append(setup.calculator.getClass().getSimpleName())
-        // .append('\n')
-        // .append(box.draw());
-        // }
-        // }
-        // if (zeroFirstPlaces)
-        // {
-        // samples.append("end sampleset\n");
-        // }
     }
 
     private static List<Rectangle> createRandomRectangles(Random random)
