@@ -229,7 +229,6 @@ public class DropboxOptimizationTest
                 .append(evenPreAllocationsPerc)
                 .append('\n')
                 .toString());
-            System.out.println(score.winningPreAllocations);
         }
         w.close();
     }
@@ -281,7 +280,7 @@ public class DropboxOptimizationTest
                 {
                     minArea = currentArea;
                 }
-                System.out.println(dropbox.draw());
+                // System.out.println(dropbox.draw());
             }
         }
 
