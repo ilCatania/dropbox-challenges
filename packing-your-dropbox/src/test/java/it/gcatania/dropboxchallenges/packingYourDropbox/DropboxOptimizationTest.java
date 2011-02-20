@@ -35,11 +35,11 @@ import org.testng.annotations.Test;
 public class DropboxOptimizationTest
 {
 
-    private static final int NUM_ITERATIONS = 10;
+    private static final int NUM_ITERATIONS = 100;
 
-    private static final int NUM_RECTANGLES = 20;
+    private static final int NUM_RECTANGLES = 200;
 
-    private static final int MIN_SIDE_LENGTH = 4;
+    private static final int MIN_SIDE_LENGTH = 1;
 
     private static final int MAX_SIDE_LENGTH = 8;
 
