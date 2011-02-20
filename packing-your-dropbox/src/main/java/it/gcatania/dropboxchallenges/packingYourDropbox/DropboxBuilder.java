@@ -8,8 +8,10 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.model.PreAllocatingDropb
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Rectangle;
 import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.OverheadCalculator;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -89,5 +91,53 @@ public class DropboxBuilder
             dropbox.put(minOverheadRect);
         }
         return dropbox;
+    }
+
+    public Dropbox bruteForceBuild(List<Rectangle> rectangles)
+    {
+        Collections.sort(rectangles, new ReverseComparator<Rectangle>(rectangleComparator));
+        List<Dropbox> boxes = Collections.singletonList(new Dropbox());
+        for (Rectangle rect : rectangles)
+        {
+            List<Dropbox> newBoxes = new ArrayList<Dropbox>();
+            for (Dropbox db : boxes)
+            {
+                Set<Coordinates> availableStartingPoints = db.getAvailableStartingPoints();
+                for (Coordinates coords : availableStartingPoints)
+                {
+                    addToBoxes(rect, coords, newBoxes, db);
+                    if (!rect.isSquare())
+                    {
+                        addToBoxes(rect.rotate(), coords, newBoxes, db);
+                    }
+                }
+            }
+            boxes = newBoxes;
+        }
+
+        Iterator<Dropbox> boxesIter = boxes.iterator();
+        Dropbox min = boxesIter.next();
+        long minArea = min.getArea();
+        for (Dropbox db : boxes)
+        {
+            long currArea = db.getArea();
+            if (currArea < minArea)
+            {
+                min = db;
+                minArea = currArea;
+            }
+        }
+        return min;
+    }
+
+    private static void addToBoxes(Rectangle rect, Coordinates coords, List<Dropbox> newBoxes, Dropbox db)
+    {
+        CartesianRectangle cRect = new CartesianRectangle(coords, rect);
+        if (!db.overlaps(cRect))
+        {
+            Dropbox clone = db.clone();
+            clone.put(cRect);
+            newBoxes.add(clone);
+        }
     }
 }
