@@ -14,7 +14,7 @@ public class FileDeletionEvent extends StructuredEvent
 {
 
     // warning: not thread safe
-    private static final MessageFormat FMT = new MessageFormat("{0}: file {1} created in {2}.");
+    private static final MessageFormat FMT = new MessageFormat("{0}: file {1} deleted from {2}.");
 
     public final FileData deletedData;
 
