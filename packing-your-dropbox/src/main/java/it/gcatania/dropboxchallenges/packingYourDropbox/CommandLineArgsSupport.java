@@ -5,6 +5,7 @@ package it.gcatania.dropboxchallenges.packingYourDropbox;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -42,10 +43,12 @@ public class CommandLineArgsSupport
 
     public boolean hasArg(String arg)
     {
-        for (String s : args)
+        Iterator<String> iter = leftoverArgs.iterator();
+        while (iter.hasNext())
         {
-            if (arg.equals(s))
+            if (arg.equals(iter.next()))
             {
+                iter.remove();
                 return true;
             }
         }
