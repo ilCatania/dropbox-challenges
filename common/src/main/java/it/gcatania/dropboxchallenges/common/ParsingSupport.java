@@ -110,8 +110,7 @@ public abstract class ParsingSupport<T>
         }
         catch (FileNotFoundException e)
         {
-            System.err.println(e.getLocalizedMessage());
-            return Collections.emptyList();
+            throw new IllegalArgumentException("File not found: " + filename);
         }
         try
         {
