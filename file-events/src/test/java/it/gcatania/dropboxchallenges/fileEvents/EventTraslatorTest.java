@@ -122,6 +122,20 @@ public class EventTraslatorTest
     }
 
     @Test
+    public void testFileAddAndDel()
+    {
+        List<RawEvent> raw = make(//
+            new RawEvent(ADD, 1, "/asdf", "4"),
+            new RawEvent(DEL, 1, "/asdf", "4"),
+            new RawEvent(DEL, 1, "/asdf", "4"));
+        List<StructuredEvent> result = translator.translate(raw);
+        check(result,//
+            new FileCreationEvent(1, "/asdf", "4"),
+            new FileDeletionEvent(1, "/asdf", "4"),
+            new FileDeletionEvent(1, "/asdf", "4"));
+    }
+
+    @Test
     public void testNoFileContentChange()
     {
         List<RawEvent> raw = make(//
