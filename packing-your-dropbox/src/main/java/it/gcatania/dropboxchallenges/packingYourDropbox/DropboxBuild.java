@@ -127,7 +127,7 @@ public final class DropboxBuild
         System.out
             .println("\tThe first argument (except when preceded with --cmp or --calc) will be interpreted as a file to parse.");
         System.out.println("\tUse '--cmp name' to specify a comparator, '--calc name' to specify a calculator,\n"
-            + "\t--brute-force to use brute force method and --pre to use pre-allocation method.");
+            + "\t--brute-force to use brute force method and --pre to use pre-allocation method (mutually exclusive).");
         System.out.println();
 
         System.out.print("\tAvailable comparators: ");
@@ -168,7 +168,10 @@ public final class DropboxBuild
             System.out.print(str);
         }
         System.out.println();
-        System.out.println("example syntax: java -jar dropboxbuild.jar --cmp area --calc free-space path/to/file.txt");
+        System.out.println();
+        System.out.println("Examples:");
+        System.out.println("\tjava -jar dropboxbuild.jar --cmp area --calc free-space path/to/file.txt");
+        System.out.println("\tjava -jar dropboxbuild.jar --cmp max-side --brute-force");
     }
 
     private static Comparator<Rectangle> getComparator(String comparatorId)
