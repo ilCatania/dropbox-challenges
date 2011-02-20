@@ -26,15 +26,30 @@ import java.util.Map;
 public final class DropboxBuild
 {
 
-    /**
-     * works best
-     */
-    private static final DropboxAreaOverheadCalculator DEFAULT_OVERHEAD_CALC = new DropboxAreaOverheadCalculator();
+    private static Map<String, Comparator<Rectangle>> COMPARATORS_BY_ID;
 
-    /**
-     * works best when rectangles are far from being squares (otherwise should use max area comparator)
-     */
-    private static final RectangleMaxSideComparator DEFAULT_RECTANGLE_COMP = new RectangleMaxSideComparator();
+    private static Map<String, OverheadCalculator< ? >> CALCULATORS_BY_ID;
+    static
+    {
+        // works best when rectangles are far from being squares (otherwise should use max area comparator)
+        RectangleMaxSideComparator defaultComp = new RectangleMaxSideComparator();
+        COMPARATORS_BY_ID = new HashMap<String, Comparator<Rectangle>>();
+        COMPARATORS_BY_ID.put(null, defaultComp);
+        COMPARATORS_BY_ID.put("area", new RectangleAreaComparator());
+        COMPARATORS_BY_ID.put("max-side", new RectangleMaxSideComparator());
+        COMPARATORS_BY_ID.put("area-max-side", new RectangleAreaThenMaxSideComparator());
+        COMPARATORS_BY_ID.put("max-side-perimeter", new RectangleMaxSideThenPerimeterComparator());
+        COMPARATORS_BY_ID.put("perimeter", new RectanglePerimeterComparator());
+        COMPARATORS_BY_ID.put("side-ratio", new RectangleSideRatioComparator());
+
+        // works best
+        DropboxAreaOverheadCalculator defaultCalc = new DropboxAreaOverheadCalculator();
+        CALCULATORS_BY_ID = new HashMap<String, OverheadCalculator< ? >>();
+        CALCULATORS_BY_ID.put(null, defaultCalc);
+        CALCULATORS_BY_ID.put("area", new DropboxAreaOverheadCalculator());
+        CALCULATORS_BY_ID.put("free-space", new FreeSpaceOverheadCalculator());
+        CALCULATORS_BY_ID.put("magic", new DropboxMagicOverheadCalculator());
+    }
 
     private DropboxBuild()
     {
@@ -48,38 +63,57 @@ public final class DropboxBuild
     {
         Comparator<Rectangle> rectangleComparator;
         OverheadCalculator< ? > overheadCalculator;
+        boolean bruteForce;
+        boolean preAllocate;
         List<Rectangle> rectangles;
         try
         {
-            CommandLineArgsSupport as = new CommandLineArgsSupport(args);
-            if (as.hasArg("-h") || as.hasArg(" - "))
+            CommandLineArgsSupport clas = new CommandLineArgsSupport(args);
+            if (clas.hasArg("-h") || clas.hasArg("-?"))
             {
                 showHelp();
                 return;
             }
 
-            rectangleComparator = getComparator(as.getArgAfter("--cmp"));
-            overheadCalculator = getOverheadCalculator(as.getArgAfter("--calc"));
+            bruteForce = clas.hasArg("--brute-force");
+            preAllocate = clas.hasArg("--pre");
+
+            rectangleComparator = getComparator(clas.getArgAfter("--cmp"));
+            overheadCalculator = getOverheadCalculator(clas.getArgAfter("--calc"));
             RectangleParsingSupport rps = new RectangleParsingSupport();
-            if (as.getLeftoverArgs().isEmpty())
+            if (clas.getLeftoverArgs().isEmpty())
             {
                 rectangles = rps.parseStandardInput();
             }
             else
             {
-                rectangles = rps.parseFile(as.getLeftoverArgs().get(0));
+                rectangles = rps.parseFile(clas.getLeftoverArgs().get(0));
             }
         }
         catch (IllegalArgumentException e)
         {
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + " Use -h to display help.");
             return;
         }
 
         // System.out.println("Using: " + rectangleComparator.getClass().getSimpleName());
         // System.out.println("Using: " + overheadCalculator.getClass().getSimpleName());
 
-        Dropbox built = new DropboxBuilder(rectangleComparator, overheadCalculator).build(rectangles);
+        DropboxBuilder builder = new DropboxBuilder(rectangleComparator, overheadCalculator);
+
+        Dropbox built;
+        if (bruteForce)
+        {
+            built = builder.bruteForceBuild(rectangles);
+        }
+        else if (preAllocate)
+        {
+            built = builder.buildWithPreAllocation(rectangles);
+        }
+        else
+        {
+            built = builder.build(rectangles);
+        }
 
         // System.out.println(MessageFormat.format("{0}x{1}", built.getWidth(), built.getHeight()));
         System.out.println(built.getArea());
@@ -88,26 +122,58 @@ public final class DropboxBuild
 
     private static void showHelp()
     {
+        System.out.println("Bidimensional dropbox building challenge - usage:");
+        System.out.println();
         System.out
-            .println("the first argument (except when preceded with --cmp or --calc) will be interpreted as a file to parse");
-        System.out.println("use --cmp name to specify a comparator, and --calc name to specify a calculator.");
-        System.out
-            .println("available comparators: area, max-side, area-max-side, max-side-perimeter, perimeter, side-ratio");
+            .println("\tThe first argument (except when preceded with --cmp or --calc) will be interpreted as a file to parse.");
+        System.out.println("\tUse '--cmp name' to specify a comparator, '--calc name' to specify a calculator,\n"
+            + "\t--brute-force to use brute force method and --pre to use pre-allocation method.");
+        System.out.println();
+
+        System.out.print("\tAvailable comparators: ");
+        boolean first = true;
+        for (String str : COMPARATORS_BY_ID.keySet())
+        {
+            if (str == null)
+            {
+                continue;
+            }
+            if (first)
+            {
+                first = false;
+            }
+            else
+            {
+                System.out.print(", ");
+            }
+            System.out.print(str);
+        }
+        System.out.println();
+        System.out.print("\tAvailable calculators: ");
+        first = true;
+        for (String str : CALCULATORS_BY_ID.keySet())
+        {
+            if (str == null)
+            {
+                continue;
+            }
+            if (first)
+            {
+                first = false;
+            }
+            else
+            {
+                System.out.print(", ");
+            }
+            System.out.print(str);
+        }
+        System.out.println();
         System.out.println("example syntax: java -jar dropboxbuild.jar --cmp area --calc free-space path/to/file.txt");
     }
 
     private static Comparator<Rectangle> getComparator(String comparatorId)
     {
-        Map<String, Comparator<Rectangle>> comparatorsById = new HashMap<String, Comparator<Rectangle>>();
-        comparatorsById.put(null, DEFAULT_RECTANGLE_COMP);
-        comparatorsById.put("area", new RectangleAreaComparator());
-        comparatorsById.put("max-side", new RectangleMaxSideComparator());
-        comparatorsById.put("area-max-side", new RectangleAreaThenMaxSideComparator());
-        comparatorsById.put("max-side-perimeter", new RectangleMaxSideThenPerimeterComparator());
-        comparatorsById.put("perimeter", new RectanglePerimeterComparator());
-        comparatorsById.put("side-ratio", new RectangleSideRatioComparator());
-
-        Comparator<Rectangle> result = comparatorsById.get(comparatorId);
+        Comparator<Rectangle> result = COMPARATORS_BY_ID.get(comparatorId);
         if (result == null)
         {
             throw new IllegalArgumentException("No comparator configured for: \'" + comparatorId + "\'.");
@@ -117,13 +183,7 @@ public final class DropboxBuild
 
     public static OverheadCalculator< ? > getOverheadCalculator(String calculatorId)
     {
-        Map<String, OverheadCalculator< ? >> calculatorsById = new HashMap<String, OverheadCalculator< ? >>();
-        calculatorsById.put(null, DEFAULT_OVERHEAD_CALC);
-        calculatorsById.put("area", new DropboxAreaOverheadCalculator());
-        calculatorsById.put("free-space", new FreeSpaceOverheadCalculator());
-        calculatorsById.put("magic", new DropboxMagicOverheadCalculator());
-
-        OverheadCalculator< ? > result = calculatorsById.get(calculatorId);
+        OverheadCalculator< ? > result = CALCULATORS_BY_ID.get(calculatorId);
         if (result == null)
         {
             throw new IllegalArgumentException("No calculator configured for: \'" + calculatorId + "\'.");
