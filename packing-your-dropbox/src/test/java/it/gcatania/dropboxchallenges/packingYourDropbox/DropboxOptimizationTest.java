@@ -158,7 +158,6 @@ public class DropboxOptimizationTest
             }
         });
 
-        int totalFirstPlaces = 0;
         long minArea = Long.MAX_VALUE;
         long minFreeSpace = Long.MAX_VALUE;
         long minTime = Long.MAX_VALUE;
@@ -166,7 +165,6 @@ public class DropboxOptimizationTest
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Score score = e.getValue();
-            totalFirstPlaces += score.firstPlaces;
             if (minArea > score.totalArea)
             {
                 minArea = score.totalArea;
@@ -193,7 +191,7 @@ public class DropboxOptimizationTest
         {
             Setup setup = e.getKey();
             Score score = e.getValue();
-            int firstPlacesPerc = 100 * score.firstPlaces / totalFirstPlaces;
+            int firstPlacesPerc = 100 * score.firstPlaces / NUM_ITERATIONS;
             long totalAreaPerc = 100 * score.totalArea / minArea;
             long freeSpacePerc = 100 * score.totalFreeSpace / minFreeSpace;
             long timePerc = 100 * score.watch.getTime() / minTime;
