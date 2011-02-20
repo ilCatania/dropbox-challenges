@@ -25,7 +25,7 @@ public class DropboxBuilder
 
     private final Comparator<Rectangle> rectangleComparator;
 
-    private final OverheadCalculator overheadCalculator;
+    private final OverheadCalculator< ? > overheadCalculator;
 
     /**
      * @param rectangleComparator rectangles will be added to the dropbox according to the order imposed by the reverse
@@ -34,7 +34,7 @@ public class DropboxBuilder
      * @param overheadCalculator every time a rectangle is added, the builder will choose between the available
      * positions the one that minimizes the overhead calculated by this calculator. Not used in brute force approach.
      */
-    public DropboxBuilder(Comparator<Rectangle> rectangleComparator, OverheadCalculator overheadCalculator)
+    public DropboxBuilder(Comparator<Rectangle> rectangleComparator, OverheadCalculator< ? > overheadCalculator)
     {
         this.rectangleComparator = rectangleComparator;
         this.overheadCalculator = overheadCalculator;
@@ -71,6 +71,7 @@ public class DropboxBuilder
         return internalOptimizedBuild(rectangles, dropbox);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private Dropbox internalOptimizedBuild(List<Rectangle> rectangles, Dropbox dropbox)
     {
         Collections.sort(rectangles, new ReverseComparator<Rectangle>(rectangleComparator));
@@ -83,7 +84,7 @@ public class DropboxBuilder
                 continue;
             }
 
-            Comparable minOverhead = null;
+            Comparable<Object> minOverhead = null;
             CartesianRectangle minOverheadRect = null;
             for (Coordinates coords : availableStartingPoints)
             {

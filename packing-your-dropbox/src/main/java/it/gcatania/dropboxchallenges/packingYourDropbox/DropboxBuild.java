@@ -37,7 +37,7 @@ public final class DropboxBuild
     public static void main(String[] args)
     {
         Comparator<Rectangle> rectangleComparator = getComparator(args);
-        OverheadCalculator overheadCalculator = getOverheadCalculator(args);
+        OverheadCalculator< ? > overheadCalculator = getOverheadCalculator(args);
 
         // System.out.println("Using: " + rectangleComparator.getClass().getSimpleName());
         // System.out.println("Using: " + overheadCalculator.getClass().getSimpleName());
@@ -87,7 +87,7 @@ public final class DropboxBuild
         return DEFAULT_RECTANGLE_COMP;
     }
 
-    public static OverheadCalculator getOverheadCalculator(String[] args)
+    public static OverheadCalculator< ? > getOverheadCalculator(String[] args)
     {
         for (String s : args)
         {
@@ -96,7 +96,7 @@ public final class DropboxBuild
                 Class< ? > cl = Class.forName(s);
                 if (OverheadCalculator.class.isAssignableFrom(cl))
                 {
-                    return (OverheadCalculator) cl.newInstance();
+                    return (OverheadCalculator< ? >) cl.newInstance();
                 }
             }
             catch (Exception e)
