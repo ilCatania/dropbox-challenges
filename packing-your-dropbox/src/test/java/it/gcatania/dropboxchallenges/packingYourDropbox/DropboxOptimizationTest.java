@@ -89,6 +89,7 @@ public class DropboxOptimizationTest
 
         private int winningPreAllocations = 0;
 
+        private int evenPreAllocations = 0;
         private long totalArea = 0;
 
         private long totalFreeSpace = 0;
@@ -185,8 +186,9 @@ public class DropboxOptimizationTest
         }
 
         BufferedWriter w = new BufferedWriter(new FileWriter("target/results.csv", false));
-        w
-            .write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;FreeSpace;FreeSpacePerc;TimeMillis;TimeMillisPerc;AreaOverhead;AreaOverheadPerc\n");
+        w.write("Comparator;Calculator;FirstPlaces;FirstPlacesPerc;TotalArea;TotalAreaPerc;"
+            + "FreeSpace;FreeSpacePerc;TimeMillis;TimeMillisPerc;AreaOverhead;AreaOverheadPerc;"
+            + "winningPreAllocationsPerc;evenPreAllocationsPerc\n");
         for (Map.Entry<Setup, Score> e : entrySet)
         {
             Setup setup = e.getKey();
@@ -196,6 +198,8 @@ public class DropboxOptimizationTest
             long freeSpacePerc = 100 * score.totalFreeSpace / minFreeSpace;
             long timePerc = 100 * score.watch.getTime() / minTime;
             long areaOverheadPerc = minAreaOverhead > 0 ? 100 * score.totalAreaOverhead / minAreaOverhead : 0;
+            int winningPreAllocationsPerc = score.winningPreAllocations * 100 / NUM_ITERATIONS;
+            int evenPreAllocationsPerc = score.evenPreAllocations * 100 / NUM_ITERATIONS;
             w.write(new StringBuilder(setup.comparator.getClass().getSimpleName())
                 .append(';')
                 .append(setup.calculator.getClass().getSimpleName())
@@ -219,6 +223,10 @@ public class DropboxOptimizationTest
                 .append(score.totalAreaOverhead)
                 .append(';')
                 .append(areaOverheadPerc)
+                .append(';')
+                .append(winningPreAllocationsPerc)
+                .append(';')
+                .append(evenPreAllocationsPerc)
                 .append('\n')
                 .toString());
             System.out.println(score.winningPreAllocations);
@@ -259,6 +267,10 @@ public class DropboxOptimizationTest
                 {
                     dropbox = dropbox2;
                     score.winningPreAllocations++;
+                }
+                else if (dropbox2.getArea() == dropbox.getArea())
+                {
+                    score.evenPreAllocations++;
                 }
 
                 long currentArea = dropbox.getArea();
