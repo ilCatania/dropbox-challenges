@@ -51,6 +51,9 @@ public class Rectangle
         return width * height;
     }
 
+    /**
+     * @return a new rectangle, with height and width swapped
+     */
     public Rectangle rotate()
     {
         return new Rectangle(height, width);

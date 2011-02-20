@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 
 /**
+ * a composite comparator that averages the result of its child comparators
  * @author gcatania
  */
 public class AverageComparator<T> implements Comparator<T>

@@ -9,6 +9,7 @@ import java.util.Comparator;
 
 
 /**
+ * compares coordinates by their x value first, and by their y value if the x's are equal.
  * @author gcatania
  */
 public class CoordinateAxisComparator implements Comparator<Coordinates>

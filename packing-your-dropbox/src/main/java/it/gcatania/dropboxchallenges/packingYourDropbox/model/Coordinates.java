@@ -1,6 +1,7 @@
 package it.gcatania.dropboxchallenges.packingYourDropbox.model;
 
 /**
+ * a set of coordinates in the cartesian plane.
  * @author gcatania
  */
 public class Coordinates

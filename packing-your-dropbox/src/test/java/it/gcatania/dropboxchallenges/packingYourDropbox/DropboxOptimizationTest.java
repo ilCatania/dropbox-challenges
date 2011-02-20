@@ -5,7 +5,7 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.RectangleAre
 import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.RectangleMaxSideComparator;
 import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.RectanglePerimeterComparator;
 import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.RectangleSideRatioComparator;
-import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.RectangleUltraComparator;
+import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.RectangleMaxSideThenPerimeterComparator;
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Dropbox;
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Rectangle;
 import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.DropboxAreaOverheadCalculator;
@@ -41,7 +41,7 @@ public class DropboxOptimizationTest
 
     private static final int MIN_SIDE_LENGTH = 1;
 
-    private static final int MAX_SIDE_LENGTH = 8;
+    private static final int MAX_SIDE_LENGTH = 80;
 
     private final Map<Setup, Score> optimizationData = new HashMap<Setup, Score>();
 
@@ -151,7 +151,7 @@ public class DropboxOptimizationTest
         @SuppressWarnings("unchecked")
         List<Comparator<Rectangle>> comparators = Arrays.asList(new FakeComparator<Rectangle>(),
         // new RectangleSuperComparator(), // same as RectangleAreaComparator
-            new RectangleUltraComparator(),
+            new RectangleMaxSideThenPerimeterComparator(),
             new RectangleAreaComparator(),
             new RectangleMaxSideComparator(),
             new RectangleSideRatioComparator(),

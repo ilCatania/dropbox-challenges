@@ -11,6 +11,7 @@ import java.util.List;
 
 
 /**
+ * entry point for command line execution.
  * @author gcatania
  */
 public final class DropboxBuild
@@ -22,7 +23,7 @@ public final class DropboxBuild
     private static final DropboxAreaOverheadCalculator DEFAULT_OVERHEAD_CALC = new DropboxAreaOverheadCalculator();
 
     /**
-     * works best when rectangles are far from being squares
+     * works best when rectangles are far from being squares (otherwise should use max area comparator)
      */
     private static final RectangleMaxSideComparator DEFAULT_RECTANGLE_COMP = new RectangleMaxSideComparator();
 
@@ -32,7 +33,9 @@ public final class DropboxBuild
 
     /**
      * @param args the first argument, if any, will be treated as a file to be parsed for rectangles. Otherwise,
-     * standard input will be prompted
+     * standard input will be prompted. Additionally, any of the argument may be simple name (case sensitive) of a
+     * comparator or overhead
+     * calculator class, in which case said class will be used.
      */
     public static void main(String[] args)
     {
@@ -51,7 +54,7 @@ public final class DropboxBuild
         System.err.println(built.draw());
     }
 
-    public static List<Rectangle> getRectangles(String[] args)
+    private static List<Rectangle> getRectangles(String[] args)
     {
         RectangleParsingSupport rps = new RectangleParsingSupport();
         if (args.length > 0)
@@ -67,13 +70,13 @@ public final class DropboxBuild
     }
 
     @SuppressWarnings("unchecked")
-    public static Comparator<Rectangle> getComparator(String[] args)
+    private static Comparator<Rectangle> getComparator(String[] args)
     {
         for (String s : args)
         {
             try
             {
-                Class< ? > cl = Class.forName(s);
+                Class< ? > cl = Class.forName("it.gcatania.dropboxchallenges.packingYourDropbox.comparators." + s);
                 if (Comparator.class.isAssignableFrom(cl))
                 {
                     return (Comparator<Rectangle>) cl.newInstance();
@@ -93,7 +96,8 @@ public final class DropboxBuild
         {
             try
             {
-                Class< ? > cl = Class.forName(s);
+                Class< ? > cl = Class.forName("it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators."
+                    + s);
                 if (OverheadCalculator.class.isAssignableFrom(cl))
                 {
                     return (OverheadCalculator< ? >) cl.newInstance();

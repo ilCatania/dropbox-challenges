@@ -8,6 +8,8 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.model.Dropbox;
 
 
 /**
+ * a "magic" overhead calculator that calculates overhead by area first, and then by comparing the distance between the
+ * rectangle and dropbox's respective upper right corners (reversed)
  * @author gcatania
  */
 public class DropboxMagicOverheadCalculator extends CompositeOverheadCalculator<Long>

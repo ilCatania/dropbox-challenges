@@ -5,6 +5,7 @@ import java.util.List;
 
 
 /**
+ * a rectangle in the cartesian plane.
  * @author gcatania
  */
 public class CartesianRectangle extends Rectangle

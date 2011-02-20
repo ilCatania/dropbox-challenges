@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 
 /**
- * compares drop boxes by free space, with those having less free space scoring lower
+ * compares drop boxes by area
  * @author gcatania
  */
 public class DropboxAreaComparator implements Comparator<Dropbox>

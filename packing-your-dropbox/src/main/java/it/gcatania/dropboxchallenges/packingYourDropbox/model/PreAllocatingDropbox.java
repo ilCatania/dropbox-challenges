@@ -1,6 +1,7 @@
 package it.gcatania.dropboxchallenges.packingYourDropbox.model;
 
 /**
+ * a dropbox that allows pre-allocation of space
  * @author gcatania
  */
 public class PreAllocatingDropbox extends Dropbox

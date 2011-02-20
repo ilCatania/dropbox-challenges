@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 
 /**
+ * a composite comparator that returns the first non-zero value of child comparators
  * @author gcatania
  */
 public class SequentialComparator<T> implements Comparator<T>

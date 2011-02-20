@@ -5,6 +5,7 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.model.Rectangle;
 
 
 /**
+ * rectangle parsing support
  * @author gcatania
  */
 public class RectangleParsingSupport extends ParsingSupport<Rectangle>

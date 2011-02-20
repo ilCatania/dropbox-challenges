@@ -6,11 +6,11 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.model.Rectangle;
 /**
  * @author gcatania
  */
-public class RectangleUltraComparator extends AverageComparator<Rectangle>
+public class RectangleMaxSideThenPerimeterComparator extends AverageComparator<Rectangle>
 {
 
     @SuppressWarnings("unchecked")
-    public RectangleUltraComparator()
+    public RectangleMaxSideThenPerimeterComparator()
     {
         super(new RectangleMaxSideComparator(), new RectanglePerimeterComparator(), new RectangleAreaComparator());
     }

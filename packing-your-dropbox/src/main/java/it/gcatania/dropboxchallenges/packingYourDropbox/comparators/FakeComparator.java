@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 
 /**
- * a fake comparator, always returns 0
+ * a fake comparator, always returns 0 (used for testing purposes)
  * @author gcatania
  */
 public class FakeComparator<T> implements Comparator<T>
