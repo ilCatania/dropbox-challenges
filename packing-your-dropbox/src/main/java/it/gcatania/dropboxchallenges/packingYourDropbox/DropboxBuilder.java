@@ -17,6 +17,7 @@ import java.util.Set;
 
 
 /**
+ * main engine class for dropbox building.
  * @author gcatania
  */
 public class DropboxBuilder
@@ -26,17 +27,35 @@ public class DropboxBuilder
 
     private final OverheadCalculator overheadCalculator;
 
+    /**
+     * @param rectangleComparator rectangles will be added to the dropbox according to the order imposed by the reverse
+     * of this comparator. For example, if the comparator compares areas, rectangles will be added starting from the one
+     * with greater area.
+     * @param overheadCalculator every time a rectangle is added, the builder will choose between the available
+     * positions the one that minimizes the overhead calculated by this calculator. Not used in brute force approach.
+     */
     public DropboxBuilder(Comparator<Rectangle> rectangleComparator, OverheadCalculator overheadCalculator)
     {
         this.rectangleComparator = rectangleComparator;
         this.overheadCalculator = overheadCalculator;
     }
 
+    /**
+     * standard dropbox build method
+     * @param rectangles the rectangles to build a dropbox from
+     * @return the best dropbox containing the rectangles
+     */
     public Dropbox build(List<Rectangle> rectangles)
     {
-        return internalBuild(rectangles, new Dropbox());
+        return internalOptimizedBuild(rectangles, new Dropbox());
     }
 
+    /**
+     * standard dropbox build method that pre-allocates a square dropbox with an area close to the total area of the
+     * rectangles (its sides are the square root of the area, rounded down)
+     * @param rectangles the rectangles to build a dropbox from
+     * @return the best dropbox containing the rectangles
+     */
     public Dropbox buildWithPreAllocation(List<Rectangle> rectangles)
     {
         PreAllocatingDropbox dropbox = new PreAllocatingDropbox();
@@ -49,10 +68,10 @@ public class DropboxBuilder
         long preAllocation = (long) Math.sqrt(totalRectangleArea);
         dropbox.preAllocate(preAllocation, preAllocation);
 
-        return internalBuild(rectangles, dropbox);
+        return internalOptimizedBuild(rectangles, dropbox);
     }
 
-    private Dropbox internalBuild(List<Rectangle> rectangles, Dropbox dropbox)
+    private Dropbox internalOptimizedBuild(List<Rectangle> rectangles, Dropbox dropbox)
     {
         Collections.sort(rectangles, new ReverseComparator<Rectangle>(rectangleComparator));
         for (Rectangle rect : rectangles)
@@ -76,16 +95,15 @@ public class DropboxBuilder
                     minOverheadRect = cRect;
                 }
                 // if not square, also try with rotation
-                if (rect.isSquare())
+                if (!rect.isSquare())
                 {
-                    continue;
-                }
-                cRect = new CartesianRectangle(coords, rect.rotate());
-                currOverhead = overheadCalculator.getOverhead(dropbox, cRect);
-                if (currOverhead < minOverhead && !dropbox.overlaps(cRect))
-                {
-                    minOverhead = currOverhead;
-                    minOverheadRect = cRect;
+                    cRect = new CartesianRectangle(coords, rect.rotate());
+                    currOverhead = overheadCalculator.getOverhead(dropbox, cRect);
+                    if (currOverhead < minOverhead && !dropbox.overlaps(cRect))
+                    {
+                        minOverhead = currOverhead;
+                        minOverheadRect = cRect;
+                    }
                 }
             }
             dropbox.put(minOverheadRect);
@@ -93,6 +111,13 @@ public class DropboxBuilder
         return dropbox;
     }
 
+    /**
+     * "brute force" dropbox building method. After sorting the rectangles according to the comparator, attempts to
+     * place every rectangle in every possible position. This method takes multiple orders of magnitude longer than the
+     * others depending on the number of rectangles passed.
+     * @param rectangles the rectangles to build a dropbox from
+     * @return the best dropbox containing the rectangles
+     */
     public Dropbox bruteForceBuild(List<Rectangle> rectangles)
     {
         Collections.sort(rectangles, new ReverseComparator<Rectangle>(rectangleComparator));
@@ -114,7 +139,22 @@ public class DropboxBuilder
             }
             boxes = newBoxes;
         }
+        return findBest(boxes);
+    }
 
+    private static void addToBoxes(Rectangle rect, Coordinates coords, List<Dropbox> newBoxes, Dropbox db)
+    {
+        CartesianRectangle cRect = new CartesianRectangle(coords, rect);
+        if (!db.overlaps(cRect))
+        {
+            Dropbox clone = db.clone();
+            clone.put(cRect);
+            newBoxes.add(clone);
+        }
+    }
+
+    private Dropbox findBest(List<Dropbox> boxes)
+    {
         Iterator<Dropbox> boxesIter = boxes.iterator();
         Dropbox min = boxesIter.next();
         long minArea = min.getArea();
@@ -128,16 +168,5 @@ public class DropboxBuilder
             }
         }
         return min;
-    }
-
-    private static void addToBoxes(Rectangle rect, Coordinates coords, List<Dropbox> newBoxes, Dropbox db)
-    {
-        CartesianRectangle cRect = new CartesianRectangle(coords, rect);
-        if (!db.overlaps(cRect))
-        {
-            Dropbox clone = db.clone();
-            clone.put(cRect);
-            newBoxes.add(clone);
-        }
     }
 }

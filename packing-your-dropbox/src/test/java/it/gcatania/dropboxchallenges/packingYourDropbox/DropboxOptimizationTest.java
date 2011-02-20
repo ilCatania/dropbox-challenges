@@ -24,9 +24,12 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.lang.time.StopWatch;
+import org.testng.annotations.Test;
 
 
 /**
+ * dropbox optimization test class. Generates multiple groups of random rectangles and evaluates the performance of
+ * different methods. Outputs the results in a csv file
  * @author gcatania
  */
 public class DropboxOptimizationTest
@@ -40,8 +43,14 @@ public class DropboxOptimizationTest
 
     private static final int MAX_SIDE_LENGTH = 8;
 
-    private Map<Setup, Score> optimizationData;
+    private final Map<Setup, Score> optimizationData = new HashMap<Setup, Score>();
 
+    private final Random random = new Random();
+
+    /**
+     * a dropbox build setup
+     * @author gcatania
+     */
     private static final class Setup
     {
 
@@ -82,38 +91,62 @@ public class DropboxOptimizationTest
 
     }
 
+    /**
+     * a dropbox build score
+     * @author gcatania
+     */
     private static final class Score
     {
 
+        /**
+         * counts the number of times the setup yielded the best solution
+         */
         private int firstPlaces = 0;
 
+        /**
+         * counts the number of times a pre-allocation strategy was more successful than the default one
+         */
         private int winningPreAllocations = 0;
 
+        /**
+         * counts the number of times a pre-allocation strategy performed like the default one
+         */
         private int evenPreAllocations = 0;
+
+        /**
+         * the total area of built droboxes
+         */
         private long totalArea = 0;
 
+        /**
+         * the total free space of built droboxes
+         */
         private long totalFreeSpace = 0;
 
+        /**
+         * the difference between the total area for this setup and the total area of the setup that performed best
+         * overall
+         */
         private long totalAreaOverhead = 0;
 
+        /**
+         * keeps record of time performance
+         */
         private final StopWatch watch = new StopWatch();
 
+        /**
+         * transient variable used to compare dropboxes at the end of the single iteration
+         */
         private Dropbox lastDropBox = null;
 
     }
 
-    public static void main(String[] args) throws Exception
-    {
-        new DropboxOptimizationTest().testOptimization();
-    }
-
+    @Test
     public void testOptimization() throws IOException
     {
-        // 133l
-        Random random = new Random();
-        random.setSeed(133l);
+        random.setSeed(133l); // make test reproductible
 
-        optimizationData = new HashMap<Setup, Score>();
+        optimizationData.clear();
 
         @SuppressWarnings("unchecked")
         List<Comparator<Rectangle>> comparators = Arrays.asList(new FakeComparator<Rectangle>(),
@@ -134,12 +167,16 @@ public class DropboxOptimizationTest
         for (int i = 0; i < NUM_ITERATIONS; i++)
         {
             System.out.println("pass " + i);
-            singlePass(random, comparators, overheadCalculators);
+            singlePass(comparators, overheadCalculators);
         }
         List<Map.Entry<Setup, Score>> entrySet = new ArrayList<Map.Entry<Setup, Score>>(optimizationData.entrySet());
         Collections.sort(entrySet, new Comparator<Map.Entry<Setup, Score>>()
         {
 
+            /**
+             * compares two scores by their number of first places, then by their total area, then by their total free
+             * space
+             */
             @Override
             public int compare(Map.Entry<Setup, Score> e1, Map.Entry<Setup, Score> e2)
             {
@@ -233,11 +270,9 @@ public class DropboxOptimizationTest
         w.close();
     }
 
-    private void singlePass(Random random, List<Comparator<Rectangle>> comparators,
-        List<OverheadCalculator> overheadCalculators)
+    private void singlePass(List<Comparator<Rectangle>> comparators, List<OverheadCalculator> overheadCalculators)
     {
-
-        List<Rectangle> rectangles = createRandomRectangles(random);
+        List<Rectangle> rectangles = createRandomRectangles();
 
         long minArea = Long.MAX_VALUE;
         for (Comparator<Rectangle> comp : comparators)
@@ -299,7 +334,7 @@ public class DropboxOptimizationTest
         }
     }
 
-    private static List<Rectangle> createRandomRectangles(Random random)
+    private List<Rectangle> createRandomRectangles()
     {
         List<Rectangle> rectangles = new ArrayList<Rectangle>(NUM_RECTANGLES);
         for (int i = 0; i < NUM_RECTANGLES; i++)
