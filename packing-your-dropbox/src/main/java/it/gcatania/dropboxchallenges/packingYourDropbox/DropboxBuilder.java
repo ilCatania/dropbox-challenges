@@ -51,24 +51,27 @@ public class DropboxBuilder
     }
 
     /**
-     * standard dropbox build method that pre-allocates a square dropbox with an area close to the total area of the
-     * rectangles (its sides are the square root of the area, rounded down)
+     * standard dropbox build method that pre-allocates a rectangular dropbox with an area equal to the total rectangle
+     * area
      * @param rectangles the rectangles to build a dropbox from
      * @return the best dropbox containing the rectangles
      */
     public Dropbox buildWithPreAllocation(List<Rectangle> rectangles)
     {
-        PreAllocatingDropbox dropbox = new PreAllocatingDropbox();
-
         long totalRectangleArea = 0;
         for (Rectangle rect : rectangles)
         {
             totalRectangleArea += rect.getArea();
         }
-        long preAllocation = (long) Math.sqrt(totalRectangleArea);
-        dropbox.preAllocate(preAllocation, preAllocation);
+        long a = (long) Math.sqrt(totalRectangleArea);
 
-        return internalOptimizedBuild(rectangles, dropbox);
+        while (totalRectangleArea % a != 0)
+        {
+            a--;
+        }
+        long b = totalRectangleArea / a;
+
+        return internalOptimizedBuild(rectangles, new PreAllocatingDropbox(a, b));
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

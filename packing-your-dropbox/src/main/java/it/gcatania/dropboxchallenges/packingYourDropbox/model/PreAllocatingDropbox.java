@@ -7,14 +7,24 @@ package it.gcatania.dropboxchallenges.packingYourDropbox.model;
 public class PreAllocatingDropbox extends Dropbox
 {
 
-    private long preAllocatedWidth;
+    public final long preAllocatedWidth;
 
-    private long preAllocatedHeight;
+    public final long preAllocatedHeight;
 
-    public void preAllocate(long width, long height)
+    public PreAllocatingDropbox(long preAllocatedWidth, long preAllocatedHeight)
     {
-        preAllocatedWidth = width;
-        preAllocatedHeight = height;
+        this.preAllocatedWidth = preAllocatedWidth;
+        this.preAllocatedHeight = preAllocatedHeight;
+    }
+
+    /**
+     * @param other
+     */
+    public PreAllocatingDropbox(PreAllocatingDropbox other)
+    {
+        super(other);
+        preAllocatedWidth = other.preAllocatedWidth;
+        preAllocatedHeight = other.preAllocatedHeight;
     }
 
     /**

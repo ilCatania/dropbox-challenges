@@ -9,6 +9,7 @@ import it.gcatania.dropboxchallenges.packingYourDropbox.comparators.RectangleSid
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Dropbox;
 import it.gcatania.dropboxchallenges.packingYourDropbox.model.Rectangle;
 import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.DropboxAreaOverheadCalculator;
+import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.DropboxMagicOverheadCalculator;
 import it.gcatania.dropboxchallenges.packingYourDropbox.overheadcalculators.OverheadCalculator;
 
 import java.io.BufferedWriter;
@@ -156,11 +157,11 @@ public class DropboxOptimizationTest
             new RectangleMaxSideComparator(),
             new RectangleSideRatioComparator(),
             new RectanglePerimeterComparator());
-        List<OverheadCalculator< ? >> overheadCalculators = Arrays
-            .<OverheadCalculator< ? >> asList(new DropboxAreaOverheadCalculator()
+        List<OverheadCalculator< ? >> overheadCalculators = Arrays.<OverheadCalculator< ? >> asList(
+            new DropboxAreaOverheadCalculator(),
             // new AreaOverheadCalculator(), // not optimal
             // new DistanceFromOriginOverheadCalculator(), // not optimal
-            // new DropboxMagicOverheadCalculator(), // not optimal
+            new DropboxMagicOverheadCalculator() // not optimal
             // new FreeSpaceOverheadCalculator(), // same as DropBoxAreaOverheadCalculator
             // new DropBoxOverheadCalculator() // not optimal
             );
