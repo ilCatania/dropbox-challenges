@@ -57,6 +57,7 @@
           <header>${basedir}/src/main/etc/header.txt</header>
           <failIfMissing>true</failIfMissing>
           <aggregate>true</aggregate>
+          <strictCheck>true</strictCheck>
           <includes>
             <include>**/*.java</include>
           </includes>
