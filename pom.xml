@@ -57,6 +57,9 @@
           <header>${basedir}/src/main/etc/header.txt</header>
           <failIfMissing>true</failIfMissing>
           <aggregate>true</aggregate>
+          <includes>
+            <include>**/*.java</include>
+          </includes>
           <properties>
             <owner>Gabriele Catania</owner>
             <year>${project.inceptionYear}</year>
