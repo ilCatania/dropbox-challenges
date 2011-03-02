@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.gcatania.dropbox-challenges</groupId>
   <artifactId>dropbox-challenges</artifactId>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Dropbox Challenges</name>
   <inceptionYear>2011</inceptionYear>
