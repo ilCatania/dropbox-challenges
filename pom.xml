@@ -6,6 +6,13 @@
   <version>1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Dropbox Challenges</name>
+  <inceptionYear>2011</inceptionYear>
+  <licenses>
+    <license>
+      <name> Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
   <modules>
     <module>common</module>
     <module>packing-your-dropbox</module>
@@ -41,6 +48,32 @@
     </dependencies>
   </dependencyManagement>
   <build>
+    <plugins>
+      <plugin>
+        <inherited>false</inherited>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <configuration>
+          <header>${basedir}/src/main/etc/header.txt</header>
+          <failIfMissing>true</failIfMissing>
+          <aggregate>true</aggregate>
+          <properties>
+            <owner>Gabriele Catania</owner>
+            <year>${project.inceptionYear}</year>
+            <email>gabriele.ctn@gmail.com</email>
+          </properties>
+        </configuration>
+        <executions>
+          <execution>
+            <id>check-headers</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -74,7 +107,25 @@
           <artifactId>maven-dependency-plugin</artifactId>
           <version>2.1</version>
         </plugin>
+        <plugin>
+          <groupId>com.mycila.maven-license-plugin</groupId>
+          <artifactId>maven-license-plugin</artifactId>
+          <version>1.9.0</version>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>mc-release</id>
+      <name>Local Maven repository of releases</name>
+      <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
 </project>
