@@ -13,6 +13,20 @@
       <url>http://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>
+  <developers>
+    <developer>
+      <id>ilcatania</id>
+      <name>Gabriele Catania</name>
+      <email>gabriele.ctn@gmail.com</email>
+      <roles>
+        <role>owner</role>
+      </roles>
+      <timezone>+1</timezone>
+      <properties>
+        <picUrl>http://www.gravatar.com/avatar/cb5dbb47e20a4edc4edac080b5bec1a2?s=400</picUrl>
+      </properties>
+    </developer>
+  </developers>
   <modules>
     <module>common</module>
     <module>packing-your-dropbox</module>
