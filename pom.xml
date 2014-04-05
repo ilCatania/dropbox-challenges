@@ -37,9 +37,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <scm>
-    <connection>scm:hg:https://ilCatania@bitbucket.org/ilCatania/dropbox-challenges</connection>
-    <developerConnection>scm:hg:ssh://hg@bitbucket.org/ilCatania/dropbox-challenges</developerConnection>
-    <url>https://bitbucket.org/ilCatania/dropbox-challenges</url>
+    <connection>git@github.com:ilCatania/dropbox-challenges.git</connection>
+    <developerConnection>git@github.com:ilCatania/dropbox-challenges.git</developerConnection>
+    <url>https://github.com/ilCatania/dropbox-challenges</url>
   </scm>
   <dependencyManagement>
     <dependencies>
